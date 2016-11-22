@@ -17,12 +17,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 		// Maak toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		ActionBar actionBar = getSupportActionBar();
+		makeToolbar();		
 
+		// Start download en recyclerview
+		initialize();
     }
 
+	// Maak toolbar
+	public void makeToolbar()
+	{
+	Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+	setSupportActionBar(toolbar);
+	ActionBar actionBar = getSupportActionBar();
+	}
+	
 	// Maak options menu in toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -43,13 +51,11 @@ public class MainActivity extends AppCompatActivity
         switch (id)
 		{
             case R.id.action_settings:
-                return true;
+				return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-	// LinearLayout mProgress = (LinearLayout) findViewById(R.id.LinLayProgress);
 
 	// Als verbinding, download xml
 	// als geen verbinding, toon boodschap met knop probeer opnieuw
@@ -86,5 +92,12 @@ public class MainActivity extends AppCompatActivity
 	private void tryAgain()
 	{
 		
-	}	
+	}
+	
+	private void showSnackbar()
+	{
+		Snackbar mSnackbar = (Snackbar) Snackbar.make( findViewById(R.id.coordinator), "Boem!", Snackbar.LENGTH_LONG );
+		mSnackbar.show();
+	}
+	
 }
