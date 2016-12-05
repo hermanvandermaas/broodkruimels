@@ -7,18 +7,11 @@ import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
-import android.util.*;
 import android.view.*;
-import android.widget.*;
-
-import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
 	private static final String TAG = MainActivity.class.getSimpleName();
-	private static final boolean DEBUG = true; // Set this to false to disable logs.
-	private static final String KEY_CURRENT_PROGRESS = "current_progress";
-	private static final String KEY_PERCENT_PROGRESS = "percent_progress";
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
 	private TaskFragment mTaskFragment;
 
@@ -32,7 +25,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
-
+		
+		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
 		mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
 
@@ -45,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 		
 		// Controle netwerkverbinding en
-		// download xml in methode onStart() onderaan
+		// download xml staan in methode onStart() onderaan
     }
 
 	// Maak options menu in toolbar
@@ -92,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
-		if (DEBUG) Log.i(TAG, "onSaveInstanceState(Bundle)");
 		super.onSaveInstanceState(outState);
 	}
 
@@ -103,28 +96,25 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPreExecute()
 	{
-		if (DEBUG) Log.i(TAG, "onPreExecute()");
-		Toast.makeText(this, "onPreExecute", Toast.LENGTH_SHORT).show();
+		// ...
 	}
 
 	@Override
 	public void onProgressUpdate(int percent)
 	{
-		if (DEBUG) Log.i(TAG, "onProgressUpdate(" + percent + "%)");
+		// ...
 	}
 
 	@Override
 	public void onCancelled()
 	{
-		if (DEBUG) Log.i(TAG, "onCancelled()");
-		Toast.makeText(this, "onCancelled", Toast.LENGTH_SHORT).show();
+		// ...
 	}
 
 	@Override
 	public void onPostExecute()
 	{
-		if (DEBUG) Log.i(TAG, "onPostExecute()");
-		Toast.makeText(this, "onPostExecute", Toast.LENGTH_SHORT).show();
+		// ...
 	}
 
 	/************************/
@@ -134,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	protected void onStart()
 	{
-		if (DEBUG) Log.i(TAG, "onStart()");
 		super.onStart();
 		
 		// Als verbinding, download xml
@@ -154,28 +143,24 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	protected void onResume()
 	{
-		if (DEBUG) Log.i(TAG, "onResume()");
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause()
 	{
-		if (DEBUG) Log.i(TAG, "onPause()");
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop()
 	{
-		if (DEBUG) Log.i(TAG, "onStop()");
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		if (DEBUG) Log.i(TAG, "onDestroy()");
 		super.onDestroy();
 	}
 }
