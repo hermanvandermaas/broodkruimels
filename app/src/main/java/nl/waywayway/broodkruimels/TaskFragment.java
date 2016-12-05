@@ -29,6 +29,7 @@ public class TaskFragment extends Fragment
 	private TaskCallbacks mCallbacks;
 	private DummyTask mTask;
 	private boolean mRunning;
+	private boolean mHasDownloaded;
 
 	/**
 	 * Hold a reference to the parent Activity so we can report the task's current
@@ -110,6 +111,12 @@ public class TaskFragment extends Fragment
 		return mRunning;
 	}
 
+	// Geeft weer of wel/niet xml is gedownload
+	public boolean hasDownloaded()
+	{
+		return mHasDownloaded;
+	}	
+	
 	/***************************/
 	/***** BACKGROUND TASK *****/
 	/***************************/

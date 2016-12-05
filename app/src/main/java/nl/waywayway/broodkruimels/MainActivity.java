@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		if ( isNetworkConnected() )
 		{
 			// Start asynchrone taak
-			if ( !mTaskFragment.isRunning() )
+			if ( !mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded() )
 				mTaskFragment.start();
 		} 
 		else
