@@ -17,20 +17,23 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 		// Maak toolbar
-		makeToolbar();		
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		ActionBar actionBar = getSupportActionBar();
 
-		// Start download en recyclerview
-		initialize();
+		// Als verbinding, download xml
+		// als geen verbinding, toon boodschap met knop probeer opnieuw
+		if (isNetworkConnected())
+		{
+			// downloadXml();
+		} 
+		else
+		{
+			// tryAgain();
+		}
+
     }
 
-	// Maak toolbar
-	public void makeToolbar()
-	{
-	Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-	setSupportActionBar(toolbar);
-	ActionBar actionBar = getSupportActionBar();
-	}
-	
 	// Maak options menu in toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -57,21 +60,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-	// Als verbinding, download xml
-	// als geen verbinding, toon boodschap met knop probeer opnieuw
-	private void initialize()
-	{
-		if (isNetworkConnected())
-		{
-			downloadXml();
-		} 
-		else
-		{
-			tryAgain();
-		}
-	}
-	
-	
 	// Netwerkverbinding ja/nee
 	private boolean isNetworkConnected()
 	{
@@ -81,23 +69,10 @@ public class MainActivity extends AppCompatActivity
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
-
-	// Download xml
-	private void downloadXml()
-	{
-
-	}
-
-	// Toon boodschap geen verbinding, knop voor opnieuw proberen
-	private void tryAgain()
-	{
-		
-	}
-	
 	private void showSnackbar()
 	{
-		Snackbar mSnackbar = (Snackbar) Snackbar.make( findViewById(R.id.coordinator), "Boem!", Snackbar.LENGTH_LONG );
+		Snackbar mSnackbar = (Snackbar) Snackbar.make(findViewById(R.id.coordinator), "Boem!", Snackbar.LENGTH_LONG);
 		mSnackbar.show();
 	}
-	
+
 }
