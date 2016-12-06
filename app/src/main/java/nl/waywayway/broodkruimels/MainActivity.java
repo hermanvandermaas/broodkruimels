@@ -7,11 +7,11 @@ import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
+import android.util.*;
 import android.view.*;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
-	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
 	private TaskFragment mTaskFragment;
 
@@ -19,13 +19,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 
 		// Maak toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
-		
+
 		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
 		mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
@@ -38,10 +38,27 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
 		
-		// Controle netwerkverbinding en
-		// download xml staan in methode onStart() onderaan
+		if (!isNetworkConnected())
+		{
+			View view = findViewById(R.id.notConnectedLinLayout);
+			view.setVisibility(View.VISIBLE);
+		}
     }
 
+	// Start download xml
+	private void downloadXml()
+	{
+		// Als verbinding, download xml
+		if (isNetworkConnected())
+		{
+			// Start asynchrone taak
+			if (!mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded())
+			{
+				mTaskFragment.start();
+			}
+		}
+	}
+	
 	// Maak options menu in toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -77,9 +94,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
-	private void showSnackbar()
+	private void showSnackbar(String snackMsg)
 	{
-		Snackbar mSnackbar = (Snackbar) Snackbar.make(findViewById(R.id.coordinator), "Boem!", Snackbar.LENGTH_LONG);
+		// if ( findViewById(R.id.coordinator) )
+		Snackbar mSnackbar = Snackbar.make(findViewById(R.id.coordinator), snackMsg, Snackbar.LENGTH_LONG);
 		mSnackbar.show();
 	}
 
@@ -115,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onPostExecute()
 	{
 		// ...
+		showSnackbar("boem!");
+		mTaskFragment.setHasDownloaded(true);
 	}
 
 	/************************/
@@ -125,19 +145,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onStart()
 	{
 		super.onStart();
-		
-		// Als verbinding, download xml
-		// als geen verbinding, toon boodschap met knop probeer opnieuw
-		if ( isNetworkConnected() )
-		{
-			// Start asynchrone taak
-			if ( !mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded() )
-				mTaskFragment.start();
-		} 
-		else
-		{
-			// TODO: probeer opnieuw
-		}
+		downloadXml();
 	}
 
 	@Override

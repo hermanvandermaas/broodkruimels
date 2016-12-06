@@ -12,8 +12,6 @@ import android.support.v4.app.Fragment;
  */
 public class TaskFragment extends Fragment
 {
-	private static final String TAG = TaskFragment.class.getSimpleName();
-
 	/**
 	 * Callback interface through which the fragment can report the task's
 	 * progress and results back to the Activity.
@@ -111,11 +109,17 @@ public class TaskFragment extends Fragment
 		return mRunning;
 	}
 
-	// Geeft weer of wel/niet xml is gedownload
+	// Getter wel/niet xml gedownload
 	public boolean hasDownloaded()
 	{
 		return mHasDownloaded;
 	}	
+
+	// Setter wel/niet xml gedownload
+	public void setHasDownloaded(boolean mHasDownloaded)
+	{
+		this.mHasDownloaded = mHasDownloaded;
+	}
 	
 	/***************************/
 	/***** BACKGROUND TASK *****/
