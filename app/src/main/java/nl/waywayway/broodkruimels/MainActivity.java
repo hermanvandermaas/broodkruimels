@@ -7,8 +7,10 @@ import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
-import android.util.*;
 import android.view.*;
+import android.widget.*;
+
+import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
@@ -26,6 +28,18 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 
+		// Klik knop probeer opnieuw:
+		// check verbinding, indien ok dan xml laden
+		Button button = (Button) findViewById(R.id.btnTryAgain);
+        button.setOnClickListener(new View.OnClickListener()
+		{
+			public void onClick(View v)
+			{
+				// Perform action on click
+				downloadXml();
+			}
+		});
+
 		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
 		mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
@@ -37,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
-		
+
 		if (!isNetworkConnected())
 		{
 			View view = findViewById(R.id.notConnectedLinLayout);
@@ -51,6 +65,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Als verbinding, download xml
 		if (isNetworkConnected())
 		{
+			// Als gestart door knop probeer opnieuw,
+			// verberg knop
+			View view = findViewById(R.id.notConnectedLinLayout);
+			view.setVisibility(View.GONE);
+			
 			// Start asynchrone taak
 			if (!mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded())
 			{
@@ -58,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			}
 		}
 	}
-	
+
 	// Maak options menu in toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
