@@ -148,7 +148,7 @@ public class TaskFragment extends Fragment
 		protected Void doInBackground(Void... ignore)
 		{
 			// De asynchrone taak
-			SystemClock.sleep(3000);
+			SystemClock.sleep(5000);
 
 			// Eind asynchrone taak
 			return null;

@@ -18,7 +18,17 @@
 			android:background="?attr/colorPrimary"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			app:popupTheme="@style/overflow_menu"
-			app:layout_scrollFlags="scroll|enterAlways"/>
+			app:layout_scrollFlags="scroll|enterAlways">
+
+			<ProgressBar
+				android:id="@+id/toolbar_progress_bar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:indeterminateTint="?attr/colorPrimary"
+				android:indeterminateTintMode="src_in"
+				android:layout_gravity="right"/>
+
+			</android.support.v7.widget.Toolbar>
 
 	</android.support.design.widget.AppBarLayout>
 
@@ -29,13 +39,13 @@
 		android:gravity="center"
 		android:orientation="vertical"
 		android:visibility="gone" >
-		
+
 		<TextView
 			android:id="@+id/txtTryAgain"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
 			android:text="@string/txt_try_again" />
-			
+
 		<Button
 			android:id="@+id/btnTryAgain"
 			android:layout_width="wrap_content"
