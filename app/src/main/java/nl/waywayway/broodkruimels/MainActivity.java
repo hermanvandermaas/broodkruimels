@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// check verbinding, indien ok dan xml laden
 		Button button = (Button) findViewById(R.id.btnTryAgain);
         button.setOnClickListener(new View.OnClickListener()
-		{
-			public void onClick(View v)
 			{
-				// Perform action on click
-				downloadXml();
-			}
-		});
+				public void onClick(View v)
+				{
+					// Perform action on click
+					downloadXml();
+				}
+			});
 
 		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			// Als gestart door knop probeer opnieuw,
 			// verberg knop
-			View view = findViewById(R.id.notConnectedLinLayout);
-			view.setVisibility(View.GONE);
-			
+			View mNotConnectedLayout = findViewById(R.id.notConnectedLinLayout);
+			mNotConnectedLayout.setVisibility(View.GONE);
+
 			// Start asynchrone taak
 			if (!mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded())
 			{
@@ -133,7 +133,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPreExecute()
 	{
-		// ...
+		// Progressbar tonen
+		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+		mProgressbar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -151,7 +153,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPostExecute()
 	{
-		// ...
+		// Progressbar verbergen
+		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+		mProgressbar.setVisibility(View.GONE);
+		
 		showSnackbar("boem!");
 		mTaskFragment.setHasDownloaded(true);
 	}
@@ -164,6 +169,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onStart()
 	{
 		super.onStart();
+		
+		if (mTaskFragment.isRunning() )
+		{
+			// Progressbar tonen als downloadproces nog loopt
+			// na configuratie verandering
+			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+			mProgressbar.setVisibility(View.VISIBLE);
+		}
+		
 		downloadXml();
 	}
 
