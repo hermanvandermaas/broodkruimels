@@ -51,11 +51,21 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
+		
+		// Als geen verbinding, toon knop
+		// probeer opnieuw en eventuele cancel download
+		// en zet hasDownloaded flag op false
 
 		if (!isNetworkConnected())
-		{
+		{	
 			View view = findViewById(R.id.notConnectedLinLayout);
 			view.setVisibility(View.VISIBLE);
+			
+			if ( mTaskFragment.isRunning() )
+			{
+				mTaskFragment.cancel();
+				mTaskFragment.setHasDownloaded(false);
+			}
 		}
     }
 
@@ -185,6 +195,17 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onResume()
 	{
 		super.onResume();
+		
+		if (mTaskFragment.isRunning() )
+		{
+			// Progressbar tonen als downloadproces nog loopt
+			// na configuratie verandering
+			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+			mProgressbar.setVisibility(View.VISIBLE);
+		}
+		
+		mTaskFragment.setHasDownloaded(false);
+		downloadXml();
 	}
 
 	@Override
