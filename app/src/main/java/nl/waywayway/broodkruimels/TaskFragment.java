@@ -3,6 +3,9 @@ package nl.waywayway.broodkruimels;
 import android.app.*;
 import android.os.*;
 import android.support.v4.app.*;
+import android.util.*;
+import com.squareup.okhttp.*;
+import java.io.*;
 
 import android.support.v4.app.Fragment;
 
@@ -21,13 +24,17 @@ public class TaskFragment extends Fragment
 		void onPreExecute();
 		void onProgressUpdate(int percent);
 		void onCancelled();
-		void onPostExecute();
+		void onPostExecute(String mResult);
 	}
 
 	private TaskCallbacks mCallbacks;
 	private DummyTask mTask;
 	private boolean mRunning;
 	private boolean mHasDownloaded;
+	private OkHttpClient mClient;
+	private String mUrl;
+	private Request mRequest;
+	private Response mResponse;
 
 	/**
 	 * Hold a reference to the parent Activity so we can report the task's current
@@ -120,7 +127,7 @@ public class TaskFragment extends Fragment
 	{
 		this.mHasDownloaded = mHasDownloaded;
 	}
-	
+
 	/***************************/
 	/***** BACKGROUND TASK *****/
 	/***************************/
@@ -129,7 +136,7 @@ public class TaskFragment extends Fragment
 	 * A dummy task that performs some (dumb) background work and proxies progress
 	 * updates and results back to the Activity.
 	 */
-	private class DummyTask extends AsyncTask<Void, Integer, Void>
+	private class DummyTask extends AsyncTask<Void, Integer, String>
 	{
 
 		@Override
@@ -145,13 +152,37 @@ public class TaskFragment extends Fragment
 		 * background thread, as this could result in a race condition.
 		 */
 		@Override
-		protected Void doInBackground(Void... ignore)
+		protected String doInBackground(Void... ignore)
 		{
 			// De asynchrone taak
-			SystemClock.sleep(5000);
+			// SystemClock.sleep(5000);
+			OkHttpClient mClient = new OkHttpClient();
+
+			// https://waywayway.nl/bk/?s=0&n=1
+			String mUrl = "https://waywayway.nl/bk/?s=0&n=1";
+			Request mRequest = new Request.Builder()
+				.url(mUrl)
+				.build();
+
+			try
+			{
+				Response mResponse = mClient.newCall(mRequest).execute();
+
+				if (!mResponse.isSuccessful())
+				{
+					throw new IOException("Unexpected code " + mResponse);
+				}
+				
+				return mResponse.body().string();
+			}
+			catch (IOException e)
+			{
+				// TODO: catch exception
+			}
+
 
 			// Eind asynchrone taak
-			return null;
+			return "Fout!";
 		}
 
 		@Override
@@ -170,10 +201,10 @@ public class TaskFragment extends Fragment
 		}
 
 		@Override
-		protected void onPostExecute(Void ignore)
+		protected void onPostExecute(String mResult)
 		{
 			// Proxy the call to the Activity.
-			mCallbacks.onPostExecute();
+			mCallbacks.onPostExecute(mResult);
 			mRunning = false;
 		}
 	}

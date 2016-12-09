@@ -7,6 +7,7 @@ import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
+import android.util.*;
 import android.view.*;
 import android.widget.*;
 
@@ -161,13 +162,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	}
 
 	@Override
-	public void onPostExecute()
+	public void onPostExecute(String mResult)
 	{
 		// Progressbar verbergen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.GONE);
 		
 		showSnackbar("boem!");
+		Log.i( "HermLog", mResult );
+
 		mTaskFragment.setHasDownloaded(true);
 	}
 
@@ -195,17 +198,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onResume()
 	{
 		super.onResume();
-		
-		if (mTaskFragment.isRunning() )
-		{
-			// Progressbar tonen als downloadproces nog loopt
-			// na configuratie verandering
-			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
-			mProgressbar.setVisibility(View.VISIBLE);
-		}
-		
-		mTaskFragment.setHasDownloaded(false);
-		downloadXml();
 	}
 
 	@Override
