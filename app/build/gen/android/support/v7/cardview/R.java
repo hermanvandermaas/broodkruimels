@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package nl.waywayway.broodkruimels;
+package android.support.v7.cardview;
 
 public final class R {
     public static final class anim {

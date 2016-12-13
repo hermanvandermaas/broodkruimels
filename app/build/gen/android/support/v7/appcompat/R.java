@@ -437,6 +437,61 @@ containing a value of this type.
 </table>
          */
         public static final int buttonTintMode=0x7f0100f5;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cardBackgroundColor=0x7f010137;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cardCornerRadius=0x7f010138;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cardElevation=0x7f010139;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cardMaxElevation=0x7f01013a;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cardPreventCornerOverlap=0x7f01013c;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int cardUseCompatPadding=0x7f01013b;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -642,6 +697,56 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int contentInsetStartWithNavigation=0x7f010070;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int contentPadding=0x7f01013d;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int contentPaddingBottom=0x7f010141;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int contentPaddingLeft=0x7f01013e;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int contentPaddingRight=0x7f01013f;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int contentPaddingTop=0x7f010140;
         /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -2276,29 +2381,29 @@ containing a value of this type.
         public static final int abc_config_showMenuShortcutsWhenKeyboardPresent=0x7f0c0004;
     }
     public static final class color {
-        public static final int abc_background_cache_hint_selector_material_dark=0x7f0a0049;
-        public static final int abc_background_cache_hint_selector_material_light=0x7f0a004a;
-        public static final int abc_btn_colored_borderless_text_material=0x7f0a004b;
-        public static final int abc_color_highlight_material=0x7f0a004c;
+        public static final int abc_background_cache_hint_selector_material_dark=0x7f0a004d;
+        public static final int abc_background_cache_hint_selector_material_light=0x7f0a004e;
+        public static final int abc_btn_colored_borderless_text_material=0x7f0a004f;
+        public static final int abc_color_highlight_material=0x7f0a0050;
         public static final int abc_input_method_navigation_guard=0x7f0a000a;
-        public static final int abc_primary_text_disable_only_material_dark=0x7f0a004d;
-        public static final int abc_primary_text_disable_only_material_light=0x7f0a004e;
-        public static final int abc_primary_text_material_dark=0x7f0a004f;
-        public static final int abc_primary_text_material_light=0x7f0a0050;
-        public static final int abc_search_url_text=0x7f0a0051;
+        public static final int abc_primary_text_disable_only_material_dark=0x7f0a0051;
+        public static final int abc_primary_text_disable_only_material_light=0x7f0a0052;
+        public static final int abc_primary_text_material_dark=0x7f0a0053;
+        public static final int abc_primary_text_material_light=0x7f0a0054;
+        public static final int abc_search_url_text=0x7f0a0055;
         public static final int abc_search_url_text_normal=0x7f0a000b;
         public static final int abc_search_url_text_pressed=0x7f0a000c;
         public static final int abc_search_url_text_selected=0x7f0a000d;
-        public static final int abc_secondary_text_material_dark=0x7f0a0052;
-        public static final int abc_secondary_text_material_light=0x7f0a0053;
-        public static final int abc_tint_btn_checkable=0x7f0a0054;
-        public static final int abc_tint_default=0x7f0a0055;
-        public static final int abc_tint_edittext=0x7f0a0056;
-        public static final int abc_tint_seek_thumb=0x7f0a0057;
-        public static final int abc_tint_spinner=0x7f0a0058;
-        public static final int abc_tint_switch_thumb=0x7f0a0059;
-        public static final int abc_tint_switch_track=0x7f0a005a;
-        public static final int accent=0x7f0a0046;
+        public static final int abc_secondary_text_material_dark=0x7f0a0056;
+        public static final int abc_secondary_text_material_light=0x7f0a0057;
+        public static final int abc_tint_btn_checkable=0x7f0a0058;
+        public static final int abc_tint_default=0x7f0a0059;
+        public static final int abc_tint_edittext=0x7f0a005a;
+        public static final int abc_tint_seek_thumb=0x7f0a005b;
+        public static final int abc_tint_spinner=0x7f0a005c;
+        public static final int abc_tint_switch_thumb=0x7f0a005d;
+        public static final int abc_tint_switch_track=0x7f0a005e;
+        public static final int accent=0x7f0a004a;
         public static final int accent_material_dark=0x7f0a000e;
         public static final int accent_material_light=0x7f0a000f;
         public static final int background_floating_material_dark=0x7f0a0010;
@@ -2313,7 +2418,11 @@ containing a value of this type.
         public static final int bright_foreground_material_light=0x7f0a0019;
         public static final int button_material_dark=0x7f0a001a;
         public static final int button_material_light=0x7f0a001b;
-        public static final int design_error=0x7f0a005b;
+        public static final int cardview_dark_background=0x7f0a0044;
+        public static final int cardview_light_background=0x7f0a0045;
+        public static final int cardview_shadow_end_color=0x7f0a0046;
+        public static final int cardview_shadow_start_color=0x7f0a0047;
+        public static final int design_error=0x7f0a005f;
         public static final int design_fab_shadow_end_color=0x7f0a0000;
         public static final int design_fab_shadow_mid_color=0x7f0a0001;
         public static final int design_fab_shadow_start_color=0x7f0a0002;
@@ -2324,7 +2433,7 @@ containing a value of this type.
         public static final int design_snackbar_background_color=0x7f0a0007;
         public static final int design_textinput_error_color_dark=0x7f0a0008;
         public static final int design_textinput_error_color_light=0x7f0a0009;
-        public static final int design_tint_password_toggle=0x7f0a005c;
+        public static final int design_tint_password_toggle=0x7f0a0060;
         public static final int dim_foreground_disabled_material_dark=0x7f0a001c;
         public static final int dim_foreground_disabled_material_light=0x7f0a001d;
         public static final int dim_foreground_material_dark=0x7f0a001e;
@@ -2347,10 +2456,10 @@ containing a value of this type.
         public static final int material_grey_800=0x7f0a002f;
         public static final int material_grey_850=0x7f0a0030;
         public static final int material_grey_900=0x7f0a0031;
-        public static final int overflow_background=0x7f0a0047;
-        public static final int overflow_text=0x7f0a0048;
-        public static final int primary=0x7f0a0044;
-        public static final int primary_dark=0x7f0a0045;
+        public static final int overflow_background=0x7f0a004b;
+        public static final int overflow_text=0x7f0a004c;
+        public static final int primary=0x7f0a0048;
+        public static final int primary_dark=0x7f0a0049;
         public static final int primary_dark_material_dark=0x7f0a0032;
         public static final int primary_dark_material_light=0x7f0a0033;
         public static final int primary_material_dark=0x7f0a0034;
@@ -2367,8 +2476,8 @@ containing a value of this type.
         public static final int secondary_text_disabled_material_light=0x7f0a003f;
         public static final int switch_thumb_disabled_material_dark=0x7f0a0040;
         public static final int switch_thumb_disabled_material_light=0x7f0a0041;
-        public static final int switch_thumb_material_dark=0x7f0a005d;
-        public static final int switch_thumb_material_light=0x7f0a005e;
+        public static final int switch_thumb_material_dark=0x7f0a0061;
+        public static final int switch_thumb_material_light=0x7f0a0062;
         public static final int switch_thumb_normal_material_dark=0x7f0a0042;
         public static final int switch_thumb_normal_material_light=0x7f0a0043;
     }
@@ -2445,6 +2554,9 @@ containing a value of this type.
         public static final int abc_text_size_subtitle_material_toolbar=0x7f060029;
         public static final int abc_text_size_title_material=0x7f06006d;
         public static final int abc_text_size_title_material_toolbar=0x7f06002a;
+        public static final int cardview_compat_inset_shadow=0x7f060076;
+        public static final int cardview_default_elevation=0x7f060077;
+        public static final int cardview_default_radius=0x7f060078;
         public static final int design_appbar_elevation=0x7f06000b;
         public static final int design_bottom_navigation_active_item_max_width=0x7f06000c;
         public static final int design_bottom_navigation_active_text_size=0x7f06000d;
@@ -2583,10 +2695,11 @@ containing a value of this type.
         public static final int ic_menu=0x7f020057;
         public static final int icon=0x7f020058;
         public static final int navigation_empty_icon=0x7f020059;
-        public static final int notification_template_icon_bg=0x7f02005a;
+        public static final int notification_template_icon_bg=0x7f02005b;
+        public static final int placeholder=0x7f02005a;
     }
     public static final class id {
-        public static final int action0=0x7f07007d;
+        public static final int action0=0x7f07007f;
         public static final int action_bar=0x7f07005e;
         public static final int action_bar_activity_content=0x7f070002;
         public static final int action_bar_container=0x7f07005d;
@@ -2595,13 +2708,13 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f07003e;
         public static final int action_bar_title=0x7f07003d;
         public static final int action_context_bar=0x7f07005f;
-        public static final int action_divider=0x7f070081;
+        public static final int action_divider=0x7f070083;
         public static final int action_menu_divider=0x7f070004;
         public static final int action_menu_presenter=0x7f070005;
         public static final int action_mode_bar=0x7f07005b;
         public static final int action_mode_bar_stub=0x7f07005a;
         public static final int action_mode_close_button=0x7f07003f;
-        public static final int action_settings=0x7f07008a;
+        public static final int action_settings=0x7f07008c;
         public static final int activity_chooser_view_content=0x7f070040;
         public static final int add=0x7f070034;
         public static final int alertTitle=0x7f07004c;
@@ -2612,12 +2725,12 @@ containing a value of this type.
         public static final int bottom=0x7f070011;
         public static final int btnTryAgain=0x7f070072;
         public static final int buttonPanel=0x7f070047;
-        public static final int cancel_action=0x7f07007e;
+        public static final int cancel_action=0x7f070080;
         public static final int center=0x7f070012;
         public static final int center_horizontal=0x7f070013;
         public static final int center_vertical=0x7f070014;
         public static final int checkbox=0x7f070055;
-        public static final int chronometer=0x7f070084;
+        public static final int chronometer=0x7f070086;
         public static final int clip_horizontal=0x7f07001e;
         public static final int clip_vertical=0x7f07001f;
         public static final int collapseActionView=0x7f070039;
@@ -2627,15 +2740,15 @@ containing a value of this type.
         public static final int customPanel=0x7f070052;
         public static final int decor_content_parent=0x7f07005c;
         public static final int default_activity_button=0x7f070043;
-        public static final int design_bottom_sheet=0x7f070074;
-        public static final int design_menu_item_action_area=0x7f07007b;
-        public static final int design_menu_item_action_area_stub=0x7f07007a;
-        public static final int design_menu_item_text=0x7f070079;
-        public static final int design_navigation_view=0x7f070078;
+        public static final int design_bottom_sheet=0x7f070075;
+        public static final int design_menu_item_action_area=0x7f07007c;
+        public static final int design_menu_item_action_area_stub=0x7f07007b;
+        public static final int design_menu_item_text=0x7f07007a;
+        public static final int design_navigation_view=0x7f070079;
         public static final int disableHome=0x7f07002e;
         public static final int edit_query=0x7f070060;
         public static final int end=0x7f070015;
-        public static final int end_padder=0x7f070089;
+        public static final int end_padder=0x7f07008b;
         public static final int enterAlways=0x7f07000b;
         public static final int enterAlwaysCollapsed=0x7f07000c;
         public static final int exitUntilCollapsed=0x7f07000d;
@@ -2650,18 +2763,18 @@ containing a value of this type.
         public static final int icon=0x7f070045;
         public static final int ifRoom=0x7f07003a;
         public static final int image=0x7f070042;
-        public static final int info=0x7f070088;
+        public static final int info=0x7f07008a;
         public static final int item_touch_helper_previous_elevation=0x7f070000;
         public static final int left=0x7f070017;
-        public static final int line1=0x7f070082;
-        public static final int line3=0x7f070086;
+        public static final int line1=0x7f070084;
+        public static final int line3=0x7f070088;
         public static final int listMode=0x7f07002c;
         public static final int list_item=0x7f070044;
-        public static final int media_actions=0x7f070080;
+        public static final int media_actions=0x7f070082;
         public static final int middle=0x7f070037;
         public static final int mini=0x7f070023;
         public static final int multiply=0x7f070027;
-        public static final int navigation_header_container=0x7f070077;
+        public static final int navigation_header_container=0x7f070078;
         public static final int never=0x7f07003b;
         public static final int none=0x7f07001b;
         public static final int normal=0x7f070024;
@@ -2672,6 +2785,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f070007;
         public static final int progress_horizontal=0x7f070008;
         public static final int radio=0x7f070057;
+        public static final int recyclerview=0x7f070073;
         public static final int right=0x7f070018;
         public static final int screen=0x7f070028;
         public static final int scroll=0x7f07000e;
@@ -2694,8 +2808,8 @@ containing a value of this type.
         public static final int showCustom=0x7f070030;
         public static final int showHome=0x7f070031;
         public static final int showTitle=0x7f070032;
-        public static final int snackbar_action=0x7f070076;
-        public static final int snackbar_text=0x7f070075;
+        public static final int snackbar_action=0x7f070077;
+        public static final int snackbar_text=0x7f070076;
         public static final int snap=0x7f07000f;
         public static final int spacer=0x7f070048;
         public static final int split_action_bar=0x7f070009;
@@ -2703,22 +2817,23 @@ containing a value of this type.
         public static final int src_in=0x7f07002a;
         public static final int src_over=0x7f07002b;
         public static final int start=0x7f070019;
-        public static final int status_bar_latest_event_content=0x7f07007f;
+        public static final int status_bar_latest_event_content=0x7f070081;
         public static final int submenuarrow=0x7f070058;
         public static final int submit_area=0x7f070069;
         public static final int tabMode=0x7f07002d;
-        public static final int text=0x7f070087;
-        public static final int text2=0x7f070085;
+        public static final int text=0x7f070089;
+        public static final int text2=0x7f070087;
         public static final int textSpacerNoButtons=0x7f070050;
-        public static final int text_input_password_toggle=0x7f07007c;
-        public static final int time=0x7f070083;
+        public static final int text_input_password_toggle=0x7f07007d;
+        public static final int thumbnail=0x7f07007e;
+        public static final int time=0x7f070085;
         public static final int title=0x7f070046;
         public static final int title_template=0x7f07004b;
         public static final int toolbar=0x7f07006e;
         public static final int toolbar_progress_bar=0x7f07006f;
         public static final int top=0x7f07001a;
         public static final int topPanel=0x7f07004a;
-        public static final int touch_outside=0x7f070073;
+        public static final int touch_outside=0x7f070074;
         public static final int txtTryAgain=0x7f070071;
         public static final int up=0x7f07000a;
         public static final int useLogo=0x7f070033;
@@ -2776,18 +2891,19 @@ containing a value of this type.
         public static final int design_navigation_menu=0x7f040025;
         public static final int design_navigation_menu_item=0x7f040026;
         public static final int design_text_input_password_icon=0x7f040027;
-        public static final int notification_media_action=0x7f040028;
-        public static final int notification_media_cancel_action=0x7f040029;
-        public static final int notification_template_big_media=0x7f04002a;
-        public static final int notification_template_big_media_narrow=0x7f04002b;
-        public static final int notification_template_lines=0x7f04002c;
-        public static final int notification_template_media=0x7f04002d;
-        public static final int notification_template_part_chronometer=0x7f04002e;
-        public static final int notification_template_part_time=0x7f04002f;
-        public static final int select_dialog_item_material=0x7f040030;
-        public static final int select_dialog_multichoice_material=0x7f040031;
-        public static final int select_dialog_singlechoice_material=0x7f040032;
-        public static final int support_simple_spinner_dropdown_item=0x7f040033;
+        public static final int list_row=0x7f040028;
+        public static final int notification_media_action=0x7f040029;
+        public static final int notification_media_cancel_action=0x7f04002a;
+        public static final int notification_template_big_media=0x7f04002b;
+        public static final int notification_template_big_media_narrow=0x7f04002c;
+        public static final int notification_template_lines=0x7f04002d;
+        public static final int notification_template_media=0x7f04002e;
+        public static final int notification_template_part_chronometer=0x7f04002f;
+        public static final int notification_template_part_time=0x7f040030;
+        public static final int select_dialog_item_material=0x7f040031;
+        public static final int select_dialog_multichoice_material=0x7f040032;
+        public static final int select_dialog_singlechoice_material=0x7f040033;
+        public static final int support_simple_spinner_dropdown_item=0x7f040034;
     }
     public static final class menu {
         public static final int menu_main=0x7f0d0000;
@@ -2843,11 +2959,12 @@ containing a value of this type.
         public static final int Animation_AppCompat_Dialog=0x7f0800a6;
         public static final int Animation_AppCompat_DropDownUp=0x7f0800a7;
         public static final int Animation_Design_BottomSheetDialog=0x7f080002;
-        public static final int AppTheme=0x7f080165;
+        public static final int AppTheme=0x7f080169;
         public static final int Base_AlertDialog_AppCompat=0x7f0800a8;
         public static final int Base_AlertDialog_AppCompat_Light=0x7f0800a9;
         public static final int Base_Animation_AppCompat_Dialog=0x7f0800aa;
         public static final int Base_Animation_AppCompat_DropDownUp=0x7f0800ab;
+        public static final int Base_CardView=0x7f080166;
         public static final int Base_DialogWindowTitle_AppCompat=0x7f0800ac;
         public static final int Base_DialogWindowTitleBackground_AppCompat=0x7f0800ad;
         public static final int Base_TextAppearance_AppCompat=0x7f080052;
@@ -2996,6 +3113,9 @@ containing a value of this type.
         public static final int Base_Widget_AppCompat_Toolbar_Button_Navigation=0x7f080097;
         public static final int Base_Widget_Design_AppBarLayout=0x7f080003;
         public static final int Base_Widget_Design_TabLayout=0x7f080004;
+        public static final int CardView=0x7f080165;
+        public static final int CardView_Dark=0x7f080167;
+        public static final int CardView_Light=0x7f080168;
         public static final int Platform_AppCompat=0x7f080033;
         public static final int Platform_AppCompat_Light=0x7f080034;
         public static final int Platform_ThemeOverlay_AppCompat=0x7f080098;
@@ -3201,7 +3321,7 @@ containing a value of this type.
 		<item name="android:textColor">@color/overflow_text</item>
 		
          */
-        public static final int overflow_menu=0x7f080166;
+        public static final int overflow_menu=0x7f08016a;
     }
     public static final class styleable {
         /** Attributes that can be used with a ActionBar.
@@ -5959,6 +6079,229 @@ containing a value of this type.
           @attr name nl.waywayway.broodkruimels:allowStacking
         */
         public static final int ButtonBarLayout_allowStacking = 0;
+        /** Attributes that can be used with a CardView.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #CardView_android_minHeight android:minHeight}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_android_minWidth android:minWidth}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_cardBackgroundColor nl.waywayway.broodkruimels:cardBackgroundColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_cardCornerRadius nl.waywayway.broodkruimels:cardCornerRadius}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_cardElevation nl.waywayway.broodkruimels:cardElevation}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_cardMaxElevation nl.waywayway.broodkruimels:cardMaxElevation}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_cardPreventCornerOverlap nl.waywayway.broodkruimels:cardPreventCornerOverlap}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_cardUseCompatPadding nl.waywayway.broodkruimels:cardUseCompatPadding}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_contentPadding nl.waywayway.broodkruimels:contentPadding}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_contentPaddingBottom nl.waywayway.broodkruimels:contentPaddingBottom}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_contentPaddingLeft nl.waywayway.broodkruimels:contentPaddingLeft}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_contentPaddingRight nl.waywayway.broodkruimels:contentPaddingRight}</code></td><td></td></tr>
+           <tr><td><code>{@link #CardView_contentPaddingTop nl.waywayway.broodkruimels:contentPaddingTop}</code></td><td></td></tr>
+           </table>
+           @see #CardView_android_minHeight
+           @see #CardView_android_minWidth
+           @see #CardView_cardBackgroundColor
+           @see #CardView_cardCornerRadius
+           @see #CardView_cardElevation
+           @see #CardView_cardMaxElevation
+           @see #CardView_cardPreventCornerOverlap
+           @see #CardView_cardUseCompatPadding
+           @see #CardView_contentPadding
+           @see #CardView_contentPaddingBottom
+           @see #CardView_contentPaddingLeft
+           @see #CardView_contentPaddingRight
+           @see #CardView_contentPaddingTop
+         */
+        public static final int[] CardView = {
+            0x0101013f, 0x01010140, 0x7f010137, 0x7f010138,
+            0x7f010139, 0x7f01013a, 0x7f01013b, 0x7f01013c,
+            0x7f01013d, 0x7f01013e, 0x7f01013f, 0x7f010140,
+            0x7f010141
+        };
+        /**
+          <p>This symbol is the offset where the {@link android.R.attr#minHeight}
+          attribute's value can be found in the {@link #CardView} array.
+          @attr name android:minHeight
+        */
+        public static final int CardView_android_minHeight = 1;
+        /**
+          <p>This symbol is the offset where the {@link android.R.attr#minWidth}
+          attribute's value can be found in the {@link #CardView} array.
+          @attr name android:minWidth
+        */
+        public static final int CardView_android_minWidth = 0;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#cardBackgroundColor}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:cardBackgroundColor
+        */
+        public static final int CardView_cardBackgroundColor = 2;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#cardCornerRadius}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:cardCornerRadius
+        */
+        public static final int CardView_cardCornerRadius = 3;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#cardElevation}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:cardElevation
+        */
+        public static final int CardView_cardElevation = 4;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#cardMaxElevation}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:cardMaxElevation
+        */
+        public static final int CardView_cardMaxElevation = 5;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#cardPreventCornerOverlap}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:cardPreventCornerOverlap
+        */
+        public static final int CardView_cardPreventCornerOverlap = 7;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#cardUseCompatPadding}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:cardUseCompatPadding
+        */
+        public static final int CardView_cardUseCompatPadding = 6;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#contentPadding}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:contentPadding
+        */
+        public static final int CardView_contentPadding = 8;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#contentPaddingBottom}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:contentPaddingBottom
+        */
+        public static final int CardView_contentPaddingBottom = 12;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#contentPaddingLeft}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:contentPaddingLeft
+        */
+        public static final int CardView_contentPaddingLeft = 9;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#contentPaddingRight}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:contentPaddingRight
+        */
+        public static final int CardView_contentPaddingRight = 10;
+        /**
+          <p>This symbol is the offset where the {@link nl.waywayway.broodkruimels.R.attr#contentPaddingTop}
+          attribute's value can be found in the {@link #CardView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.waywayway.broodkruimels:contentPaddingTop
+        */
+        public static final int CardView_contentPaddingTop = 11;
         /** Attributes that can be used with a CollapsingToolbarLayout.
            <p>Includes the following attributes:</p>
            <table>
