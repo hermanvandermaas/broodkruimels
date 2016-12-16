@@ -10,13 +10,19 @@ import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+import java.util.*;
+import org.json.*;
 
 import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
+	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
+    private List<FeedItem> feedsList;
+    private RecyclerView mRecyclerView;
+    private MyRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		ActionBar actionBar = getSupportActionBar();
 
 		// Klik knop probeer opnieuw:
-		// check verbinding, indien ok dan xml laden
+		// check verbinding, indien ok dan json laden
 		Button button = (Button) findViewById(R.id.btnTryAgain);
         button.setOnClickListener(new View.OnClickListener()
 			{
@@ -52,7 +58,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
-		
+
+		// Vind recyclerview en koppel layoutmanager
+		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 		// Als geen verbinding, toon knop
 		// probeer opnieuw en eventuele cancel download
 		// en zet hasDownloaded flag op false
@@ -61,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{	
 			View view = findViewById(R.id.notConnectedLinLayout);
 			view.setVisibility(View.VISIBLE);
-			
-			if ( mTaskFragment.isRunning() )
+
+			if (mTaskFragment.isRunning())
 			{
 				mTaskFragment.cancel();
 				mTaskFragment.setHasDownloaded(false);
@@ -70,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
     }
 
-	// Start download xml
+	// Start download json
 	private void downloadXml()
 	{
-		// Als verbinding, download xml
+		// Als verbinding, download json
 		if (isNetworkConnected())
 		{
 			// Als gestart door knop probeer opnieuw,
@@ -88,6 +98,64 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			}
 		}
 	}
+
+	// Zet json string per item in List<E>
+	private void parseResult(String result)
+	{
+        try
+		{
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("data");
+            feedsList = new ArrayList<>();
+
+            for (int i = 0; i < posts.length(); i++)
+			{
+                JSONObject post = posts.optJSONObject(i);
+                FeedItem item = new FeedItem();
+				
+				/*
+				Json:
+				 "title"
+				 "pubDate"
+				 "creator"
+				 "content"
+				 "mediacontent"
+				 "mediawidth"
+				 "mediaheight"
+				 "mediamedium"
+				 "mediatype"
+				
+				FeedItem:
+				 private String title;
+				 private String pubdate;
+				 private String creator;
+				 private String content;
+				 private String mediacontent;
+				 private int mediawidth;
+				 private int mediaheight;
+				 private String mediamedium;
+				 private String mediatype;
+				*/
+				
+				
+                item.setTitle(post.optString("title"));
+                item.setPubdate(post.optString("pubDate"));
+				item.setCreator(post.optString("creator"));
+				item.setContent(post.optString("content"));
+                item.setMediacontent(post.optString("mediacontent"));
+				item.setMediawidth(post.optInt("mediawidth"));
+				item.setMediaheight(post.optInt("mediaheight"));
+                item.setMediamedium(post.optString("mediamedium"));
+                item.setMediatype(post.optString("mediatype"));
+                feedsList.add(item);
+            }
+        }
+		catch (JSONException e)
+		{
+            e.printStackTrace();
+        }
+    }
+
 
 	// Maak options menu in toolbar
     @Override
@@ -168,10 +236,32 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.GONE);
 		
-		showSnackbar("boem!");
-		Log.i( "HermLog", mResult );
+		// List met xml maken, als gegevens aanwezig:
+		// zet gedownload op ja
+		parseResult(mResult);
+		int responseSize = feedsList.size();
+		
+		if (responseSize > 0)
+		{
+			showSnackbar("boem!");
+			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize) );
+			mTaskFragment.setHasDownloaded(true);
 
-		mTaskFragment.setHasDownloaded(true);
+			// Verbind adapter met recyclerview
+			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
+			mRecyclerView.setAdapter(adapter);
+
+			// Actie bij klik op item
+			adapter.setOnItemClickListener(new OnItemClickListener()
+				{
+					@Override
+					public void onItemClick(FeedItem item)
+					{
+						Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+					}
+				});
+			
+		}
 	}
 
 	/************************/
@@ -182,15 +272,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onStart()
 	{
 		super.onStart();
-		
-		if (mTaskFragment.isRunning() )
+
+		if (mTaskFragment.isRunning())
 		{
 			// Progressbar tonen als downloadproces nog loopt
 			// na configuratie verandering
 			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 			mProgressbar.setVisibility(View.VISIBLE);
 		}
-		
+
 		downloadXml();
 	}
 
