@@ -27,12 +27,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     @Override
-    public void onBindViewHolder(CustomViewHolder customViewHolder, int i) {
+    public void onBindViewHolder(CustomViewHolder customViewHolder, int i)
+	{
         final FeedItem feedItem = feedItemList.get(i);
 
         //Download image using picasso library
-        if (!TextUtils.isEmpty(feedItem.getThumbnail())) {
-            Picasso.with(mContext).load(feedItem.getThumbnail())
+        if (!TextUtils.isEmpty( feedItem.getMediacontent() ))
+		{
+            Picasso.with(mContext).load( feedItem.getMediacontent() )
                     .error(R.drawable.placeholder)
                     .placeholder(R.drawable.placeholder)
                     .into(customViewHolder.imageView);

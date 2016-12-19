@@ -112,32 +112,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
                 JSONObject post = posts.optJSONObject(i);
                 FeedItem item = new FeedItem();
-				
-				/*
-				Json:
-				 "title"
-				 "pubDate"
-				 "creator"
-				 "content"
-				 "mediacontent"
-				 "mediawidth"
-				 "mediaheight"
-				 "mediamedium"
-				 "mediatype"
-				
-				FeedItem:
-				 private String title;
-				 private String pubdate;
-				 private String creator;
-				 private String content;
-				 private String mediacontent;
-				 private int mediawidth;
-				 private int mediaheight;
-				 private String mediamedium;
-				 private String mediatype;
-				*/
-				
-				
+								
                 item.setTitle(post.optString("title"));
                 item.setPubdate(post.optString("pubDate"));
 				item.setCreator(post.optString("creator"));

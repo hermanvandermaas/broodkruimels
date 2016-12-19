@@ -159,7 +159,7 @@ public class TaskFragment extends Fragment
 			OkHttpClient mClient = new OkHttpClient();
 
 			// https://waywayway.nl/bk/?s=0&n=1
-			String mUrl = "https://waywayway.nl/bk/?s=0&n=1";
+			String mUrl = "https://waywayway.nl/bk/?s=0&n=20";
 			Request mRequest = new Request.Builder()
 				.url(mUrl)
 				.build();
