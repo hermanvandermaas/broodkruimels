@@ -68,17 +68,23 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// en zet hasDownloaded flag op false
 
 		if (!isNetworkConnected())
-		{	
-			View view = findViewById(R.id.notConnectedLinLayout);
-			view.setVisibility(View.VISIBLE);
-
-			if (mTaskFragment.isRunning())
-			{
-				mTaskFragment.cancel();
-				mTaskFragment.setHasDownloaded(false);
-			}
-		}
+			tryAgain();
     }
+
+	// Toon boodschap kon data niet downloaden,
+	// toon knop probeer opnieuw
+	private void tryAgain()
+	{	
+		View view = findViewById(R.id.notConnectedLinLayout);
+		view.setVisibility(View.VISIBLE);
+
+		if (mTaskFragment.isRunning())
+		{
+			mTaskFragment.cancel();
+		}
+		
+		mTaskFragment.setHasDownloaded(false);
+	}
 
 	// Start download json
 	private void downloadXml()

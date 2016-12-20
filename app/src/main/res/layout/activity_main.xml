@@ -45,7 +45,7 @@
 			android:id="@+id/txtTryAgain"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
-			android:text="@string/txt_try_again" />
+			android:text="@string/txt_try_again_nointernet" />
 
 		<Button
 			android:id="@+id/btnTryAgain"

@@ -2947,11 +2947,12 @@ containing a value of this type.
         public static final int app_name=0x7f0b0024;
         public static final int appbar_scrolling_view_behavior=0x7f0b0000;
         public static final int bottom_sheet_behavior=0x7f0b0001;
-        public static final int btn_try_again=0x7f0b0027;
+        public static final int btn_try_again=0x7f0b0028;
         public static final int character_counter_pattern=0x7f0b0002;
         public static final int search_menu_title=0x7f0b0016;
         public static final int status_bar_notification_info_overflow=0x7f0b0017;
-        public static final int txt_try_again=0x7f0b0026;
+        public static final int txt_try_again_nodownload=0x7f0b0027;
+        public static final int txt_try_again_nointernet=0x7f0b0026;
     }
     public static final class style {
         public static final int AlertDialog_AppCompat=0x7f0600a8;

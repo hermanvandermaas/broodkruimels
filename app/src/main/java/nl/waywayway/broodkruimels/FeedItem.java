@@ -12,16 +12,6 @@ public class FeedItem {
     private String mediamedium;
 	private String mediatype;
 
-	public void setMediacontent(String mediacontent)
-	{
-		this.mediacontent = mediacontent;
-	}
-
-	public String getMediacontent()
-	{
-		return mediacontent;
-	}
-
 	public void setTitle(String title)
 	{
 		this.title = title;
@@ -61,7 +51,17 @@ public class FeedItem {
 	{
 		return content;
 	}
+	
+	public void setMediacontent(String mediacontent)
+	{
+		this.mediacontent = mediacontent;
+	}
 
+	public String getMediacontent()
+	{
+		return mediacontent;
+	}
+	
 	public void setMediawidth(int mediawidth)
 	{
 		this.mediawidth = mediawidth;
