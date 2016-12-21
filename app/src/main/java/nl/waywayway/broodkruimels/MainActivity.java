@@ -64,18 +64,23 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		// Als geen verbinding, toon knop
-		// probeer opnieuw en eventuele cancel download
-		// en zet hasDownloaded flag op false
-
+		// probeer opnieuw
 		if (!isNetworkConnected())
-			tryAgain();
+		{
+			tryAgain( getResources().getString(R.string.txt_try_again_nointernet) );
+		}
     }
 
-	// Toon boodschap kon data niet downloaden,
+	// Toon foutboodschap
 	// toon knop probeer opnieuw
-	private void tryAgain()
+	// eventueel cancel download
+	// zet hasDownloaded flag op false
+	private void tryAgain(String mMsg)
 	{	
-		View view = findViewById(R.id.notConnectedLinLayout);
+		TextView txtview = (TextView) findViewById(R.id.txtTryAgain);
+		txtview.setText(mMsg);
+		
+		View view = findViewById(R.id.notConnectedLinLayout);		
 		view.setVisibility(View.VISIBLE);
 
 		if (mTaskFragment.isRunning())
@@ -216,6 +221,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Progressbar verbergen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.GONE);
+
+		// Als niets gedownload, toon boodschap
+		// en knop probeer opnieuw
+		if ( mResult == "Fout!" )
+		{
+			Log.i("HermLog", "Niets gedownload" );
+			tryAgain( getResources().getString(R.string.txt_try_again_nodownload) );
+			return;
+		}		
 		
 		// List met xml maken, als gegevens aanwezig:
 		// zet gedownload op ja

@@ -154,12 +154,13 @@ public class TaskFragment extends Fragment
 		@Override
 		protected String doInBackground(Void... ignore)
 		{
+			Log.i("HermLog", "doInBackground" );
 			// De asynchrone taak
 			// SystemClock.sleep(5000);
 			OkHttpClient mClient = new OkHttpClient();
 
 			// https://waywayway.nl/bk/?s=0&n=1
-			String mUrl = "https://waywayway.nl/bk/?s=0&n=20";
+			String mUrl = "https://waywayway.nl/bk/?s=0&n=1";
 			Request mRequest = new Request.Builder()
 				.url(mUrl)
 				.build();
@@ -173,16 +174,18 @@ public class TaskFragment extends Fragment
 					throw new IOException("Unexpected code " + mResponse);
 				}
 				
+				Log.i("HermLog", "Gedownload!" );
 				return mResponse.body().string();
 			}
 			catch (IOException e)
 			{
 				// TODO: catch exception
+				Log.i("HermLog", "Exception bij download JSON" );
 			}
-
+			
+			return "Fout!";
 
 			// Eind asynchrone taak
-			return "Fout!";
 		}
 
 		@Override
