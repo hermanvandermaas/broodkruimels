@@ -79,9 +79,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{	
 		TextView txtview = (TextView) findViewById(R.id.txtTryAgain);
 		txtview.setText(mMsg);
+
+		View viewTryAgain = findViewById(R.id.notConnectedLinLayout);
+		viewTryAgain.setVisibility(View.VISIBLE);
 		
-		View view = findViewById(R.id.notConnectedLinLayout);		
-		view.setVisibility(View.VISIBLE);
+		// verberg recyclerview
+		View viewRecycler = findViewById(R.id.recycler_view);
+		viewRecycler.setVisibility(View.GONE);
+
+		Log.i("HermLog", "tryAgain()" );
 
 		if (mTaskFragment.isRunning())
 		{
@@ -102,17 +108,27 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			View mNotConnectedLayout = findViewById(R.id.notConnectedLinLayout);
 			mNotConnectedLayout.setVisibility(View.GONE);
 
+			// en toon recyclerview
+			View viewRecycler = findViewById(R.id.recycler_view);
+			viewRecycler.setVisibility(View.VISIBLE);
+			
 			// Start asynchrone taak
 			if (!mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded())
 			{
 				mTaskFragment.start();
 			}
 		}
+		else
+		{
+			tryAgain( getResources().getString(R.string.txt_try_again_nointernet) );
+		}
 	}
 
 	// Zet json string per item in List<E>
 	private void parseResult(String result)
 	{
+		Log.i("HermLog", "parseResult()" );
+		
         try
 		{
             JSONObject response = new JSONObject(result);
@@ -138,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
         }
 		catch (JSONException e)
 		{
+			Log.i("HermLog", "JSON Exception in parseResult" );
             e.printStackTrace();
         }
     }
@@ -198,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPreExecute()
 	{
+		Log.i("HermLog", "onPreExecute()" );
 		// Progressbar tonen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.VISIBLE);
@@ -213,11 +231,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onCancelled()
 	{
 		// ...
+		Log.i("HermLog", "onCancelled()" );
 	}
 
 	@Override
 	public void onPostExecute(String mResult)
 	{
+		Log.i("HermLog", "onPostExecute()" );
+		
 		// Progressbar verbergen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.GONE);
@@ -238,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		
 		if (responseSize > 0)
 		{
-			showSnackbar("boem!");
 			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize) );
 			mTaskFragment.setHasDownloaded(true);
 
@@ -266,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	protected void onStart()
 	{
+		Log.i("HermLog", "onStart()" );
+		
 		super.onStart();
 
 		if (mTaskFragment.isRunning())
