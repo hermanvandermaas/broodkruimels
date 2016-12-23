@@ -10,13 +10,19 @@ import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+import java.util.*;
+import org.json.*;
 
 import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
+	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
+    private List<FeedItem> feedsList;
+    private RecyclerView mRecyclerView;
+    private MyRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		ActionBar actionBar = getSupportActionBar();
 
 		// Klik knop probeer opnieuw:
-		// check verbinding, indien ok dan xml laden
+		// check verbinding, indien ok dan json laden
 		Button button = (Button) findViewById(R.id.btnTryAgain);
         button.setOnClickListener(new View.OnClickListener()
 			{
@@ -52,28 +58,49 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
-		
-		// Als geen verbinding, toon knop
-		// probeer opnieuw en eventuele cancel download
-		// en zet hasDownloaded flag op false
 
+		// Vind recyclerview en koppel layoutmanager
+		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+		// Als geen verbinding, toon knop
+		// probeer opnieuw
 		if (!isNetworkConnected())
-		{	
-			View view = findViewById(R.id.notConnectedLinLayout);
-			view.setVisibility(View.VISIBLE);
-			
-			if ( mTaskFragment.isRunning() )
-			{
-				mTaskFragment.cancel();
-				mTaskFragment.setHasDownloaded(false);
-			}
+		{
+			tryAgain( getResources().getString(R.string.txt_try_again_nointernet) );
 		}
     }
 
-	// Start download xml
+	// Toon foutboodschap
+	// toon knop probeer opnieuw
+	// eventueel cancel download
+	// zet hasDownloaded flag op false
+	private void tryAgain(String mMsg)
+	{	
+		TextView txtview = (TextView) findViewById(R.id.txtTryAgain);
+		txtview.setText(mMsg);
+
+		View viewTryAgain = findViewById(R.id.notConnectedLinLayout);
+		viewTryAgain.setVisibility(View.VISIBLE);
+		
+		// verberg recyclerview
+		View viewRecycler = findViewById(R.id.recycler_view);
+		viewRecycler.setVisibility(View.GONE);
+
+		Log.i("HermLog", "tryAgain()" );
+
+		if (mTaskFragment.isRunning())
+		{
+			mTaskFragment.cancel();
+		}
+		
+		mTaskFragment.setHasDownloaded(false);
+	}
+
+	// Start download json
 	private void downloadXml()
 	{
-		// Als verbinding, download xml
+		// Als verbinding, download json
 		if (isNetworkConnected())
 		{
 			// Als gestart door knop probeer opnieuw,
@@ -81,13 +108,57 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			View mNotConnectedLayout = findViewById(R.id.notConnectedLinLayout);
 			mNotConnectedLayout.setVisibility(View.GONE);
 
+			// en toon recyclerview
+			View viewRecycler = findViewById(R.id.recycler_view);
+			viewRecycler.setVisibility(View.VISIBLE);
+			
 			// Start asynchrone taak
 			if (!mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded())
 			{
 				mTaskFragment.start();
 			}
 		}
+		else
+		{
+			tryAgain( getResources().getString(R.string.txt_try_again_nointernet) );
+		}
 	}
+
+	// Zet json string per item in List<E>
+	private void parseResult(String result)
+	{
+		Log.i("HermLog", "parseResult()" );
+		
+        try
+		{
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("data");
+            feedsList = new ArrayList<>();
+
+            for (int i = 0; i < posts.length(); i++)
+			{
+                JSONObject post = posts.optJSONObject(i);
+                FeedItem item = new FeedItem();
+								
+                item.setTitle(post.optString("title"));
+                item.setPubdate(post.optString("pubDate"));
+				item.setCreator(post.optString("creator"));
+				item.setContent(post.optString("content"));
+                item.setMediacontent(post.optString("mediacontent"));
+				item.setMediawidth(post.optInt("mediawidth"));
+				item.setMediaheight(post.optInt("mediaheight"));
+                item.setMediamedium(post.optString("mediamedium"));
+                item.setMediatype(post.optString("mediatype"));
+                feedsList.add(item);
+            }
+        }
+		catch (JSONException e)
+		{
+			Log.i("HermLog", "JSON Exception in parseResult" );
+            e.printStackTrace();
+        }
+    }
+
 
 	// Maak options menu in toolbar
     @Override
@@ -144,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPreExecute()
 	{
+		Log.i("HermLog", "onPreExecute()" );
 		// Progressbar tonen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.VISIBLE);
@@ -159,19 +231,52 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onCancelled()
 	{
 		// ...
+		Log.i("HermLog", "onCancelled()" );
 	}
 
 	@Override
 	public void onPostExecute(String mResult)
 	{
+		Log.i("HermLog", "onPostExecute()" );
+		
 		// Progressbar verbergen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.GONE);
-		
-		showSnackbar("boem!");
-		Log.i( "HermLog", mResult );
 
-		mTaskFragment.setHasDownloaded(true);
+		// Als niets gedownload, toon boodschap
+		// en knop probeer opnieuw
+		if ( mResult == "Fout!" )
+		{
+			Log.i("HermLog", "Niets gedownload" );
+			tryAgain( getResources().getString(R.string.txt_try_again_nodownload) );
+			return;
+		}		
+		
+		// List met xml maken, als gegevens aanwezig:
+		// zet gedownload op ja
+		parseResult(mResult);
+		int responseSize = feedsList.size();
+		
+		if (responseSize > 0)
+		{
+			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize) );
+			mTaskFragment.setHasDownloaded(true);
+
+			// Verbind adapter met recyclerview
+			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
+			mRecyclerView.setAdapter(adapter);
+
+			// Actie bij klik op item
+			adapter.setOnItemClickListener(new OnItemClickListener()
+				{
+					@Override
+					public void onItemClick(FeedItem item)
+					{
+						Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+					}
+				});
+			
+		}
 	}
 
 	/************************/
@@ -181,16 +286,18 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	protected void onStart()
 	{
-		super.onStart();
+		Log.i("HermLog", "onStart()" );
 		
-		if (mTaskFragment.isRunning() )
+		super.onStart();
+
+		if (mTaskFragment.isRunning())
 		{
 			// Progressbar tonen als downloadproces nog loopt
 			// na configuratie verandering
 			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 			mProgressbar.setVisibility(View.VISIBLE);
 		}
-		
+
 		downloadXml();
 	}
 
