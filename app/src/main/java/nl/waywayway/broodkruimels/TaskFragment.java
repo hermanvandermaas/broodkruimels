@@ -4,9 +4,9 @@ import android.app.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.util.*;
-import com.squareup.okhttp.*;
 import java.io.*;
 import java.util.concurrent.*;
+import okhttp3.*;
 
 import android.support.v4.app.Fragment;
 
@@ -156,20 +156,23 @@ public class TaskFragment extends Fragment
 		protected String doInBackground(Void... ignore)
 		{
 			Log.i("HermLog", "doInBackground" );
+
 			// De asynchrone taak
-			// SystemClock.sleep(5000);
-			OkHttpClient mClient = new OkHttpClient();
-			mClient.setReadTimeout(30, TimeUnit.SECONDS);
+			OkHttpClient mClient = new OkHttpClient.Builder()
+				.readTimeout(30, TimeUnit.SECONDS)
+				.build();
 
 			// https://waywayway.nl/bk/?s=0&n=1
-			String mUrl = "https://waywayway.nl/bk/?s=0&n=3";
+			String mUrl = "https://waywayway.nl/bk/?s=0&n=20";
 			Request mRequest = new Request.Builder()
 				.url(mUrl)
 				.build();
 
 			try
 			{
-				Response mResponse = mClient.newCall(mRequest).execute();
+				Response mResponse = mClient
+					.newCall(mRequest)
+					.execute();
 
 				if (!mResponse.isSuccessful())
 				{
