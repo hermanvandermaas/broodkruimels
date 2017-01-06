@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			viewRecycler.setVisibility(View.VISIBLE);
 			
 			// Start asynchrone taak
-			if (!mTaskFragment.isRunning() && !mTaskFragment.hasDownloaded())
+			if ( !mTaskFragment.isRunning() )
 			{
 				mTaskFragment.start();
 			}
@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				item.setMediaheight(post.optInt("mediaheight"));
                 item.setMediamedium(post.optString("mediamedium"));
                 item.setMediatype(post.optString("mediatype"));
+				
                 feedsList.add(item);
             }
         }
@@ -298,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			// na configuratie verandering
 			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 			mProgressbar.setVisibility(View.VISIBLE);
+			return;
 		}
 
 		downloadXml();

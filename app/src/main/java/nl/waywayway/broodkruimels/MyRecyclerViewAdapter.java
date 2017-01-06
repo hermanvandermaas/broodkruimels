@@ -37,7 +37,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //Download image using picasso library
         if (!TextUtils.isEmpty(feedItem.getMediacontent()))
 		{
-            Picasso.with(mContext).load(feedItem.getMediacontent())
+            Picasso
+				.with(mContext)
+				.load(feedItem.getMediacontent())
 				.error(R.drawable.placeholder)
 				.placeholder(R.drawable.placeholder)
 				.into(customViewHolder.imageView);
@@ -56,6 +58,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             }
         };
 
+		
         customViewHolder.imageView.setOnClickListener(listener);
         customViewHolder.textView.setOnClickListener(listener);
     }
