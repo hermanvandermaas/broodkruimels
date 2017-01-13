@@ -42,9 +42,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 				.load(feedItem.getMediacontent())
 				.error(R.drawable.placeholder)
 				.placeholder(R.drawable.placeholder)
-				.resize(200, 200)
+				.resize(80, 80)
 				.centerCrop()
-				.transform( new RoundedCornersTransformation(2, 0, RoundedCornersTransformation.CornerType.LEFT) )
+				.transform( new RoundedCornersTransformation(3, 0, RoundedCornersTransformation.CornerType.LEFT) )
 				.into(customViewHolder.imageView);
         }
 
