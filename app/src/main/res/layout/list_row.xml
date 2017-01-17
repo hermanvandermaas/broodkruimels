@@ -39,6 +39,39 @@
 				android:textColor="#444"
 				android:textSize="14dp"
 				android:textStyle="bold"/>
+			
+			<TextView
+				android:id="@+id/pubdate"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/thumbnail"
+				android:layout_below="@+id/title"
+				android:layout_marginLeft="4dp"
+				android:maxLines="1"
+				android:paddingLeft="4dp"
+				android:paddingRight="4dp"
+				android:paddingBottom="4dp"				
+				android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+				android:textColor="#444"
+				android:textSize="12dp"
+				android:textStyle="normal"/>
+			
+			<TextView
+				android:id="@+id/content"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_toRightOf="@+id/thumbnail"
+				android:layout_below="@+id/pubdate"
+				android:layout_marginLeft="4dp"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:paddingLeft="4dp"
+				android:paddingRight="4dp"
+				android:paddingBottom="4dp"				
+				android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+				android:textColor="#444"
+				android:textSize="14dp"
+				android:textStyle="normal"/>
 
 		</RelativeLayout>
 	</android.support.v7.widget.CardView>

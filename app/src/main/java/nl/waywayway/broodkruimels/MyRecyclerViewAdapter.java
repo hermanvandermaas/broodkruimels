@@ -48,9 +48,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 				.into(customViewHolder.imageView);
         }
 
-        //Setting text view title
-        customViewHolder.textView.setText(Html.fromHtml(feedItem.getTitle()));
-
+        //Setting text views
+        customViewHolder.textViewTitle.setText(Html.fromHtml(feedItem.getTitle() ));
+        customViewHolder.textViewPubdate.setText(Html.fromHtml(feedItem.getPubdate() ));
+		customViewHolder.textViewContent.setText(Html.fromHtml(feedItem.getContent() ));
 
         View.OnClickListener listener = new View.OnClickListener()
 		{
@@ -63,7 +64,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 		
         customViewHolder.imageView.setOnClickListener(listener);
-        customViewHolder.textView.setOnClickListener(listener);
+        customViewHolder.textViewTitle.setOnClickListener(listener);
+        customViewHolder.textViewPubdate.setOnClickListener(listener);
+		customViewHolder.textViewContent.setOnClickListener(listener);
     }
 
     @Override
@@ -76,16 +79,19 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     class CustomViewHolder extends RecyclerView.ViewHolder
 	{
         protected ImageView imageView;
-        protected TextView textView;
-
+        protected TextView textViewTitle;
+        protected TextView textViewPubdate;
+		protected TextView textViewContent;
+		
         public CustomViewHolder(View view)
 		{
             super(view);
             this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
-            this.textView = (TextView) view.findViewById(R.id.title);
+            this.textViewTitle = (TextView) view.findViewById(R.id.title);
+            this.textViewPubdate = (TextView) view.findViewById(R.id.pubdate);
+			this.textViewContent = (TextView) view.findViewById(R.id.content);
         }
     }
-
 
     public OnItemClickListener getOnItemClickListener()
 	{
