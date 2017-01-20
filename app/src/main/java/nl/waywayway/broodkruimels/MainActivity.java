@@ -10,6 +10,7 @@ import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+import java.text.*;
 import java.util.*;
 import org.json.*;
 
@@ -140,8 +141,21 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
                 JSONObject post = posts.optJSONObject(i);
                 FeedItem item = new FeedItem();
 								
+				// Velden in de lijst met feeditems vullen
                 item.setTitle(post.optString("title"));
-                item.setPubdate(post.optString("pubDate"));
+				// Datum opmaken
+				String mDateString = post.optString("pubDate");
+				try
+				{
+					Date mDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateString);
+					String mFormattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(mDate);
+					item.setPubdate(mFormattedDate);
+				}
+				catch (Exception e)
+				{
+					//
+				}
+				// einde datum opmaken
 				item.setCreator(post.optString("creator"));
 				item.setContent(post.optString("content"));
                 item.setMediacontent(post.optString("mediacontent"));
