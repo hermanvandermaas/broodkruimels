@@ -44,7 +44,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 				.placeholder(R.drawable.placeholder)
 				.resize(80, 80)
 				.centerCrop()
-				.transform( new RoundedCornersTransformation(3, 0, RoundedCornersTransformation.CornerType.LEFT) )
+				.transform( new RoundedCornersTransformation(2, 0, RoundedCornersTransformation.CornerType.LEFT) )
 				.into(customViewHolder.imageView);
         }
 

@@ -64,6 +64,7 @@
 				android:layout_below="@+id/pubdate"
 				android:layout_marginLeft="4dp"
 				android:maxLines="1"
+				android:scrollHorizontally="true"
 				android:ellipsize="end"
 				android:paddingLeft="4dp"
 				android:paddingRight="4dp"
