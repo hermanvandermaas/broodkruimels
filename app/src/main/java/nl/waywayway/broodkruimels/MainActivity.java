@@ -24,12 +24,16 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter adapter;
+	private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// zet referentie naar context van deze activity in een variabele
+		mContext = this;
 
 		// Maak toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -287,7 +291,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					@Override
 					public void onItemClick(FeedItem item)
 					{
-						Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+						mContext.startActivity( new Intent(mContext, DetailActivity.class) );
+						
+						// Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
 					}
 				});
 			
