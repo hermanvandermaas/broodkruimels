@@ -294,11 +294,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					{
 						Intent mIntent = new Intent(mContext, DetailActivity.class);
 						
-						mIntent.putExtra("mediacontent", Html.fromHtml( item.getMediacontent()) );
-						mIntent.putExtra("title", Html.fromHtml( item.getTitle()) );
-						mIntent.putExtra("pubdate", Html.fromHtml( item.getPubdate()) );
-						mIntent.putExtra("creator", Html.fromHtml( item.getCreator()) );
-						mIntent.putExtra("content", Html.fromHtml( item.getContent()) );
+						mIntent.putExtra("mediacontent", item.getMediacontent() );
+						mIntent.putExtra("title", item.getTitle() );
+						mIntent.putExtra("pubdate", item.getPubdate() );
+						mIntent.putExtra("creator", item.getCreator() );
+						mIntent.putExtra("content", item.getContent() );
 
 						mContext.startActivity(mIntent);
 					}
