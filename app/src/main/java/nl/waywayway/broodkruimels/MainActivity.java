@@ -7,6 +7,7 @@ import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
+import android.text.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
@@ -291,9 +292,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					@Override
 					public void onItemClick(FeedItem item)
 					{
-						mContext.startActivity( new Intent(mContext, DetailActivity.class) );
+						Intent mIntent = new Intent(mContext, DetailActivity.class);
 						
-						// Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+						mIntent.putExtra("mediacontent", Html.fromHtml( item.getMediacontent()) );
+						mIntent.putExtra("title", Html.fromHtml( item.getTitle()) );
+						mIntent.putExtra("pubdate", Html.fromHtml( item.getPubdate()) );
+						mIntent.putExtra("creator", Html.fromHtml( item.getCreator()) );
+						mIntent.putExtra("content", Html.fromHtml( item.getContent()) );
+
+						mContext.startActivity(mIntent);
 					}
 				});
 			
