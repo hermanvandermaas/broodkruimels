@@ -20,10 +20,13 @@ import android.support.v7.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
+	private static final String TAG_SCROLLPOSITION = "scroll_position";
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
+	private LinearLayoutManager mLinearLayoutManager;
+	private Parcelable mScrollposition;
     private MyRecyclerViewAdapter adapter;
 	private Context mContext;
 
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
     {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		Log.i("HermLog", "onCreate()" );
 		
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
@@ -67,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Vind recyclerview en koppel layoutmanager
 		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+		mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
 		// Als geen verbinding, toon knop
 		// probeer opnieuw
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	// Toon foutboodschap
 	// toon knop probeer opnieuw
 	// eventueel cancel download
-	// zet hasDownloaded flag op false
+	// zet 	hasDownloaded flag op false
 	private void tryAgain(String mMsg)
 	{	
 		TextView txtview = (TextView) findViewById(R.id.txtTryAgain);
@@ -221,13 +227,30 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		Snackbar mSnackbar = Snackbar.make(findViewById(R.id.coordinator), snackMsg, Snackbar.LENGTH_LONG);
 		mSnackbar.show();
 	}
-
+	
+	/*
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
+		
+		Log.i("HermLog", "onSaveInstanceState()" );
+		
+		outState.putParcelable(TAG_SCROLLPOSITION, mLinearLayoutManager.onSaveInstanceState() );
 	}
+	
 
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		Log.i("HermLog", "onRestoreInstanceState()" );
+
+    	mScrollposition = savedInstanceState.getParcelable(TAG_SCROLLPOSITION);
+	}
+	*/
+	
 	/*********************************/
 	/***** TASK CALLBACK METHODS *****/
 	/*********************************/
@@ -304,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					}
 				});
 			
+			// mTaskFragment.setHasRecyclerviewReady(true);
 		}
 	}
 
@@ -327,6 +351,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			return;
 		}
 
+		/*
+		if ( !mTaskFragment.getHasRecyclerviewReady() )
+		{
+			downloadXml();
+		}
+		*/
+		
 		downloadXml();
 	}
 
@@ -334,6 +365,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onResume()
 	{
 		super.onResume();
+		
+		/*
+		Log.i("HermLog", "onResume()" );
+		
+		if (mScrollposition != null) {
+			Log.i("HermLog", "mScrollposition" );
+			mLinearLayoutManager.onRestoreInstanceState(mScrollposition);
+		}
+		*/
 	}
 
 	@Override

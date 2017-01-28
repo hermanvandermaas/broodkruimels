@@ -32,6 +32,7 @@ public class TaskFragment extends Fragment
 	private DummyTask mTask;
 	private boolean mRunning;
 	private boolean mHasDownloaded;
+	private boolean mHasRecyclerviewReady;
 	private OkHttpClient mClient;
 	private String mUrl;
 	private Request mRequest;
@@ -128,7 +129,21 @@ public class TaskFragment extends Fragment
 	{
 		this.mHasDownloaded = mHasDownloaded;
 	}
+	
+	/*
+	// Getter wel/niet recyclerview gemaakt
+	public boolean getHasRecyclerviewReady()
+	{
+		return mHasRecyclerviewReady;
+	}	
 
+	// Setter wel/niet recyclerview gemaakt
+	public void setHasRecyclerviewReady(boolean mHasRecyclerviewReady)
+	{
+		this.mHasRecyclerviewReady = mHasRecyclerviewReady;
+	}
+	*/
+	
 	/***************************/
 	/***** BACKGROUND TASK *****/
 	/***************************/
