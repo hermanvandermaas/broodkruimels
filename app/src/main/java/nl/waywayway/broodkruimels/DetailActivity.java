@@ -5,6 +5,7 @@ import android.os.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
 import android.text.*;
+import android.util.*;
 import android.widget.*;
 import com.squareup.picasso.*;
 
@@ -45,6 +46,13 @@ public class DetailActivity extends AppCompatActivity
         if ( !TextUtils.isEmpty(mImageUrl) )
 		{
 			mImageview = (ImageView) findViewById(R.id.image_detail);
+			
+			// Maak juiste URL voor downloaden grote afbeelding
+			String mRegex = "(.+)(-\\d+x\\d+)(.jpg)";
+			// String mImageSize = getResources().getString(R.string.activity_detail_image_size);
+			mImageUrl = mImageUrl.replaceAll(mRegex, "$1$3");
+			
+			Log.i("HermLog", "mImageUrl: " + mImageUrl);
 			
             Picasso
 				.with(mContext)

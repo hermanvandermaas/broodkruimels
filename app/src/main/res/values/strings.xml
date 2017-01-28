@@ -6,4 +6,5 @@
 	<string name="txt_try_again_nointernet">Geen internetverbinding</string>
 	<string name="txt_try_again_nodownload">Gegevens downloaden niet gelukt</string>
 	<string name="btn_try_again">Opnieuw proberen</string>
+	<string name="activity_detail_image_size">1024x674</string>
 </resources>
