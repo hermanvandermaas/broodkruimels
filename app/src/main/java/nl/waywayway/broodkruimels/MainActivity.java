@@ -7,7 +7,6 @@ import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
-import android.text.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
@@ -25,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
 	private LinearLayoutManager mLinearLayoutManager;
+	private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private MyRecyclerViewAdapter adapter;
 	private Context mContext;
 
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Log.i("HermLog", "onCreate()" );
-		
+		Log.i("HermLog", "onCreate()");
+
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
 
@@ -68,16 +68,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
 
-		// Vind recyclerview en koppel layoutmanager
-		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-		mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
 
 		// Als geen verbinding, toon knop
 		// probeer opnieuw
 		if (!isNetworkConnected())
 		{
-			tryAgain( getResources().getString(R.string.txt_try_again_nointernet) );
+			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
     }
 
@@ -92,18 +89,18 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		View viewTryAgain = findViewById(R.id.notConnectedLinLayout);
 		viewTryAgain.setVisibility(View.VISIBLE);
-		
+
 		// verberg recyclerview
 		View viewRecycler = findViewById(R.id.recycler_view);
 		viewRecycler.setVisibility(View.GONE);
 
-		Log.i("HermLog", "tryAgain()" );
+		Log.i("HermLog", "tryAgain()");
 
 		if (mTaskFragment.isRunning())
 		{
 			mTaskFragment.cancel();
 		}
-		
+
 		mTaskFragment.setHasDownloaded(false);
 	}
 
@@ -121,24 +118,24 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			// en toon recyclerview
 			View viewRecycler = findViewById(R.id.recycler_view);
 			viewRecycler.setVisibility(View.VISIBLE);
-			
+
 			// Start asynchrone taak
-			if ( !mTaskFragment.isRunning() )
+			if (!mTaskFragment.isRunning())
 			{
 				mTaskFragment.start();
 			}
 		}
 		else
 		{
-			tryAgain( getResources().getString(R.string.txt_try_again_nointernet) );
+			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
 	}
 
 	// Zet json string per item in List<E>
 	private void parseResult(String result)
 	{
-		Log.i("HermLog", "parseResult()" );
-		
+		Log.i("HermLog", "parseResult()");
+
         try
 		{
             JSONObject response = new JSONObject(result);
@@ -149,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
                 JSONObject post = posts.optJSONObject(i);
                 FeedItem item = new FeedItem();
-								
+
 				// Velden in de lijst met feeditems vullen
                 item.setTitle(post.optString("title"));
 				// Datum opmaken
@@ -162,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				}
 				catch (Exception e)
 				{
-					Log.i("HermLog", "Date format exception in parseResult" );
+					Log.i("HermLog", "Date format exception in parseResult");
             		e.printStackTrace();
 				}
 				// einde datum opmaken
@@ -175,13 +172,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
                 item.setMediatype(post.optString("mediatype"));
 				item.setImgwidth(post.optInt("imgwidth"));
 				item.setImgheight(post.optInt("imgheight"));
-				
+
                 feedsList.add(item);
             }
         }
 		catch (JSONException e)
 		{
-			Log.i("HermLog", "JSON Exception in parseResult" );
+			Log.i("HermLog", "JSON Exception in parseResult");
             e.printStackTrace();
         }
     }
@@ -228,30 +225,30 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		Snackbar mSnackbar = Snackbar.make(findViewById(R.id.coordinator), snackMsg, Snackbar.LENGTH_LONG);
 		mSnackbar.show();
 	}
-	
+
 	/*
-	@Override
-	public void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-		
-		Log.i("HermLog", "onSaveInstanceState()" );
-		
-		outState.putParcelable(TAG_SCROLLPOSITION, mLinearLayoutManager.onSaveInstanceState() );
-	}
-	
+	 @Override
+	 public void onSaveInstanceState(Bundle outState)
+	 {
+	 super.onSaveInstanceState(outState);
 
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState)
-	{
-		super.onRestoreInstanceState(savedInstanceState);
-		
-		Log.i("HermLog", "onRestoreInstanceState()" );
+	 Log.i("HermLog", "onSaveInstanceState()" );
 
-    	mScrollposition = savedInstanceState.getParcelable(TAG_SCROLLPOSITION);
-	}
-	*/
-	
+	 outState.putParcelable(TAG_SCROLLPOSITION, mLinearLayoutManager.onSaveInstanceState() );
+	 }
+
+
+	 @Override
+	 protected void onRestoreInstanceState(Bundle savedInstanceState)
+	 {
+	 super.onRestoreInstanceState(savedInstanceState);
+
+	 Log.i("HermLog", "onRestoreInstanceState()" );
+
+	 mScrollposition = savedInstanceState.getParcelable(TAG_SCROLLPOSITION);
+	 }
+	 */
+
 	/*********************************/
 	/***** TASK CALLBACK METHODS *****/
 	/*********************************/
@@ -259,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPreExecute()
 	{
-		Log.i("HermLog", "onPreExecute()" );
+		Log.i("HermLog", "onPreExecute()");
 		// Progressbar tonen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.VISIBLE);
@@ -275,36 +272,61 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onCancelled()
 	{
 		// ...
-		Log.i("HermLog", "onCancelled()" );
+		Log.i("HermLog", "onCancelled()");
 	}
 
 	@Override
 	public void onPostExecute(String mResult)
 	{
-		Log.i("HermLog", "onPostExecute()" );
-		
+		Log.i("HermLog", "onPostExecute()");
+
 		// Progressbar verbergen
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
 		mProgressbar.setVisibility(View.GONE);
 
 		// Als niets gedownload, toon boodschap
 		// en knop probeer opnieuw
-		if ( mResult == "Fout!" )
+		if (mResult == "Fout!")
 		{
-			Log.i("HermLog", "Niets gedownload" );
-			tryAgain( getResources().getString(R.string.txt_try_again_nodownload) );
+			Log.i("HermLog", "Niets gedownload");
+			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
 		}		
-		
+
 		// List met xml maken, als gegevens aanwezig:
 		// zet gedownload op ja
 		parseResult(mResult);
 		int responseSize = feedsList.size();
-		
+
 		if (responseSize > 0)
 		{
-			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize) );
+			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize));
 			mTaskFragment.setHasDownloaded(true);
+
+			// Vind breedte van de app in dp
+			View mView = findViewById(R.id.coordinator);
+			int mViewWidth = mView.getWidth();
+			DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+			int AppWidthDp = Math.round(mViewWidth / displayMetrics.density);
+			Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
+			Log.i("HermLog", "Density: " + displayMetrics.density);
+
+			// Vind recyclerview
+			mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+			
+			if (AppWidthDp < getResources().getInteger(R.integer.listview_max_width))
+			{
+				// Koppel layoutmanager voor smal scherm
+				mLinearLayoutManager = new LinearLayoutManager(this);
+				mRecyclerView.setLayoutManager(mLinearLayoutManager);
+			}
+			else
+			{
+				// Koppel layoutmanager voor breed scherm
+				int mNumberOfColumns = Math.round( AppWidthDp / getResources().getInteger(R.integer.staggeredgridview_column_width) );
+				mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(mNumberOfColumns, StaggeredGridLayoutManager.VERTICAL);
+				mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+			}
 
 			// Verbind adapter met recyclerview
 			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
@@ -317,19 +339,19 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					public void onItemClick(FeedItem item)
 					{
 						Intent mIntent = new Intent(mContext, DetailActivity.class);
-						
-						mIntent.putExtra("mediacontent", item.getMediacontent() );
-						mIntent.putExtra("imgwidth", item.getImgwidth() );
-						mIntent.putExtra("imgheight", item.getImgheight() );
-						mIntent.putExtra("title", item.getTitle() );
-						mIntent.putExtra("pubdate", item.getPubdate() );
-						mIntent.putExtra("creator", item.getCreator() );
-						mIntent.putExtra("content", item.getContent() );
+
+						mIntent.putExtra("mediacontent", item.getMediacontent());
+						mIntent.putExtra("imgwidth", item.getImgwidth());
+						mIntent.putExtra("imgheight", item.getImgheight());
+						mIntent.putExtra("title", item.getTitle());
+						mIntent.putExtra("pubdate", item.getPubdate());
+						mIntent.putExtra("creator", item.getCreator());
+						mIntent.putExtra("content", item.getContent());
 
 						mContext.startActivity(mIntent);
 					}
 				});
-			
+
 			// mTaskFragment.setHasRecyclerviewReady(true);
 		}
 	}
@@ -341,8 +363,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	protected void onStart()
 	{
-		Log.i("HermLog", "onStart()" );
-		
+		Log.i("HermLog", "onStart()");
+
 		super.onStart();
 
 		if (mTaskFragment.isRunning())
@@ -355,12 +377,12 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 
 		/*
-		if ( !mTaskFragment.getHasRecyclerviewReady() )
-		{
-			downloadXml();
-		}
-		*/
-		
+		 if ( !mTaskFragment.getHasRecyclerviewReady() )
+		 {
+		 downloadXml();
+		 }
+		 */
+
 		downloadXml();
 	}
 
@@ -368,15 +390,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onResume()
 	{
 		super.onResume();
-		
+
 		/*
-		Log.i("HermLog", "onResume()" );
-		
-		if (mScrollposition != null) {
-			Log.i("HermLog", "mScrollposition" );
-			mLinearLayoutManager.onRestoreInstanceState(mScrollposition);
-		}
-		*/
+		 Log.i("HermLog", "onResume()" );
+
+		 if (mScrollposition != null) {
+		 Log.i("HermLog", "mScrollposition" );
+		 mLinearLayoutManager.onRestoreInstanceState(mScrollposition);
+		 }
+		 */
 	}
 
 	@Override
