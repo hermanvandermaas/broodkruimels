@@ -11,6 +11,28 @@ public class FeedItem {
     private int mediaheight;
     private String mediamedium;
 	private String mediatype;
+	private int imgwidth;
+	private int imgheight;
+
+	public void setImgheight(int imgheight)
+	{
+		this.imgheight = imgheight;
+	}
+
+	public int getImgheight()
+	{
+		return imgheight;
+	}
+
+	public void setImgwidth(int imgwidth)
+	{
+		this.imgwidth = imgwidth;
+	}
+
+	public int getImgwidth()
+	{
+		return imgwidth;
+	}
 
 	public void setTitle(String title)
 	{

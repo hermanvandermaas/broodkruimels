@@ -20,13 +20,11 @@ import android.support.v7.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
-	private static final String TAG_SCROLLPOSITION = "scroll_position";
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
 	private LinearLayoutManager mLinearLayoutManager;
-	private Parcelable mScrollposition;
     private MyRecyclerViewAdapter adapter;
 	private Context mContext;
 
@@ -164,7 +162,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				}
 				catch (Exception e)
 				{
-					//
+					Log.i("HermLog", "Date format exception in parseResult" );
+            		e.printStackTrace();
 				}
 				// einde datum opmaken
 				item.setCreator(post.optString("creator"));
@@ -174,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				item.setMediaheight(post.optInt("mediaheight"));
                 item.setMediamedium(post.optString("mediamedium"));
                 item.setMediatype(post.optString("mediatype"));
+				item.setImgwidth(post.optInt("imgwidth"));
+				item.setImgheight(post.optInt("imgheight"));
 				
                 feedsList.add(item);
             }
@@ -318,6 +319,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 						Intent mIntent = new Intent(mContext, DetailActivity.class);
 						
 						mIntent.putExtra("mediacontent", item.getMediacontent() );
+						mIntent.putExtra("imgwidth", item.getImgwidth() );
+						mIntent.putExtra("imgheight", item.getImgheight() );
 						mIntent.putExtra("title", item.getTitle() );
 						mIntent.putExtra("pubdate", item.getPubdate() );
 						mIntent.putExtra("creator", item.getCreator() );
