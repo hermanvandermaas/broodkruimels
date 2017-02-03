@@ -1,9 +1,9 @@
 package nl.waywayway.broodkruimels;
 
-import android.*;
 import android.content.*;
 import android.support.v7.widget.*;
 import android.text.*;
+import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.squareup.picasso.*;
@@ -14,6 +14,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private List<FeedItem> feedItemList;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
+	private String mScreenWidth;
+	private int mItemLayout;
 
     public MyRecyclerViewAdapter(Context context, List<FeedItem> feedItemList)
 	{
@@ -23,10 +25,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-	{
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_row, null);
-        CustomViewHolder viewHolder = new CustomViewHolder(view);
-        return viewHolder;
+	{		
+		// Inflate juiste layout voor smal of breed scherm
+		if (mScreenWidth == "narrow")
+		{
+			mItemLayout = R.layout.recyclerview_item_listlayout;
+		}
+		else
+		{
+			mItemLayout = R.layout.recyclerview_item_staggeredgridlayout;
+		}
+		
+		View view = LayoutInflater.from(viewGroup.getContext()).inflate(mItemLayout, null);
+		CustomViewHolder viewHolder = new CustomViewHolder(view);
+		return viewHolder;
     }
 
     @Override
@@ -92,6 +104,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 			this.textViewContent = (TextView) view.findViewById(R.id.content);
         }
     }
+	
+	public void setScreenWidth( String mScreenwidth)
+	{
+		this.mScreenWidth = mScreenwidth;
+	}
 
     public OnItemClickListener getOnItemClickListener()
 	{

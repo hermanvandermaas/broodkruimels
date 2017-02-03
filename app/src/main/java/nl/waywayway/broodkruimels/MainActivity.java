@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private TaskFragment mTaskFragment;
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
+	private String mScreenWidth;
 	private LinearLayoutManager mLinearLayoutManager;
 	private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private MyRecyclerViewAdapter adapter;
@@ -304,17 +305,26 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment.setHasDownloaded(true);
 
 			// Vind breedte van de app in dp
+			// dp = pixels / logical density
+			// de gemeten breedte is de breedte van de hoogste view in de xml layout
 			View mView = findViewById(R.id.coordinator);
 			int mViewWidth = mView.getWidth();
 			DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
 			int AppWidthDp = Math.round(mViewWidth / displayMetrics.density);
+			
+			// Bepaal of de weergave van de app smal of breed is
+			if (AppWidthDp <= getResources().getInteger(R.integer.listview_max_width))
+				this.mScreenWidth = "narrow";
+			else
+				this.mScreenWidth = "wide";
+
 			Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
 			Log.i("HermLog", "Density: " + displayMetrics.density);
 
 			// Vind recyclerview
 			mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 			
-			if (AppWidthDp < getResources().getInteger(R.integer.listview_max_width))
+			if (this.mScreenWidth == "narrow")
 			{
 				// Koppel layoutmanager voor smal scherm
 				mLinearLayoutManager = new LinearLayoutManager(this);
@@ -330,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 			// Verbind adapter met recyclerview
 			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
+			adapter.setScreenWidth(mScreenWidth);
 			mRecyclerView.setAdapter(adapter);
 
 			// Actie bij klik op item
