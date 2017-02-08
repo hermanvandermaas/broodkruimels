@@ -227,29 +227,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		mSnackbar.show();
 	}
 
-	/*
-	 @Override
-	 public void onSaveInstanceState(Bundle outState)
-	 {
-	 super.onSaveInstanceState(outState);
-
-	 Log.i("HermLog", "onSaveInstanceState()" );
-
-	 outState.putParcelable(TAG_SCROLLPOSITION, mLinearLayoutManager.onSaveInstanceState() );
-	 }
-
-
-	 @Override
-	 protected void onRestoreInstanceState(Bundle savedInstanceState)
-	 {
-	 super.onRestoreInstanceState(savedInstanceState);
-
-	 Log.i("HermLog", "onRestoreInstanceState()" );
-
-	 mScrollposition = savedInstanceState.getParcelable(TAG_SCROLLPOSITION);
-	 }
-	 */
-
 	/*********************************/
 	/***** TASK CALLBACK METHODS *****/
 	/*********************************/
@@ -340,6 +317,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 			// Verbind adapter met recyclerview
 			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
+			// geef breedte van scherm/app door aan adapter,
+			// voor berekenen van aantal kolommen in staggered grid layout
 			adapter.setScreenWidth(mScreenWidth);
 			mRecyclerView.setAdapter(adapter);
 

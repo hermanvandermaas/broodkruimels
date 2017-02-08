@@ -57,11 +57,10 @@ public class DetailActivity extends AppCompatActivity
 			// Maak juiste URL voor downloaden grote afbeelding
 			Boolean mSizeKnown = (mImgWidth > 0 && mImgHeight > 0);
 			String mOrientation = (mImgWidth > mImgHeight) ? ("landscape") : ("portrait");
-			String mImageSize = getResources().getString(R.string.activity_detail_image_size);
+			int mUrlWidth = getResources().getInteger(R.integer.activity_detail_image_size);
 			
 			if (mOrientation == "landscape" && mSizeKnown)
 			{
-				mUrlWidth = Integer.parseInt(mImageSize);
 				mAspectRatio = (float) mImgHeight / mImgWidth;
 				mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
 				mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
@@ -69,7 +68,7 @@ public class DetailActivity extends AppCompatActivity
 			
 			if (mOrientation == "portrait" && mSizeKnown)
 			{
-				mUrlHeight = Integer.parseInt(mImageSize);
+				mUrlHeight = mUrlWidth;
 				mAspectRatio = (float) mImgWidth / mImgHeight;
 				mUrlWidth = Math.round(mUrlHeight * mAspectRatio);
 				mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
