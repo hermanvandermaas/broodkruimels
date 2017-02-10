@@ -14,9 +14,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private List<FeedItem> feedItemList;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
+	private int mColumnWidth;
+	private float mLogicalDensity;
 	private String mScreenWidth;
 	private int mItemLayout;
-
+	
     public MyRecyclerViewAdapter(Context context, List<FeedItem> feedItemList)
 	{
         this.feedItemList = feedItemList;
@@ -46,7 +48,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(CustomViewHolder customViewHolder, int i)
 	{
         final FeedItem feedItem = feedItemList.get(i);
-		final CustomViewHolder mCustomViewHolder = customViewHolder;
 
         //Download image using picasso library
         if (!TextUtils.isEmpty(feedItem.getMediacontent()))
@@ -66,29 +67,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 			}
 			else
 			{
-				// Vind breedte van de cards in een staggered grid layout
-				// als die layout van toepassing is
-
-				customViewHolder.itemView.post(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							int imageWidth = feedItem.getMediawidth();
-							int imageHeight = feedItem.getMediaheight();
-							int cellWidth = mCustomViewHolder.itemView.getWidth();
-
-							Log.i("HermLog", "cellWidth: " + cellWidth);
-
-						}
-					});
-
+				// kolom breedte staat in values in eenheid dp,
+				// hier omrekenen in pixels
+				int mImgWidthPixels = Math.round( mColumnWidth * mLogicalDensity ) + 1;
+				Log.i("HermLog", "mColumnWidth: " + mColumnWidth);
+				Log.i("HermLog", "mLogicalDensity: " + mLogicalDensity);
+				Log.i("HermLog", "mImgWidthPixels: " + mImgWidthPixels);
+				
 				// Afbeelding voor staggered grid layout
 				Picasso
 					.with(mContext)
 					.load(feedItem.getMediacontent())
 					.error(R.drawable.placeholder)
 					.placeholder(R.drawable.placeholder)
+					.resize(mImgWidthPixels, 0)
 					.transform(new RoundedCornersTransformation(2, 0, RoundedCornersTransformation.CornerType.TOP))
 					.into(customViewHolder.imageView);
 			}
@@ -107,7 +99,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 onItemClickListener.onItemClick(feedItem);
             }
         };
-
 
         customViewHolder.imageView.setOnClickListener(listener);
         customViewHolder.textViewTitle.setOnClickListener(listener);
@@ -138,10 +129,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 			this.textViewContent = (TextView) view.findViewById(R.id.content);
         }
     }
-
+	
+	public void setColumnWidth(int mColumnWidth)
+	{
+		this.mColumnWidth = mColumnWidth;
+	}
+	
 	public void setScreenWidth(String mScreenwidth)
 	{
 		this.mScreenWidth = mScreenwidth;
+	}
+	
+	public void setLogicalDensity(float mLogicalDensity)
+	{
+		this.mLogicalDensity = mLogicalDensity;
 	}
 
     public OnItemClickListener getOnItemClickListener()

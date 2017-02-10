@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private MyRecyclerViewAdapter adapter;
 	private Context mContext;
+	private float mLogicalDensity;
+	private int mColumnWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -287,7 +289,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			View mView = findViewById(R.id.coordinator);
 			int mViewWidth = mView.getWidth();
 			DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-			int AppWidthDp = Math.round(mViewWidth / displayMetrics.density);
+			mLogicalDensity = displayMetrics.density;
+			int AppWidthDp = Math.round(mViewWidth / mLogicalDensity);
 			
 			// Bepaal of de weergave van de app smal of breed is
 			if (AppWidthDp <= getResources().getInteger(R.integer.listview_max_width))
@@ -310,16 +313,22 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			else
 			{
 				// Koppel layoutmanager voor breed scherm
-				int mNumberOfColumns = Math.round( AppWidthDp / getResources().getInteger(R.integer.staggeredgridview_column_width) );
+				mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
+				int mNumberOfColumns = Math.round( (float) AppWidthDp / mColumnWidth );
+				Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
 				mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(mNumberOfColumns, StaggeredGridLayoutManager.VERTICAL);
 				mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 			}
 
-			// Verbind adapter met recyclerview
+			// maak adapter instance
 			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
-			// geef breedte van scherm/app door aan adapter,
-			// voor berekenen van aantal kolommen in staggered grid layout
+			// instelling appbreedte en logical density in adapter,
+			// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
+			// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
+			adapter.setColumnWidth(mColumnWidth);
 			adapter.setScreenWidth(mScreenWidth);
+			adapter.setLogicalDensity(mLogicalDensity);
+			// Verbind adapter met recyclerview
 			mRecyclerView.setAdapter(adapter);
 
 			// Actie bij klik op item
