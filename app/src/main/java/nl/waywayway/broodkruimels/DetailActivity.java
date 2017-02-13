@@ -15,6 +15,7 @@ public class DetailActivity extends AppCompatActivity
 {
 	private Context mContext;
 	private ImageView mImageview;
+	private ProgressBar mProgressBar;
 	private TextView mTextViewTitle;
 	private TextView mTextViewPubdate;
 	private TextView mTextViewCreator;
@@ -23,7 +24,7 @@ public class DetailActivity extends AppCompatActivity
 	private int mUrlWidth;
 	private int mUrlHeight;
 	private Float mAspectRatio;
-	
+
 	@Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -32,12 +33,12 @@ public class DetailActivity extends AppCompatActivity
 
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
-		
+
 		// Maak toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		// Haal data uit intent
 		Intent mIntent = getIntent();
 		String mImageUrl = mIntent.getStringExtra("mediacontent");
@@ -48,24 +49,24 @@ public class DetailActivity extends AppCompatActivity
 		String mPubdate = mIntent.getStringExtra("pubdate");
 		String mCreator = mIntent.getStringExtra("creator");
 		String mContent = mIntent.getStringExtra("content");
-		
+
 		// Download image using picasso library
-        if ( !TextUtils.isEmpty(mImageUrl) )
+        if (!TextUtils.isEmpty(mImageUrl))
 		{
 			mImageview = (ImageView) findViewById(R.id.image_detail);
-			
+
 			// Maak juiste URL voor downloaden grote afbeelding
 			Boolean mSizeKnown = (mImgWidth > 0 && mImgHeight > 0);
 			String mOrientation = (mImgWidth > mImgHeight) ? ("landscape") : ("portrait");
 			int mUrlWidth = getResources().getInteger(R.integer.activity_detail_image_size);
-			
+
 			if (mOrientation == "landscape" && mSizeKnown)
 			{
 				mAspectRatio = (float) mImgHeight / mImgWidth;
 				mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
 				mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
 			}
-			
+
 			if (mOrientation == "portrait" && mSizeKnown)
 			{
 				mUrlHeight = mUrlWidth;
@@ -73,18 +74,18 @@ public class DetailActivity extends AppCompatActivity
 				mUrlWidth = Math.round(mUrlHeight * mAspectRatio);
 				mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
 			}
-			
-			if ( !mSizeKnown )
+
+			if (!mSizeKnown)
 			{
 				// Als afmetingen niet bekend, oorspronkelijke afbeelding downloaden
 				// mogelijk erg grote afbeelding...
 				mUrlDimensions = "";
 			}
-			
+
 			String mRegex = "(?i)(.+)(-\\d+x\\d+)(\\.jpg|\\.jpeg)";
 			mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
 			// eind maak url
-			
+
 			Log.i("HermLog", "mOrientation: " + mOrientation);
 			Log.i("HermLog", "mSizeknown: " + mSizeKnown);
 			Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
@@ -93,14 +94,30 @@ public class DetailActivity extends AppCompatActivity
 			Log.i("HermLog", "mImgWidth: " + mImgWidth);
 			Log.i("HermLog", "mImgHeight: " + mImgHeight);
 			Log.i("HermLog", "mImageUrl: " + mImageUrl);
-			
+
+			// progress bar indeterminate (draaiende cirkel)
+			// zichtbaar maken tijdens downloaden afbeelding
+			mProgressBar = (ProgressBar) findViewById(R.id.image_detail_progress_bar);
+			mProgressBar.setVisibility(ProgressBar.VISIBLE);
+
 			// Laad grote afbeelding
             Picasso
 				.with(mContext)
 				.load(mImageUrl)
-				.error(R.drawable.placeholder)
-				.placeholder(R.drawable.placeholder)
-				.into(mImageview);
+				.into(mImageview, new Callback()
+				{
+					@Override
+					public void onSuccess()
+					{
+						mProgressBar.setVisibility(ProgressBar.GONE);
+					}
+
+					@Override
+					public void onError()
+					{
+						Log.i(	"HermLog", "Afbeelding downloadfout");
+					}
+				});
         }
 
 		// Vind text views
