@@ -51,8 +51,6 @@
 					android:id="@+id/image_detail_progress_bar"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:indeterminateTint="?attr/colorPrimary"
-					android:indeterminateTintMode="src_in"
 					android:layout_centerInParent="true"
 					android:visibility="gone"/>
 

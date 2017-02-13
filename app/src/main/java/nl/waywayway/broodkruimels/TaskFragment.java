@@ -178,7 +178,7 @@ public class TaskFragment extends Fragment
 				.build();
 
 			// https://waywayway.nl/bk/?s=0&n=1
-			String mUrl = "https://waywayway.nl/bk/?s=0&n=20";
+			String mUrl = "https://waywayway.nl/bk/?s=0&n=40";
 			Request mRequest = new Request.Builder()
 				.url(mUrl)
 				.build();
