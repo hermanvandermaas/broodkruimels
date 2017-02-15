@@ -3,4 +3,5 @@
     <integer name="listview_max_width">320</integer>
 	<integer name="staggeredgridview_column_width">200</integer>
 	<integer name="activity_detail_image_size">1024</integer>
+	<integer name="items_per_page">40</integer>
 </resources>

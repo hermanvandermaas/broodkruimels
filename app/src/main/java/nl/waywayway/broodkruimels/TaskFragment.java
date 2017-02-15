@@ -37,6 +37,9 @@ public class TaskFragment extends Fragment
 	private String mUrl;
 	private Request mRequest;
 	private Response mResponse;
+	private int lastDownloadedItemNumber = 0; // begint met 0
+	private int itemsPerPage;
+	String url;
 
 	/**
 	 * Hold a reference to the parent Activity so we can report the task's current
@@ -55,6 +58,12 @@ public class TaskFragment extends Fragment
 		// Hold a reference to the parent Activity so we can report back the task's
 		// current progress and results.
 		mCallbacks = (TaskCallbacks) activity;
+		
+		// itemsperpage is aantal items dat per keer opgehaald moet worden
+		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);
+		
+		// url is de basis url voor ophalen data
+		url = getActivity().getResources().getString(R.string.url_data);
 	}
 
 	/**
@@ -130,24 +139,6 @@ public class TaskFragment extends Fragment
 		this.mHasDownloaded = mHasDownloaded;
 	}
 	
-	/*
-	// Getter wel/niet recyclerview gemaakt
-	public boolean getHasRecyclerviewReady()
-	{
-		return mHasRecyclerviewReady;
-	}	
-
-	// Setter wel/niet recyclerview gemaakt
-	public void setHasRecyclerviewReady(boolean mHasRecyclerviewReady)
-	{
-		this.mHasRecyclerviewReady = mHasRecyclerviewReady;
-	}
-	*/
-	
-	/***************************/
-	/***** BACKGROUND TASK *****/
-	/***************************/
-
 	/**
 	 * A dummy task that performs some (dumb) background work and proxies progress
 	 * updates and results back to the Activity.
@@ -176,9 +167,23 @@ public class TaskFragment extends Fragment
 			OkHttpClient mClient = new OkHttpClient.Builder()
 				.readTimeout(30, TimeUnit.SECONDS)
 				.build();
+				
+			/** Maak URL voor downloaden data
+			Query string heeft de vorm:
+			?s=0&n=40
+			waarin:
+			s=eerste op te halen item in de gesorteerde lijst met alle items, het eerste item is item 0
+			n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
+			*/
+			
+			String mUrl = url
+				+ "s="
+				+ Integer.toString(lastDownloadedItemNumber) 
+				+ "&n=" 
+				+ Integer.toString(itemsPerPage);
 
-			// https://waywayway.nl/bk/?s=0&n=1
-			String mUrl = "https://waywayway.nl/bk/?s=0&n=40";
+			Log.i("HermLog", "mUrl: " + mUrl);
+			
 			Request mRequest = new Request.Builder()
 				.url(mUrl)
 				.build();
@@ -195,6 +200,12 @@ public class TaskFragment extends Fragment
 				}
 				
 				Log.i("HermLog", "Gedownload!" );
+				
+				// Zet teller omhoog met aantal items per "pagina" voor volgende keer data ophalen
+				lastDownloadedItemNumber += itemsPerPage;
+				
+				Log.i("HermLog", "lastDownloadedItemNumber: " + lastDownloadedItemNumber);
+				
 				return mResponse.body().string();
 			}
 			catch (IOException e)

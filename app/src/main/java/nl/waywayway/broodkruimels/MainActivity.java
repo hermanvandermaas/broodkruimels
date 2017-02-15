@@ -10,6 +10,7 @@ import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+import com.paginate.*;
 import java.text.*;
 import java.util.*;
 import org.json.*;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private Context mContext;
 	private float mLogicalDensity;
 	private int mColumnWidth;
+	private boolean loadingInProgress;
+	private boolean hasLoadedAllItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -315,21 +318,54 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				// Koppel layoutmanager voor breed scherm
 				mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
 				int mNumberOfColumns = Math.round( (float) AppWidthDp / mColumnWidth );
+				
 				Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
+				
 				mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(mNumberOfColumns, StaggeredGridLayoutManager.VERTICAL);
 				mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 			}
 
 			// maak adapter instance
 			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
+			
 			// instelling appbreedte en logical density in adapter,
 			// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
 			// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
 			adapter.setColumnWidth(mColumnWidth);
 			adapter.setScreenWidth(mScreenWidth);
 			adapter.setLogicalDensity(mLogicalDensity);
+			
 			// Verbind adapter met recyclerview
 			mRecyclerView.setAdapter(adapter);
+			
+			// endless scrolling
+			Paginate.Callbacks callbacks = new Paginate.Callbacks() {
+				@Override
+				public void onLoadMore() {
+					// Load next page of data (e.g. network or database)
+					showSnackbar("onLoadMore()");
+				}
+
+				@Override
+				public boolean isLoading() {
+					// Indicate whether new page loading is in progress or not
+					return loadingInProgress;
+				}
+
+				@Override
+				public boolean hasLoadedAllItems() {
+					// Indicate whether all data (pages) are loaded or not
+					return hasLoadedAllItems;
+				}
+			};
+
+			// endless scrolling
+			Paginate.with(mRecyclerView, callbacks)
+				.setLoadingTriggerThreshold(2)
+				.addLoadingListItem(true)
+				// .setLoadingListItemCreator(new CustomLoadingListItemCreator())
+				// .setLoadingListItemSpanSizeLookup(new CustomLoadingListItemSpanLookup())
+				.build();			
 
 			// Actie bij klik op item
 			adapter.setOnItemClickListener(new OnItemClickListener()
@@ -350,8 +386,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 						mContext.startActivity(mIntent);
 					}
 				});
-
-			// mTaskFragment.setHasRecyclerviewReady(true);
 		}
 	}
 
@@ -375,13 +409,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			return;
 		}
 
-		/*
-		 if ( !mTaskFragment.getHasRecyclerviewReady() )
-		 {
-		 downloadXml();
-		 }
-		 */
-
 		downloadXml();
 	}
 
@@ -389,15 +416,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onResume()
 	{
 		super.onResume();
-
-		/*
-		 Log.i("HermLog", "onResume()" );
-
-		 if (mScrollposition != null) {
-		 Log.i("HermLog", "mScrollposition" );
-		 mLinearLayoutManager.onRestoreInstanceState(mScrollposition);
-		 }
-		 */
 	}
 
 	@Override
