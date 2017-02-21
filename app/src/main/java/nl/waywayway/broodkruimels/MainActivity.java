@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
+		
+		// maak lege feedsList aan
+		feedsList = new ArrayList<>();
 
 		// Maak toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				public void onClick(View v)
 				{
 					// Perform action on click
-					downloadXml();
+					downloadXml(false);
 				}
 			});
 
@@ -73,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
-
-
 
 		// Als geen verbinding, toon knop
 		// probeer opnieuw
@@ -106,12 +107,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			mTaskFragment.cancel();
 		}
-
-		mTaskFragment.setHasDownloaded(false);
 	}
 
-	// Start download json
-	private void downloadXml()
+	// Start download json (was eerst xml, vandaar de method naam)
+	private void downloadXml(Boolean downloadMoreItems)
 	{
 		// Als verbinding, download json
 		if (isNetworkConnected())
@@ -126,9 +125,21 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			viewRecycler.setVisibility(View.VISIBLE);
 
 			// Start asynchrone taak
-			if (!mTaskFragment.isRunning())
+			if ( !mTaskFragment.isRunning() )
 			{
-				mTaskFragment.start();
+				// Geef bestaande lijstgrootte door, voor aanvullend data downloaden bij endless scrolling
+				mTaskFragment.setFeedsListSize( feedsList.size() );
+				
+				// Bij eerste download van items start(false)
+				// bij latere download van extra items start(true)
+				if (downloadMoreItems)
+				{
+					mTaskFragment.start(true);
+				}
+				else
+				{
+					mTaskFragment.start(false);
+				}
 			}
 		}
 		else
@@ -136,7 +147,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
 	}
-
+	
+	// json string verwerken na download
 	// Zet json string per item in List<E>
 	private void parseResult(String result)
 	{
@@ -146,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("data");
-            feedsList = new ArrayList<>();
 
             for (int i = 0; i < posts.length(); i++)
 			{
@@ -155,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Velden in de lijst met feeditems vullen
                 item.setTitle(post.optString("title"));
+				
 				// Datum opmaken
 				String mDateString = post.optString("pubDate");
 				try
@@ -169,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
             		e.printStackTrace();
 				}
 				// einde datum opmaken
+				
 				item.setCreator(post.optString("creator"));
 				item.setContent(post.optString("content"));
                 item.setMediacontent(post.optString("mediacontent"));
@@ -276,15 +289,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			return;
 		}		
 
-		// List met xml maken, als gegevens aanwezig:
-		// zet gedownload op ja
+		// Recyclerview met json maken
 		parseResult(mResult);
 		int responseSize = feedsList.size();
 
 		if (responseSize > 0)
 		{
 			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize));
-			mTaskFragment.setHasDownloaded(true);
 
 			// Vind breedte van de app in dp
 			// dp = pixels / logical density
@@ -301,8 +312,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			else
 				this.mScreenWidth = "wide";
 
-			Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
-			Log.i("HermLog", "Density: " + displayMetrics.density);
+			// Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
+			// Log.i("HermLog", "Density: " + displayMetrics.density);
 
 			// Vind recyclerview
 			mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -319,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
 				int mNumberOfColumns = Math.round( (float) AppWidthDp / mColumnWidth );
 				
-				Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
+				// Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
 				
 				mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(mNumberOfColumns, StaggeredGridLayoutManager.VERTICAL);
 				mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
@@ -361,8 +372,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 			// endless scrolling
 			Paginate.with(mRecyclerView, callbacks)
-				.setLoadingTriggerThreshold(2)
-				.addLoadingListItem(true)
+				.setLoadingTriggerThreshold(1)
+				.addLoadingListItem(false)
 				// .setLoadingListItemCreator(new CustomLoadingListItemCreator())
 				// .setLoadingListItemSpanSizeLookup(new CustomLoadingListItemSpanLookup())
 				.build();			
@@ -396,10 +407,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	protected void onStart()
 	{
-		Log.i("HermLog", "onStart()");
-
 		super.onStart();
-
+		
+		Log.i("HermLog", "onStart()");
+		
 		if (mTaskFragment.isRunning())
 		{
 			// Progressbar tonen als downloadproces nog loopt
@@ -408,31 +419,41 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mProgressbar.setVisibility(View.VISIBLE);
 			return;
 		}
-
-		downloadXml();
+		
+		Log.i("HermLog", "feedsList.size(): " + feedsList.size() );
+		
+		// Data downloaden, behalve als er al data in de feedslist staan
+		if ( !(feedsList.size() > 0) )
+		{
+			downloadXml(false);
+		}
 	}
 
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
+		Log.i("HermLog", "onResume()");
 	}
 
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
+		Log.i("HermLog", "onPause()");
 	}
 
 	@Override
 	protected void onStop()
 	{
 		super.onStop();
+		Log.i("HermLog", "onStop()");
 	}
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
+		Log.i("HermLog", "onDestroy()");
 	}
 }

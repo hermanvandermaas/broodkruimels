@@ -31,14 +31,13 @@ public class TaskFragment extends Fragment
 	private TaskCallbacks mCallbacks;
 	private DummyTask mTask;
 	private boolean mRunning;
-	private boolean mHasDownloaded;
-	private boolean mHasRecyclerviewReady;
 	private OkHttpClient mClient;
 	private String mUrl;
 	private Request mRequest;
 	private Response mResponse;
-	private int lastDownloadedItemNumber = 0; // begint met 0
+	private int startItem;
 	private int itemsPerPage;
+	private int feedsListSize;
 	String url;
 
 	/**
@@ -50,6 +49,7 @@ public class TaskFragment extends Fragment
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
+		
 		if (!(activity instanceof TaskCallbacks))
 		{
 			throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
@@ -58,10 +58,10 @@ public class TaskFragment extends Fragment
 		// Hold a reference to the parent Activity so we can report back the task's
 		// current progress and results.
 		mCallbacks = (TaskCallbacks) activity;
-		
+
 		// itemsperpage is aantal items dat per keer opgehaald moet worden
 		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);
-		
+
 		// url is de basis url voor ophalen data
 		url = getActivity().getResources().getString(R.string.url_data);
 	}
@@ -96,12 +96,14 @@ public class TaskFragment extends Fragment
 	/**
 	 * Start the background task.
 	 */
-	public void start()
+	// parameter false: eerste download
+	// parameter true: extra data downoaden bij endless scrolling
+	public void start(Boolean downloadMoreItems)
 	{
 		if (!mRunning)
 		{
 			mTask = new DummyTask();
-			mTask.execute();
+			mTask.execute(downloadMoreItems);
 			mRunning = true;
 		}
 	}
@@ -127,23 +129,23 @@ public class TaskFragment extends Fragment
 		return mRunning;
 	}
 
-	// Getter wel/niet xml gedownload
-	public boolean hasDownloaded()
+	// setter en getter voor feedsListSize, gebruikt voor
+	// bepalen welke extra data te downloaden bij endless scrolling
+	public void setFeedsListSize(int feedsListSize)
 	{
-		return mHasDownloaded;
-	}	
-
-	// Setter wel/niet xml gedownload
-	public void setHasDownloaded(boolean mHasDownloaded)
-	{
-		this.mHasDownloaded = mHasDownloaded;
+		this.feedsListSize = feedsListSize;
 	}
-	
+
+	public int getFeedsListSize()
+	{
+		return feedsListSize;
+	}
+
 	/**
 	 * A dummy task that performs some (dumb) background work and proxies progress
 	 * updates and results back to the Activity.
 	 */
-	private class DummyTask extends AsyncTask<Void, Integer, String>
+	private class DummyTask extends AsyncTask<Boolean, Integer, String>
 	{
 
 		@Override
@@ -159,31 +161,49 @@ public class TaskFragment extends Fragment
 		 * background thread, as this could result in a race condition.
 		 */
 		@Override
-		protected String doInBackground(Void... ignore)
+		protected String doInBackground(Boolean... downloadMoreItems)
 		{
-			Log.i("HermLog", "doInBackground" );
+			Log.i("HermLog", "doInBackground");
+			Log.i("HermLog", "downloadMoreItems[0]: " + downloadMoreItems[0].toString() );
 
 			// De asynchrone taak
 			OkHttpClient mClient = new OkHttpClient.Builder()
 				.readTimeout(30, TimeUnit.SECONDS)
 				.build();
-				
+
 			/** Maak URL voor downloaden data
-			Query string heeft de vorm:
-			?s=0&n=40
-			waarin:
-			s=eerste op te halen item in de gesorteerde lijst met alle items, het eerste item is item 0
-			n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
-			*/
-			
+			 Query string heeft de vorm:
+			 ?s=0&n=40
+			 waarin:
+			 s=eerste op te halen item in de gesorteerde lijst met alle items,
+			 letop: het eerste item is item 0
+			 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
+
+			 Endless scrolling:
+			 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
+			 */
+			 
+			if (downloadMoreItems[0])
+			{
+				// In geval eerste download
+				startItem = 0;
+			}
+			else
+			{
+				// In geval latere downloads voor endless scrolling
+				startItem = getFeedsListSize();
+			}
+
+			Log.i("HermLog", "startItem: " + startItem);
+
 			String mUrl = url
 				+ "s="
-				+ Integer.toString(lastDownloadedItemNumber) 
-				+ "&n=" 
+				+ Integer.toString(startItem)
+				+ "&n="
 				+ Integer.toString(itemsPerPage);
 
 			Log.i("HermLog", "mUrl: " + mUrl);
-			
+
 			Request mRequest = new Request.Builder()
 				.url(mUrl)
 				.build();
@@ -198,22 +218,22 @@ public class TaskFragment extends Fragment
 				{
 					throw new IOException("Unexpected code " + mResponse);
 				}
-				
-				Log.i("HermLog", "Gedownload!" );
-				
+
+				Log.i("HermLog", "Gedownload!");
+
 				// Zet teller omhoog met aantal items per "pagina" voor volgende keer data ophalen
-				lastDownloadedItemNumber += itemsPerPage;
-				
-				Log.i("HermLog", "lastDownloadedItemNumber: " + lastDownloadedItemNumber);
-				
+				// lastDownloadedItemNumber += itemsPerPage;
+
+				// Log.i("HermLog", "lastDownloadedItemNumber: " + lastDownloadedItemNumber);
+
 				return mResponse.body().string();
 			}
 			catch (IOException e)
 			{
 				// TODO: catch exception
-				Log.i("HermLog", "Exception bij download JSON" );
+				Log.i("HermLog", "Exception bij download JSON");
 			}
-			
+
 			return "Fout!";
 
 			// Eind asynchrone taak

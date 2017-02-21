@@ -70,9 +70,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 				// kolom breedte staat in values in eenheid dp,
 				// hier omrekenen in pixels
 				int mImgWidthPixels = Math.round( mColumnWidth * mLogicalDensity ) + 1;
-				Log.i("HermLog", "mColumnWidth: " + mColumnWidth);
-				Log.i("HermLog", "mLogicalDensity: " + mLogicalDensity);
-				Log.i("HermLog", "mImgWidthPixels: " + mImgWidthPixels);
+				
+				// Log.i("HermLog", "mColumnWidth: " + mColumnWidth);
+				// Log.i("HermLog", "mLogicalDensity: " + mLogicalDensity);
+				// Log.i("HermLog", "mImgWidthPixels: " + mImgWidthPixels);
 				
 				// Afbeelding voor staggered grid layout
 				Picasso
