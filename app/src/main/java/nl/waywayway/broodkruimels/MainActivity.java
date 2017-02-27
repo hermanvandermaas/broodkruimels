@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
-		
+
 		// maak lege feedsList aan
 		feedsList = new ArrayList<>();
 
@@ -125,11 +125,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			viewRecycler.setVisibility(View.VISIBLE);
 
 			// Start asynchrone taak
-			if ( !mTaskFragment.isRunning() )
+			if (!mTaskFragment.isRunning())
 			{
 				// Geef bestaande lijstgrootte door, voor aanvullend data downloaden bij endless scrolling
-				mTaskFragment.setFeedsListSize( feedsList.size() );
-				
+				mTaskFragment.setFeedsListSize(feedsList.size());
+
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items start(true)
 				if (downloadMoreItems)
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
 	}
-	
+
 	// json string verwerken na download
 	// Zet json string per item in List<E>
 	private void parseResult(String result)
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Velden in de lijst met feeditems vullen
                 item.setTitle(post.optString("title"));
-				
+
 				// Datum opmaken
 				String mDateString = post.optString("pubDate");
 				try
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
             		e.printStackTrace();
 				}
 				// einde datum opmaken
-				
+
 				item.setCreator(post.optString("creator"));
 				item.setContent(post.optString("content"));
                 item.setMediacontent(post.optString("mediacontent"));
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onPostExecute(String mResult)
 	{
 		Log.i("HermLog", "onPostExecute()");
-		
+
 		// Verberg progress bar
 		hideProgressBar();
 
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
 			mLogicalDensity = displayMetrics.density;
 			int AppWidthDp = Math.round(mViewWidth / mLogicalDensity);
-			
+
 			// Bepaal of de weergave van de app smal of breed is
 			if (AppWidthDp <= getResources().getInteger(R.integer.listview_max_width))
 				this.mScreenWidth = "narrow";
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 			// Vind recyclerview
 			mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-			
+
 			if (this.mScreenWidth == "narrow")
 			{
 				// Koppel layoutmanager voor smal scherm
@@ -328,43 +328,46 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
 				// Koppel layoutmanager voor breed scherm
 				mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
-				int mNumberOfColumns = Math.round( (float) AppWidthDp / mColumnWidth );
-				
+				int mNumberOfColumns = Math.round((float) AppWidthDp / mColumnWidth);
+
 				// Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
-				
+
 				mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(mNumberOfColumns, StaggeredGridLayoutManager.VERTICAL);
 				mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 			}
 
 			// maak adapter instance
 			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
-			
+
 			// instelling appbreedte en logical density in adapter,
 			// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
 			// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
 			adapter.setColumnWidth(mColumnWidth);
 			adapter.setScreenWidth(mScreenWidth);
 			adapter.setLogicalDensity(mLogicalDensity);
-			
+
 			// Verbind adapter met recyclerview
 			mRecyclerView.setAdapter(adapter);
-			
+
 			// endless scrolling
 			Paginate.Callbacks callbacks = new Paginate.Callbacks() {
 				@Override
-				public void onLoadMore() {
+				public void onLoadMore()
+				{
 					// Load next page of data (e.g. network or database)
 					showSnackbar("onLoadMore()");
 				}
 
 				@Override
-				public boolean isLoading() {
+				public boolean isLoading()
+				{
 					// Indicate whether new page loading is in progress or not
 					return loadingInProgress;
 				}
 
 				@Override
-				public boolean hasLoadedAllItems() {
+				public boolean hasLoadedAllItems()
+				{
 					// Indicate whether all data (pages) are loaded or not
 					return hasLoadedAllItems;
 				}
@@ -412,11 +415,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	// Progressbar verbergen
 	private void hideProgressBar()
 	{
-	View mProgressbar = findViewById(R.id.toolbar_progress_bar);
-	mProgressbar.setVisibility(View.GONE);
+		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+		mProgressbar.setVisibility(View.GONE);
 	}
-	
-	
+
+
 	/************************/
 	/***** LOGS & STUFF *****/
 	/************************/
@@ -425,20 +428,20 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void onStart()
 	{
 		super.onStart();
-		
+
 		Log.i("HermLog", "onStart()");
-		
+
 		// Progressbar tonen als downloadproces nog loopt
 		// na configuratie verandering
-		if ( mTaskFragment.isRunning() )
+		if (mTaskFragment.isRunning())
 		{
 			showProgressBar();
 		}
-		
-		Log.i("HermLog", "feedsList.size(): " + feedsList.size() );
-		
+
+		Log.i("HermLog", "feedsList.size(): " + feedsList.size());
+
 		// Data downloaden, behalve als er al data in de feedslist staan
-		if ( !(feedsList.size() > 0) )
+		if (!(feedsList.size() > 0))
 		{
 			downloadXml(false);
 		}
