@@ -176,7 +176,7 @@ public class TaskFragment extends Fragment
 			 ?s=0&n=40
 			 waarin:
 			 s=eerste op te halen item in de gesorteerde lijst met alle items,
-			 letop: het eerste item is item 0
+			 let op: het eerste item is item 0
 			 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
 
 			 Endless scrolling:
@@ -214,17 +214,12 @@ public class TaskFragment extends Fragment
 					.newCall(mRequest)
 					.execute();
 
-				if (!mResponse.isSuccessful())
+				if ( !mResponse.isSuccessful() )
 				{
 					throw new IOException("Unexpected code " + mResponse);
 				}
 
 				Log.i("HermLog", "Gedownload!");
-
-				// Zet teller omhoog met aantal items per "pagina" voor volgende keer data ophalen
-				// lastDownloadedItemNumber += itemsPerPage;
-
-				// Log.i("HermLog", "lastDownloadedItemNumber: " + lastDownloadedItemNumber);
 
 				return mResponse.body().string();
 			}

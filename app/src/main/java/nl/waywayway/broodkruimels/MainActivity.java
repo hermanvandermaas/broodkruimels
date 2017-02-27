@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				}
 			}
 		}
+		// Als geen verbinding, toon knop voor opnieuw proberen
 		else
 		{
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
@@ -275,10 +276,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onPostExecute(String mResult)
 	{
 		Log.i("HermLog", "onPostExecute()");
-
-		// Progressbar verbergen
-		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
-		mProgressbar.setVisibility(View.GONE);
+		
+		// Verberg progress bar
+		hideProgressBar();
 
 		// Als niets gedownload, toon boodschap
 		// en knop probeer opnieuw
@@ -400,6 +400,23 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 	}
 
+	// Progressbar tonen als downloadproces nog loopt
+	// na configuratie verandering
+	private void showProgressBar()
+	{
+		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+		mProgressbar.setVisibility(View.VISIBLE);
+		return;
+	}
+
+	// Progressbar verbergen
+	private void hideProgressBar()
+	{
+	View mProgressbar = findViewById(R.id.toolbar_progress_bar);
+	mProgressbar.setVisibility(View.GONE);
+	}
+	
+	
 	/************************/
 	/***** LOGS & STUFF *****/
 	/************************/
@@ -411,13 +428,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		
 		Log.i("HermLog", "onStart()");
 		
-		if (mTaskFragment.isRunning())
+		// Progressbar tonen als downloadproces nog loopt
+		// na configuratie verandering
+		if ( mTaskFragment.isRunning() )
 		{
-			// Progressbar tonen als downloadproces nog loopt
-			// na configuratie verandering
-			View mProgressbar = findViewById(R.id.toolbar_progress_bar);
-			mProgressbar.setVisibility(View.VISIBLE);
-			return;
+			showProgressBar();
 		}
 		
 		Log.i("HermLog", "feedsList.size(): " + feedsList.size() );
