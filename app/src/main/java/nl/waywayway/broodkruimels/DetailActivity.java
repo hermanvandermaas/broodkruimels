@@ -5,6 +5,7 @@ import android.os.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
 import android.text.*;
+import android.text.method.*;
 import android.util.*;
 import android.widget.*;
 import com.squareup.picasso.*;
@@ -132,5 +133,7 @@ public class DetailActivity extends AppCompatActivity
 		mTextViewPubdate.setText(Html.fromHtml(mPubdate));
 		mTextViewCreator.setText(Html.fromHtml(mCreator));
 		mTextViewContent.setText(Html.fromHtml(mContent));
+		// Maak links klikbaar
+		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
