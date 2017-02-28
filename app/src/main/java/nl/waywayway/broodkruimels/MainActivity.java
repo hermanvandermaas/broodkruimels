@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private int mColumnWidth;
 	private boolean loadingInProgress;
 	private boolean hasLoadedAllItems;
+	int appWidthDp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -289,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			return;
 		}		
 
-		// Recyclerview met json maken
+		// Resultaat parsen in een arraylist
 		parseResult(mResult);
 		int responseSize = feedsList.size();
 
@@ -297,109 +298,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize));
 
-			// Vind breedte van de app in dp
-			// dp = pixels / logical density
-			// de gemeten breedte is de breedte van de hoogste view in de xml layout
-			View mView = findViewById(R.id.coordinator);
-			int mViewWidth = mView.getWidth();
-			DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-			mLogicalDensity = displayMetrics.density;
-			int AppWidthDp = Math.round(mViewWidth / mLogicalDensity);
+			// Koppel layoutmanager, verbind adapter, 
+			// instellen endless scrolling, actie bij aanklikken item
+			makeRecyclerView();
 
-			// Bepaal of de weergave van de app smal of breed is
-			if (AppWidthDp <= getResources().getInteger(R.integer.listview_max_width))
-				this.mScreenWidth = "narrow";
-			else
-				this.mScreenWidth = "wide";
-
-			// Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
-			// Log.i("HermLog", "Density: " + displayMetrics.density);
-
-			// Vind recyclerview
-			mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
-			if (this.mScreenWidth == "narrow")
-			{
-				// Koppel layoutmanager voor smal scherm
-				mLinearLayoutManager = new LinearLayoutManager(this);
-				mRecyclerView.setLayoutManager(mLinearLayoutManager);
-			}
-			else
-			{
-				// Koppel layoutmanager voor breed scherm
-				mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
-				int mNumberOfColumns = Math.round((float) AppWidthDp / mColumnWidth);
-
-				// Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
-
-				mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(mNumberOfColumns, StaggeredGridLayoutManager.VERTICAL);
-				mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-			}
-
-			// maak adapter instance
-			adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
-
-			// instelling appbreedte en logical density in adapter,
-			// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
-			// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
-			adapter.setColumnWidth(mColumnWidth);
-			adapter.setScreenWidth(mScreenWidth);
-			adapter.setLogicalDensity(mLogicalDensity);
-
-			// Verbind adapter met recyclerview
-			mRecyclerView.setAdapter(adapter);
-
-			// endless scrolling
-			Paginate.Callbacks callbacks = new Paginate.Callbacks() {
-				@Override
-				public void onLoadMore()
-				{
-					// Load next page of data (e.g. network or database)
-					showSnackbar("onLoadMore()");
-				}
-
-				@Override
-				public boolean isLoading()
-				{
-					// Indicate whether new page loading is in progress or not
-					return loadingInProgress;
-				}
-
-				@Override
-				public boolean hasLoadedAllItems()
-				{
-					// Indicate whether all data (pages) are loaded or not
-					return hasLoadedAllItems;
-				}
-			};
-
-			// endless scrolling
-			Paginate.with(mRecyclerView, callbacks)
-				.setLoadingTriggerThreshold(1)
-				.addLoadingListItem(false)
-				// .setLoadingListItemCreator(new CustomLoadingListItemCreator())
-				// .setLoadingListItemSpanSizeLookup(new CustomLoadingListItemSpanLookup())
-				.build();			
-
-			// Actie bij klik op item
-			adapter.setOnItemClickListener(new OnItemClickListener()
-				{
-					@Override
-					public void onItemClick(FeedItem item)
-					{
-						Intent mIntent = new Intent(mContext, DetailActivity.class);
-
-						mIntent.putExtra("mediacontent", item.getMediacontent());
-						mIntent.putExtra("imgwidth", item.getImgwidth());
-						mIntent.putExtra("imgheight", item.getImgheight());
-						mIntent.putExtra("title", item.getTitle());
-						mIntent.putExtra("pubdate", item.getPubdate());
-						mIntent.putExtra("creator", item.getCreator());
-						mIntent.putExtra("content", item.getContent());
-
-						mContext.startActivity(mIntent);
-					}
-				});
 		}
 	}
 
@@ -419,6 +321,159 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		mProgressbar.setVisibility(View.GONE);
 	}
 
+	// Bepaal breedte van de app: 'narrow' of 'width'
+	// grenswaarde staat in xml bestand resources / values / integers
+	private void findAppWidth()
+	{
+		// Vind breedte van de app in dp
+		// dp = pixels / logical density
+		// de gemeten breedte is de breedte van de hoogste view in het xml layout bestand
+		View mView = findViewById(R.id.coordinator);
+		int mViewWidth = mView.getWidth();
+		DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+		mLogicalDensity = displayMetrics.density;
+		appWidthDp = Math.round(mViewWidth / mLogicalDensity);
+
+		// Bepaal of de weergave van de app smal of breed is
+		if (appWidthDp <= getResources().getInteger(R.integer.listview_max_width))
+			this.mScreenWidth = "narrow";
+		else
+			this.mScreenWidth = "wide";
+
+		// Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
+		// Log.i("HermLog", "Density: " + displayMetrics.density);
+	}
+
+	private int getNumberOfColumns()
+	{
+		// Bereken eerst aantal kolommen
+		// Kolombreedte staat in xml bestand resources / values / integers
+		mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
+		int mNumberOfColumns = Math.round((float) appWidthDp / mColumnWidth);
+
+		// Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
+		
+		return mNumberOfColumns;
+	}
+	
+	// 
+	private void setLayoutManager()
+	{
+		if (this.mScreenWidth == "narrow")
+		{
+			// Koppel layoutmanager voor smal scherm
+			mLinearLayoutManager = new LinearLayoutManager(this);
+			mRecyclerView.setLayoutManager(mLinearLayoutManager);
+		}
+		else
+		{
+			// Koppel layoutmanager voor breed scherm
+			mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(getNumberOfColumns(), StaggeredGridLayoutManager.VERTICAL);
+			mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+		}
+	}
+	
+	// Koppel adapter
+	private void setAdapter()
+	{
+		// maak adapter instance
+		adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
+
+		// instelling appbreedte en logical density in adapter,
+		// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
+		// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
+		adapter.setColumnWidth(mColumnWidth);
+		adapter.setScreenWidth(mScreenWidth);
+		adapter.setLogicalDensity(mLogicalDensity);
+
+		// Verbind adapter met recyclerview
+		mRecyclerView.setAdapter(adapter);
+	}
+
+	// Endless scrolling
+	// met library 'Paginate'
+	private void endlessScrolling()
+	{
+		// endless scrolling
+		Paginate.Callbacks callbacks = new Paginate.Callbacks() {
+			@Override
+			public void onLoadMore()
+			{
+				// Load next page of data (e.g. network or database)
+				showSnackbar("onLoadMore()");
+			}
+
+			@Override
+			public boolean isLoading()
+			{
+				// Indicate whether new page loading is in progress or not
+				return loadingInProgress;
+			}
+
+			@Override
+			public boolean hasLoadedAllItems()
+			{
+				// Indicate whether all data (pages) are loaded or not
+				return hasLoadedAllItems;
+			}
+		};
+
+		// endless scrolling
+		Paginate.with(mRecyclerView, callbacks)
+			.setLoadingTriggerThreshold(1)
+			.addLoadingListItem(false)
+			// .setLoadingListItemCreator(new CustomLoadingListItemCreator())
+			// .setLoadingListItemSpanSizeLookup(new CustomLoadingListItemSpanLookup())
+			.build();
+	}
+	
+	// Actie bij klik op item
+	private void setClickAction()
+	{
+		// Actie bij klik op item
+		adapter.setOnItemClickListener(new OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(FeedItem item)
+				{
+					Intent mIntent = new Intent(mContext, DetailActivity.class);
+
+					mIntent.putExtra("mediacontent", item.getMediacontent());
+					mIntent.putExtra("imgwidth", item.getImgwidth());
+					mIntent.putExtra("imgheight", item.getImgheight());
+					mIntent.putExtra("title", item.getTitle());
+					mIntent.putExtra("pubdate", item.getPubdate());
+					mIntent.putExtra("creator", item.getCreator());
+					mIntent.putExtra("content", item.getContent());
+
+					mContext.startActivity(mIntent);
+				}
+		});
+	}
+	
+	// Vul recyclerview:
+	// Koppel layoutmanager, verbind adapter, 
+	// instellen endless scrolling, actie bij aanklikken item
+	private void makeRecyclerView()
+	{
+		// Bepaal breedte van de app: 'narrow' of 'wide'
+		findAppWidth();
+
+		// Vind recyclerview
+		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+		// Koppel juiste layoutmanager
+		setLayoutManager();
+		
+		// Koppel adapter
+		setAdapter();
+
+		// Endless scrolling
+		endlessScrolling();
+
+		// Actie bij klik op item
+		setClickAction();
+	}
 
 	/************************/
 	/***** LOGS & STUFF *****/
