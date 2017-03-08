@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private Context mContext;
 	private float mLogicalDensity;
 	private int mColumnWidth;
-	private boolean loadingInProgress;
+	private boolean pageLoadingInProgress;
 	private boolean hasLoadedAllItems;
 	int appWidthDp;
 
@@ -76,6 +76,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+		}
+		
+		// Als extra data voor endless scrolling nog aan het downloaden is na bv. schermrotatie (configuration change),
+		// stop downloaden (want eerst moet eerste 'page' downloaden), daarbij wordt getExtraPage op false gezet om
+		// om aan te geven wat de status van de taskfragment is: eerste page downloaden of extra data voor endless scrolling
+		if (mTaskFragment.isRunning() && mTaskFragment.getGetExtraPage() )
+		{
+			mTaskFragment.cancel();
 		}
 
 		// Als geen verbinding, toon knop
@@ -133,14 +141,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items start(true)
-				if (downloadMoreItems)
-				{
-					mTaskFragment.start(true);
-				}
-				else
-				{
-					mTaskFragment.start(false);
-				}
+				mTaskFragment.start(downloadMoreItems);
+			}
+			else
+			{
+				Log.i("HermLog", "mTaskFragment.isRunning(): " + mTaskFragment.isRunning());
 			}
 		}
 		// Als geen verbinding, toon knop voor opnieuw proberen
@@ -150,9 +155,28 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 	}
 
+	// Datum opmaken
+	private String formatDate(String mDateString, String dateFormat)
+	{
+		try
+		{
+			Date mDate = new SimpleDateFormat(dateFormat).parse(mDateString);
+			String mFormattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(mDate);
+			return mFormattedDate;
+		}
+		catch (Exception e)
+		{
+			Log.i("HermLog", "Date format exception in parseResult");
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+	
+	
 	// json string verwerken na download
 	// Zet json string per item in List<E>
-	private void parseResult(String result)
+	private void parseResult(String result, Boolean downloadMoreItems)
 	{
 		Log.i("HermLog", "parseResult()");
 
@@ -168,22 +192,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Velden in de lijst met feeditems vullen
                 item.setTitle(post.optString("title"));
-
-				// Datum opmaken
-				String mDateString = post.optString("pubDate");
-				try
-				{
-					Date mDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateString);
-					String mFormattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(mDate);
-					item.setPubdate(mFormattedDate);
-				}
-				catch (Exception e)
-				{
-					Log.i("HermLog", "Date format exception in parseResult");
-            		e.printStackTrace();
-				}
-				// einde datum opmaken
-
+				item.setPubdate(formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss"));
 				item.setCreator(post.optString("creator"));
 				item.setContent(post.optString("content"));
                 item.setMediacontent(post.optString("mediacontent"));
@@ -255,9 +264,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onPreExecute()
 	{
 		Log.i("HermLog", "onPreExecute()");
+		
+		// Appbar tonen, zodat progressbar (draaiende cirkel) zichtbaar wordt
+		// tijdens laden data
+		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
+		appBarLayout.setExpanded(true, true);
+		
 		// Progressbar tonen
-		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
-		mProgressbar.setVisibility(View.VISIBLE);
+		showProgressBar();
 	}
 
 	@Override
@@ -274,13 +288,26 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	}
 
 	@Override
-	public void onPostExecute(String mResult)
+	public void onPostExecute(String mResult, Boolean downloadMoreItems)
 	{
 		Log.i("HermLog", "onPostExecute()");
+		Log.i("HermLog", "onPostExecute() downloadMoreItems: " + downloadMoreItems);
 
 		// Verberg progress bar
 		hideProgressBar();
 
+		// Als extra data zijn gedownload voor endless scrolling,
+		// maar eerste 'pagina' met data staat niet (meer) in de lijst
+		// bv. vanwege tussentijdse schermrotatie (configuration change),
+		// dan data niet toevoegen aan lijst
+		if (!(feedsList.size() > 0) && downloadMoreItems)
+		{
+			Log.i("HermLog", "Extra data, maar geen bestaande data");
+			downloadMoreItems = false;
+			downloadXml(false);
+			return;
+		}
+		
 		// Als niets gedownload, toon boodschap
 		// en knop probeer opnieuw
 		if (mResult == "Fout!")
@@ -291,22 +318,33 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}		
 
 		// Resultaat parsen in een arraylist
-		parseResult(mResult);
-		int responseSize = feedsList.size();
+		parseResult(mResult, downloadMoreItems);
 
-		if (responseSize > 0)
+		// Als data aanwezig zijn in de lijst,
+		// en deze data komen uit de eerste download (niet extra 'page' voor endless scrolling),
+		// maak recyclerview
+		if (feedsList.size() > 0 && !downloadMoreItems)
 		{
-			Log.i("HermLog", "Lengte List: " + String.valueOf(responseSize));
+			Log.i("HermLog", "Lengte List: " + String.valueOf(feedsList.size()));
 
-			// Koppel layoutmanager, verbind adapter, 
-			// instellen endless scrolling, actie bij aanklikken item
 			makeRecyclerView();
-
+		}
+		
+		// Als data aanwezig zijn in de lijst,
+		// en deze data komen uit extra 'page' voor endless scrolling),
+		// update recyclerview met extra data
+		if (feedsList.size() > 0 && downloadMoreItems)
+		{
+			Log.i("HermLog", "Update recyclerview met extra data");
+			
+			// itemsperpage is aantal items dat per keer opgehaald moet worden
+			// bij downloaden 'page' met data
+			int itemsPerPage = getResources().getInteger(R.integer.items_per_page);
+			adapter.notifyItemRangeInserted(feedsList.size() - itemsPerPage, itemsPerPage);
 		}
 	}
 
-	// Progressbar tonen als downloadproces nog loopt
-	// na configuratie verandering
+	// Progressbar tonen
 	private void showProgressBar()
 	{
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar);
@@ -346,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 	private int getNumberOfColumns()
 	{
-		// Bereken eerst aantal kolommen
+		// Bereken aantal kolommen
 		// Kolombreedte staat in xml bestand resources / values / integers
 		mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
 		int mNumberOfColumns = Math.round((float) appWidthDp / mColumnWidth);
@@ -399,15 +437,22 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			@Override
 			public void onLoadMore()
 			{
+				if (pageLoadingInProgress) return;
+				pageLoadingInProgress = true;
+
+				Log.i("HermLog", "onLoadMore()");
+				Log.i("HermLog", "in onLoadMore() isLoading(): " + isLoading());
+				
 				// Load next page of data (e.g. network or database)
-				showSnackbar("onLoadMore()");
+				downloadXml(true);
 			}
 
 			@Override
 			public boolean isLoading()
 			{
 				// Indicate whether new page loading is in progress or not
-				return loadingInProgress;
+				Log.i("HermLog", "pageLoadingInProgress: " + pageLoadingInProgress);
+				return pageLoadingInProgress;
 			}
 
 			@Override
@@ -420,10 +465,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// endless scrolling
 		Paginate.with(mRecyclerView, callbacks)
-			.setLoadingTriggerThreshold(1)
+			.setLoadingTriggerThreshold(2)
 			.addLoadingListItem(false)
-			// .setLoadingListItemCreator(new CustomLoadingListItemCreator())
-			// .setLoadingListItemSpanSizeLookup(new CustomLoadingListItemSpanLookup())
 			.build();
 	}
 	
@@ -470,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Endless scrolling
 		endlessScrolling();
-
+		
 		// Actie bij klik op item
 		setClickAction();
 	}

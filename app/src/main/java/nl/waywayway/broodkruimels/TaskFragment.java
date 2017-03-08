@@ -25,7 +25,7 @@ public class TaskFragment extends Fragment
 		void onPreExecute();
 		void onProgressUpdate(int percent);
 		void onCancelled();
-		void onPostExecute(String mResult);
+		void onPostExecute(String mResult, Boolean downloadMoreItems);
 	}
 
 	private TaskCallbacks mCallbacks;
@@ -39,6 +39,7 @@ public class TaskFragment extends Fragment
 	private int itemsPerPage;
 	private int feedsListSize;
 	String url;
+	private Boolean getExtraPage;
 
 	/**
 	 * Hold a reference to the parent Activity so we can report the task's current
@@ -49,7 +50,7 @@ public class TaskFragment extends Fragment
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
-		
+
 		if (!(activity instanceof TaskCallbacks))
 		{
 			throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
@@ -105,6 +106,9 @@ public class TaskFragment extends Fragment
 			mTask = new DummyTask();
 			mTask.execute(downloadMoreItems);
 			mRunning = true;
+			// geeft weer of dit eerste download is of 
+			// extra data voor endless scrolling
+			getExtraPage = downloadMoreItems;
 		}
 	}
 
@@ -118,6 +122,7 @@ public class TaskFragment extends Fragment
 			mTask.cancel(false);
 			mTask = null;
 			mRunning = false;
+			getExtraPage = false;
 		}
 	}
 
@@ -139,6 +144,44 @@ public class TaskFragment extends Fragment
 	public int getFeedsListSize()
 	{
 		return feedsListSize;
+	}
+
+	// setter en getter voor getExtraPage, gebruikt voor bepalen
+	// of taskfragment gebruikt wordt voor eerste download data of extra 'page' met data
+	// voor endless scrolling
+	public void setGetExtraPage(Boolean getExtraPage)
+	{
+		this.getExtraPage = getExtraPage;
+	}
+
+	public Boolean getGetExtraPage()
+	{
+		return getExtraPage;
+	}
+	
+	/** Maak URL voor downloaden data
+	 Query string heeft de vorm:
+	 ?s=0&n=40
+	 waarin:
+	 s=eerste op te halen item in de gesorteerde lijst met alle items,
+	 let op: het eerste item is item 0
+	 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
+
+	 Endless scrolling:
+	 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
+	 */
+
+	private String getUrl(int startItem, int itemsPerPage)
+	{
+		String mUrl = url
+			+ "s="
+			+ Integer.toString(startItem)
+			+ "&n="
+			+ Integer.toString(itemsPerPage);
+
+		Log.i("HermLog", "mUrl: " + mUrl);
+
+		return mUrl;
 	}
 
 	/**
@@ -164,48 +207,31 @@ public class TaskFragment extends Fragment
 		protected String doInBackground(Boolean... downloadMoreItems)
 		{
 			Log.i("HermLog", "doInBackground");
-			Log.i("HermLog", "downloadMoreItems[0]: " + downloadMoreItems[0].toString() );
+			Log.i("HermLog", "downloadMoreItems[0]: " + downloadMoreItems[0].toString());
 
 			// De asynchrone taak
 			OkHttpClient mClient = new OkHttpClient.Builder()
 				.readTimeout(30, TimeUnit.SECONDS)
 				.build();
 
-			/** Maak URL voor downloaden data
-			 Query string heeft de vorm:
-			 ?s=0&n=40
-			 waarin:
-			 s=eerste op te halen item in de gesorteerde lijst met alle items,
-			 let op: het eerste item is item 0
-			 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
 
-			 Endless scrolling:
-			 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
-			 */
-			 
-			if (downloadMoreItems[0])
+			if (!downloadMoreItems[0])
 			{
 				// In geval eerste download
 				startItem = 0;
+				Log.i("HermLog", "eerste download");
 			}
 			else
 			{
 				// In geval latere downloads voor endless scrolling
 				startItem = getFeedsListSize();
+				Log.i("HermLog", "latere download");
 			}
 
 			Log.i("HermLog", "startItem: " + startItem);
 
-			String mUrl = url
-				+ "s="
-				+ Integer.toString(startItem)
-				+ "&n="
-				+ Integer.toString(itemsPerPage);
-
-			Log.i("HermLog", "mUrl: " + mUrl);
-
 			Request mRequest = new Request.Builder()
-				.url(mUrl)
+				.url(getUrl(startItem, itemsPerPage))
 				.build();
 
 			try
@@ -214,7 +240,7 @@ public class TaskFragment extends Fragment
 					.newCall(mRequest)
 					.execute();
 
-				if ( !mResponse.isSuccessful() )
+				if (!mResponse.isSuccessful())
 				{
 					throw new IOException("Unexpected code " + mResponse);
 				}
@@ -225,7 +251,6 @@ public class TaskFragment extends Fragment
 			}
 			catch (IOException e)
 			{
-				// TODO: catch exception
 				Log.i("HermLog", "Exception bij download JSON");
 			}
 
@@ -247,14 +272,17 @@ public class TaskFragment extends Fragment
 			// Proxy the call to the Activity.
 			mCallbacks.onCancelled();
 			mRunning = false;
+			getExtraPage = false;
 		}
 
 		@Override
 		protected void onPostExecute(String mResult)
 		{
 			// Proxy the call to the Activity.
-			mCallbacks.onPostExecute(mResult);
+			mCallbacks.onPostExecute(mResult, getExtraPage);
+
 			mRunning = false;
+			getExtraPage = false;
 		}
 	}
 
