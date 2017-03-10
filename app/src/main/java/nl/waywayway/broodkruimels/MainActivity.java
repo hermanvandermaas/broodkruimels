@@ -328,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// en return
 		if ((recyclerViewListSize == feedsList.size()) && downloadMoreItems)
 		{
+			pageLoadingInProgress = false;
 			hasLoadedAllItems = true;
 			return;
 		}
@@ -464,9 +465,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				
 				if (hasLoadedAllItems) return;
 				if (pageLoadingInProgress) return;
-				pageLoadingInProgress = true;
 
 				// Laad volgende 'page' met data
+				pageLoadingInProgress = true;
 				downloadXml(true);
 			}
 
@@ -482,6 +483,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			public boolean hasLoadedAllItems()
 			{
 				// Indicate whether all data (pages) are loaded or not
+				Log.i("HermLog", "hasLoadedAllItems: " + hasLoadedAllItems);
 				return hasLoadedAllItems;
 			}
 		};
