@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private int mColumnWidth;
 	private boolean pageLoadingInProgress;
 	private boolean hasLoadedAllItems;
+	private int recyclerViewListSize = 0;
 	int appWidthDp;
 
     @Override
@@ -290,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void onPostExecute(String mResult, Boolean downloadMoreItems)
 	{
-		Log.i("HermLog", "onPostExecute()");
 		Log.i("HermLog", "onPostExecute() downloadMoreItems: " + downloadMoreItems);
 
 		// Verberg progress bar
@@ -316,10 +316,22 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
 		}		
-
-		// Resultaat parsen in een arraylist
+		
+		// Als download blijkbaar goed is gegaan
+		// resultaat parsen in een arraylist
 		parseResult(mResult, downloadMoreItems);
 
+
+		// Als er geen extra data meer zijn gedownload,
+		// geef aan dat laatste 'page' met data is gedownload
+		// voor endless scrolling
+		// en return
+		if ((recyclerViewListSize == feedsList.size()) && downloadMoreItems)
+		{
+			hasLoadedAllItems = true;
+			return;
+		}
+		
 		// Als data aanwezig zijn in de lijst,
 		// en deze data komen uit de eerste download (niet extra 'page' voor endless scrolling),
 		// maak recyclerview
@@ -328,6 +340,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			Log.i("HermLog", "Lengte List: " + String.valueOf(feedsList.size()));
 
 			makeRecyclerView();
+			
+			// recyclerViewListSize is voor endless scrolling, bijhouden van
+			// lengte datalijst die bekend is bij recyclerview adapter
+			recyclerViewListSize = feedsList.size();
 		}
 		
 		// Als data aanwezig zijn in de lijst,
@@ -336,11 +352,17 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		if (feedsList.size() > 0 && downloadMoreItems)
 		{
 			Log.i("HermLog", "Update recyclerview met extra data");
+
+			// Geef toevoeging aan listarray van gedownloade items door aan recyclerview adapter
+			// Zodat ze zichtbaar worden in recyclerview, met animatie
+			adapter.notifyItemRangeInserted(recyclerViewListSize, feedsList.size() - recyclerViewListSize);
 			
-			// itemsperpage is aantal items dat per keer opgehaald moet worden
-			// bij downloaden 'page' met data
-			int itemsPerPage = getResources().getInteger(R.integer.items_per_page);
-			adapter.notifyItemRangeInserted(feedsList.size() - itemsPerPage, itemsPerPage);
+			// recyclerViewListSize is voor endless scrolling, bijhouden van
+			// lengte datalijst die bekend is bij recyclerview adapter
+			recyclerViewListSize = feedsList.size();
+			
+			// Volgende 'page' downloaden mag vanaf nu weer
+			pageLoadingInProgress = false;
 		}
 	}
 
@@ -437,13 +459,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			@Override
 			public void onLoadMore()
 			{
+				Log.i("HermLog", "in onLoadMore() isLoading(): " + isLoading());
+				Log.i("HermLog", "in onLoadMore() hasLoadedAllItems(): " + hasLoadedAllItems());
+				
+				if (hasLoadedAllItems) return;
 				if (pageLoadingInProgress) return;
 				pageLoadingInProgress = true;
 
-				Log.i("HermLog", "onLoadMore()");
-				Log.i("HermLog", "in onLoadMore() isLoading(): " + isLoading());
-				
-				// Load next page of data (e.g. network or database)
+				// Laad volgende 'page' met data
 				downloadXml(true);
 			}
 
