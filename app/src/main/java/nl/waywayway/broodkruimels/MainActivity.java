@@ -6,6 +6,7 @@ import android.os.*;
 import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
+import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
@@ -235,6 +236,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
         switch (id)
 		{
             case R.id.action_settings:
+				// Ga naar instellingen / preferences / settings scherm
+				Intent mIntent = new Intent(mContext, SettingsActivity.class);
+				mContext.startActivity(mIntent);
 				return true;
         }
 

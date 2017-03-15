@@ -20,13 +20,19 @@
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			app:layout_scrollFlags="scroll|enterAlways">
 		</android.support.v7.widget.Toolbar>
-
 	</android.support.design.widget.AppBarLayout>
 
-	<fragment
-		android:name=".SettingsFragment"
-		android:tag=".SettingsFragment"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+	<android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+		<fragment
+			android:name="nl.waywayway.broodkruimels.SettingsFragment"
+			android:tag="nl.waywayway.broodkruimels.SettingsFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+		
+	</android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
