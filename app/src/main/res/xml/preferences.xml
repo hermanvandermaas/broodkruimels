@@ -10,4 +10,11 @@
         android:summary="@string/pref_notify_summ"
         android:defaultValue="false" />
 	
+	<android.support.v7.preference.SwitchPreferenceCompat
+		android:dependency="pref_notify"
+		android:key="pref_notify_time"
+        android:title="@string/pref_notify_time"
+        android:summary="@string/pref_notify_time_summ"
+        android:defaultValue="false" />
+	
 </android.support.v7.preference.PreferenceScreen>

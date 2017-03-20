@@ -5,10 +5,46 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
 		
-		<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <!-- Theme for the Preferences -->
+        <item name="preferenceTheme">@style/AppPreferenceTheme</item>
+
+        <!-- Theme for all Alert Dialogs (e.g. from DialogPreference) -->
+        <item name="alertDialogTheme">@style/AppAlertDialog</item>
+
     </style>
 
 	<style name="overflow_menu" parent="ThemeOverlay.AppCompat.Light">
 	</style>
+	
+	<!-- Custom Preference Theme inherits from the v14 support library Material Theme -->
+    <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceFragmentCompatStyle">@style/AppPreferenceFragmentCompatStyle</item>
+    </style>
+
+    <!-- Custom Style for PreferenceFragmentCompat -->
+    <style name="AppPreferenceFragmentCompatStyle" parent="@style/PreferenceFragment.Material">
+        <!-- Custom layout for PreferenceFragmentCompat -->
+    </style>
+
+    <!-- Style for a custom Preference Entry -->
+    <style name="AppPreference">
+    </style>
+
+    <!-- Style for a DialogPreference Entry -->
+    <style name="AppPreference.DialogPreference">
+        <item name="positiveButtonText">@android:string/ok</item>
+        <item name="negativeButtonText">@android:string/cancel</item>
+    </style>
+
+    <style name="AppAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- To tint the buttons -->
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="AppAlertDialogContent" parent="Theme.AppCompat.Light">
+        <!-- To tint EditText and TimePicker -->
+        <item name="colorAccent">@color/accent</item>
+    </style>
+	
 </resources>
 

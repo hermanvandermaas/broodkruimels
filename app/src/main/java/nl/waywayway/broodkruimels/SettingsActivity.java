@@ -6,6 +6,8 @@ import android.support.v7.widget.*;
 
 public class SettingsActivity extends AppCompatActivity
 {
+	public static final String KEY_PREF_NOTIFY = "pref_notify";
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState)
     {
