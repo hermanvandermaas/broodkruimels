@@ -28,4 +28,17 @@ public class TimePreference extends DialogPreference
 	{
 		super(context, attrs, defStyleAttr, defStyleRes);
 	}
+
+	public int getTime()
+	{
+		return  mTime;
+	}
+
+	public void setTime(int time)
+	{
+		mTime = time;
+		
+		// Save to Shared Preferences
+		persistInt(time);
+	}
 }
