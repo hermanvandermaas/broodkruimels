@@ -11,11 +11,11 @@
         android:defaultValue="false" />
 	
 	<nl.waywayway.broodkruimels.TimePreference
+		style="@style/AppPreference.DialogPreference"
 		android:dependency="pref_notify"
 		android:key="pref_notify_time"
         android:title="@string/pref_notify_time"
         android:summary="@string/pref_notify_time_summ"
-		style="@style/AppPreference.DialogPreference"
 		android:defaultValue="90" />
 	
 </android.support.v7.preference.PreferenceScreen>

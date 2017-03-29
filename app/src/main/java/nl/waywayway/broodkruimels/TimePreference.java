@@ -13,10 +13,11 @@ public class TimePreference extends DialogPreference
 	/**
      * Resource of the dialog layout
      */
-    private int mDialogLayoutResId = R.layout.preferences_dialog_timepicker;
+    private int mDialogLayoutResId = R.layout.preferences_timepicker_dialog;
 	
 	// 4 constructors voor verschillende API levels,
-	// die elkaar in volgorde aanroepen, beginnend met de constructor met de minste parameters
+	// die elkaar in volgorde aanroepen,
+	// beginnend met de constructor met de minste parameters
 
 	public TimePreference(Context context)
 	{
@@ -53,7 +54,8 @@ public class TimePreference extends DialogPreference
 	}
 
 	@Override
-    public int getDialogLayoutResource() {
+    public int getDialogLayoutResource()
+	{
         return mDialogLayoutResId;
     }
 	

@@ -40,7 +40,7 @@ public class TimePreferenceDialogFragmentCompat extends PreferenceDialogFragment
 
 		if (mTimePicker == null)
 		{
-			throw new IllegalStateException("Dialog view must contain a TimePicker with id 'edit'");
+			throw new IllegalStateException("Dialog view must contain a TimePicker with id 'preferences_timepicker'");
 		}
 
 		// Get the time from the related Preference
