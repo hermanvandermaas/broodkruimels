@@ -5,13 +5,12 @@
 	android:layout_height="match_parent">
 	
 	<android.support.v7.preference.SwitchPreferenceCompat 
-		android:key="pref_notify"
+		android:key="pref_notify" 
         android:title="@string/pref_notify"
         android:summary="@string/pref_notify_summ"
         android:defaultValue="false" />
 	
-	<nl.waywayway.broodkruimels.TimePreference
-		style="@style/AppPreference.DialogPreference"
+	<android.support.v7.preference.Preference
 		android:dependency="pref_notify"
 		android:key="pref_notify_time"
         android:title="@string/pref_notify_time"

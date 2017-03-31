@@ -58,6 +58,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 		// Geef de instelling met tekst weer in de preference summary
 		// als 'aan' of 'uit'
 		prefNotify.setSummary(prefNotifySumm + ": " + notifySetting);
+		
+		Log.i("HermLog", "SettingsFragment: tekst gezet op: " + notifySetting);
 	}
 
 	@Override
@@ -83,48 +85,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	public void onPause()
 	{
 		super.onPause();
-
+		
 		getPreferenceManager().getSharedPreferences()
 			.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	// Bij verandering in instelling, geef de nieuwe instelling direct weer in de summary
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
 	{
-		if (key == SettingsActivity.KEY_PREF_NOTIFY)
+		Log.i("HermLog", "onSharedPreferenceChanged()");
+		Log.i("HermLog", "key:" + key);
+		
+		if (key.equals(SettingsActivity.KEY_PREF_NOTIFY))
 		{
 			setPrefNotifySummary(key);
 		}
 	}
-
-	@Override
-    public void onDisplayPreferenceDialog(Preference preference)
-	{
-        // Try if the preference is one of our custom Preferences
-        DialogFragment dialogFragment = null;
-
-        if (preference instanceof TimePreference)
-		{
-            // Create a new instance of TimePreferenceDialogFragment with the key of the related
-            // Preference
-            dialogFragment = TimePreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        }
-
-
-        if (dialogFragment != null)
-		{
-            // The dialog was created (it was one of our custom Preferences), show the dialog for it
-            dialogFragment.setTargetFragment(this, 0);
-            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference" +
-								".PreferenceFragment.DIALOG");
-        }
-		else
-		{
-            // Dialog creation could not be handled here. Try with the super method.
-            super.onDisplayPreferenceDialog(preference);
-        }
-
-    }
 }
-
-
