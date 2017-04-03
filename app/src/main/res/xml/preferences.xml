@@ -10,7 +10,7 @@
         android:summary="@string/pref_notify_summ"
         android:defaultValue="false" />
 	
-	<nl.waywayway.broodkruimels.TimePreference
+	<android.support.v7.preference.Preference
 		style="@style/AppPreference.DialogPreference"
 		android:dependency="pref_notify"
 		android:key="pref_notify_time"
