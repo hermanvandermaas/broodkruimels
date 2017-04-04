@@ -2,11 +2,11 @@ package nl.waywayway.broodkruimels;
 
 import android.content.*;
 import android.os.*;
-import android.support.v4.app.*;
 import android.support.v7.preference.*;
 import android.util.*;
+import com.wdullaer.materialdatetimepicker.time.*;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, Time
 {
 	Context mContext;
 
@@ -26,6 +26,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
 		super.onAttach(context);
 		mContext = context;
+	}
+	
+	private void showDialog()
+	{
+		int hour = 12;
+		int minute = 30;
+		
+		TimePickerDialog tpd = TimePickerDialog.newInstanc(
+				this, hour, minute, true
+				);
 	}
 
 	// In switch preference bij summary 'aan' of 'uit' vermelden
