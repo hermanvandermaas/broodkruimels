@@ -59,6 +59,28 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 		// als 'aan' of 'uit'
 		prefNotify.setSummary(prefNotifySumm + ": " + notifySetting);
 	}
+	
+	// In time preference bij summary de ingestelde tijd vermelden
+	private void setPrefTimeSummary(String prefKey)
+	{
+		TimePreference prefTime = (TimePreference) getPreferenceManager().findPreference(prefKey);
+
+		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		int prefTimeDefault = getActivity().getResources().getInteger(R.integer.preferences_time_default);
+		int minutesAfterMidnight = sharedPref.getInt(prefKey, prefTimeDefault);
+		int hours = minutesAfterMidnight / 60;
+		int minutes = minutesAfterMidnight % 60;
+
+		// Lees de summary, zet voorloopnullen in de tijd
+		String prefTimeSumm = mContext.getResources().getString(R.string.pref_notify_time_summ);
+		String timeFormatted = String.format("%02d:%02d", hours, minutes);
+		
+		Log.i("HermLog", "setPrefTimeSummary(): " + timeFormatted);
+
+		// Geef de instelling met tekst weer in de preference summary
+		prefTime.setSummary(prefTimeSumm + ": " + timeFormatted);
+	}
 
 	@Override
 	public void onStart()
@@ -68,6 +90,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 		super.onStart();
 
 		setPrefNotifySummary(SettingsActivity.KEY_PREF_NOTIFY);
+		setPrefTimeSummary(SettingsActivity.KEY_PREF_NOTIFY_TIME);
 	}
 
 	@Override
@@ -91,9 +114,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	// Bij verandering in instelling, geef de nieuwe instelling direct weer in de summary
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
 	{
-		if (key == SettingsActivity.KEY_PREF_NOTIFY)
+		switch (key)
 		{
-			setPrefNotifySummary(key);
+			case SettingsActivity.KEY_PREF_NOTIFY:
+				setPrefNotifySummary(key);
+				break;
+			case SettingsActivity.KEY_PREF_NOTIFY_TIME:
+				setPrefTimeSummary(key);
+				break;
 		}
 	}
 

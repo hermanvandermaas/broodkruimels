@@ -3,6 +3,7 @@ package nl.waywayway.broodkruimels;
 import android.os.*;
 import android.support.v7.preference.*;
 import android.text.format.*;
+import android.util.*;
 import android.view.*;
 import android.widget.*;
 
@@ -34,6 +35,8 @@ public class TimePreferenceDialogFragmentCompat extends PreferenceDialogFragment
 	@Override
 	protected void onBindDialogView(View view)
 	{
+		Log.i("HermLog", "onBindDialogView()");
+		
 		super.onBindDialogView(view);
 
 		mTimePicker = (TimePicker) view.findViewById(R.id.preferences_timepicker);
@@ -61,6 +64,8 @@ public class TimePreferenceDialogFragmentCompat extends PreferenceDialogFragment
 			mTimePicker.setIs24HourView(is24hour);
 			mTimePicker.setCurrentHour(hours);
 			mTimePicker.setCurrentMinute(minutes);
+			
+			Log.i("HermLog", "onBindDialogView(): timepicker gezet op: " + hours + ":" + minutes);
 		}
 	}
 
@@ -72,8 +77,12 @@ public class TimePreferenceDialogFragmentCompat extends PreferenceDialogFragment
 	@Override
 	public void onDialogClosed(boolean positiveResult)
 	{
+		Log.i("HermLog", "onDialogClosed()");
+		
 		if (positiveResult)
 		{
+			Log.i("HermLog", "onDialogClosed() : positiveresult");
+			
 			// Get the current values from the TimePicker
 			int hours;
 			int minutes;
@@ -96,11 +105,14 @@ public class TimePreferenceDialogFragmentCompat extends PreferenceDialogFragment
 			if (preference instanceof TimePreference)
 			{
 				TimePreference timePreference = ((TimePreference) preference);
+				
 				// This allows the client to ignore the user value.
 				if (timePreference.callChangeListener(minutesAfterMidnight))
 				{
 					// Save the value
 					timePreference.setTime(minutesAfterMidnight);
+					
+					Log.i("HermLog", "onDialogClosed: bewaarde tijd: " + minutesAfterMidnight);
 				}
 			}
 		}

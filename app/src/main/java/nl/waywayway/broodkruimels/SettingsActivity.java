@@ -7,6 +7,7 @@ import android.support.v7.widget.*;
 public class SettingsActivity extends AppCompatActivity
 {
 	public static final String KEY_PREF_NOTIFY = "pref_notify";
+	public static final String KEY_PREF_NOTIFY_TIME = "pref_notify_time";
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState)

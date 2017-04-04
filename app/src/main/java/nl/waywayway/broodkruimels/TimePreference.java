@@ -42,6 +42,8 @@ public class TimePreference extends DialogPreference
 	// Getter en setter voor de tijd
 	public int getTime()
 	{
+		Log.i("HermLog", "getTime(): " + mTime);
+		
 		return  mTime;
 	}
 
@@ -51,8 +53,10 @@ public class TimePreference extends DialogPreference
 
 		// Save to Shared Preferences
 		persistInt(time);
+		
+		Log.i("HermLog", "setTime(): " + time);
 	}
-
+	
 	@Override
     public int getDialogLayoutResource()
 	{

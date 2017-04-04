@@ -4,4 +4,5 @@
 	<integer name="staggeredgridview_column_width">200</integer>
 	<integer name="activity_detail_image_size">1024</integer>
 	<integer name="items_per_page">40</integer>
+	<integer name="preferences_time_default">390</integer>
 </resources>
