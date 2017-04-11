@@ -39,6 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.waywayway.broodkruimels.MainActivity" />
         </activity>
+		<receiver android:name=".AlarmReceiver" />
     </application>
 
 </manifest>

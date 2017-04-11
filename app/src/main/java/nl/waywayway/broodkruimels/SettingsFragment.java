@@ -59,6 +59,29 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 		// als 'aan' of 'uit'
 		prefNotify.setSummary(prefNotifySumm + ": " + notifySetting);
 	}
+
+	// Stel alarm voor notification in
+	private void setPrefNotifyAlarm(Context context, String key)
+	{
+		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+		int prefTimeDefault = getActivity().getResources().getInteger(R.integer.preferences_time_default);
+		int minutesAfterMidnight = sharedPref.getInt(key, prefTimeDefault);
+		
+		Log.i("HermLog", "setPrefNotifyAlarm(): minutesAfterMidnight: " + minutesAfterMidnight);
+		
+		MyAlarm mAlarm = new MyAlarm(context);
+		mAlarm.setAlarm(minutesAfterMidnight);
+	}
+	
+	// Verwijder alarm voor notification
+	private void cancelPrefNotifyAlarm(Context context)
+	{
+		Log.i("HermLog", "cancelPrefNotifyAlarm()");
+		
+		MyAlarm mAlarm = new MyAlarm(context);
+		mAlarm.cancelAlarm();
+	}
 	
 	// In time preference bij summary de ingestelde tijd vermelden
 	private void setPrefTimeSummary(String prefKey)
