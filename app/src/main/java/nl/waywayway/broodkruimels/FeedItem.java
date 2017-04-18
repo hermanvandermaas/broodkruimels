@@ -1,6 +1,7 @@
 package nl.waywayway.broodkruimels;
 
-public class FeedItem {
+public class FeedItem
+{
 
     private String title;
     private String pubdate;
@@ -73,7 +74,7 @@ public class FeedItem {
 	{
 		return content;
 	}
-	
+
 	public void setMediacontent(String mediacontent)
 	{
 		this.mediacontent = mediacontent;
@@ -83,7 +84,7 @@ public class FeedItem {
 	{
 		return mediacontent;
 	}
-	
+
 	public void setMediawidth(int mediawidth)
 	{
 		this.mediawidth = mediawidth;
@@ -122,4 +123,5 @@ public class FeedItem {
 	public String getMediatype()
 	{
 		return mediatype;
-	}}
+	}
+}

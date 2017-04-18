@@ -35,7 +35,7 @@ public class MyAlarm
 		calendar.set(Calendar.HOUR_OF_DAY, hours);
 		calendar.set(Calendar.MINUTE, minutes);
 
-		// Als het ingestelde tijdstip al is verstreken
+		// Als het ingestelde tijdstip vandaag al is verstreken
 		// op de huidige dag moet het alarm morgen voor het eerst
 		// afgaan (anders gaat het direct af)
 		if (calendar.getTime().compareTo(new Date()) < 0)
