@@ -29,12 +29,15 @@ public class AlarmReceiver extends BroadcastReceiver
 			PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
+		
+		String notificationTitle = context.getResources().getString(R.string.notification_title);
+		String notificationText = context.getResources().getString(R.string.notification_text);
+		
         NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(context);
 		mNotifyBuilder
 			.setSmallIcon(R.drawable.ic_stat_bible)
-			.setContentTitle("Alarm Fired")
-			.setContentText("Events To be Performed")
+			.setContentTitle(notificationTitle)
+			.setContentText(notificationText)
 			.setSound(alarmSound)
 			.setAutoCancel(true)
 			.setWhen(when)
