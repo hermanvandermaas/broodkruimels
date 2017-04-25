@@ -18,13 +18,42 @@
 			android:background="?attr/colorPrimary"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			app:layout_scrollFlags="scroll|enterAlways">
+			
+			<ProgressBar
+				android:id="@+id/toolbar_progress_bar_detailactivity"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:indeterminate="true"
+				android:layout_gravity="right"
+				android:visibility="gone"/>
 
 		</android.support.v7.widget.Toolbar>
 
 	</android.support.design.widget.AppBarLayout>
 
+	<LinearLayout
+		android:id="@+id/notConnectedLinLayout_detailactivity"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:visibility="gone" >
+
+		<TextView
+			android:id="@+id/txtTryAgain_detailactivity"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:text="@string/txt_try_again_nointernet" />
+
+		<Button
+			android:id="@+id/btnTryAgain_detailactivity"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:text="@string/btn_try_again" />
+	</LinearLayout>
 
 	<android.support.v4.widget.NestedScrollView
+		android:id="@+id/nestedscrollview_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 		android:scrollbars="vertical"

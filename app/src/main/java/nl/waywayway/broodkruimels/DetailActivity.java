@@ -1,22 +1,30 @@
 package nl.waywayway.broodkruimels;
 
 import android.content.*;
+import android.net.*;
 import android.os.*;
+import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.support.v7.widget.*;
 import android.text.*;
 import android.text.method.*;
 import android.util.*;
+import android.view.*;
 import android.widget.*;
 import com.squareup.picasso.*;
+import java.text.*;
+import java.util.*;
+import org.json.*;
 
 import android.support.v7.widget.Toolbar;
 
-public class DetailActivity extends AppCompatActivity
+public class DetailActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
+	private static final String TAG_TASK_FRAGMENT = "task_fragment";
 	private Boolean mWeHaveData = false;
 	private Intent mIntent;
 	private String mImageUrl;
+	private TaskFragment mTaskFragment;
 	private int mImgWidth;
 	private int mImgHeight;
 	private String mTitle;
@@ -59,11 +67,37 @@ public class DetailActivity extends AppCompatActivity
 
 		Log.i("HermLog", "mWeHaveData: " + mWeHaveData);
 
-		// Download afbeelding
-		downloadImage(false);
+		if (mWeHaveData)
+		{
+			// Download afbeelding
+			downloadImage(false);
 
-		// Zet tekst in textviews
-		setText();
+			// Zet tekst in textviews
+			setText();
+		}
+
+		// Klik knop probeer opnieuw:
+		// check verbinding, indien ok dan json laden
+		Button button = (Button) findViewById(R.id.btnTryAgain_detailactivity);
+        button.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View v)
+				{
+					downloadXml();
+				}
+			});
+
+		// Handler voor worker fragment
+		FragmentManager fm = getSupportFragmentManager();
+		mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+
+		// If the Fragment is non-null, then it is being retained
+		// over a configuration change.
+		if (mTaskFragment == null)
+		{
+			mTaskFragment = new TaskFragment();
+			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+		}
     }
 
 	private void makeToolBar()
@@ -88,6 +122,77 @@ public class DetailActivity extends AppCompatActivity
 		mPubdate = mIntent.getStringExtra("pubdate");
 		mCreator = mIntent.getStringExtra("creator");
 		mContent = mIntent.getStringExtra("content");
+	}
+
+	// Start download json (was eerst xml, vandaar de method naam)
+	private void downloadXml()
+	{
+		Log.i("HermLog", "downloadXml()");
+		
+		// Als verbinding, download json
+		if (isNetworkConnected())
+		{
+			// Als gestart door knop probeer opnieuw,
+			// verberg knop
+			View mNotConnectedLayout = findViewById(R.id.notConnectedLinLayout_detailactivity);
+			mNotConnectedLayout.setVisibility(View.GONE);
+
+			// Toon nestedscrollview
+			View viewNestedScroll = findViewById(R.id.nestedscrollview_detail);
+			viewNestedScroll.setVisibility(View.VISIBLE);
+
+			// Start asynchrone taak
+			if (!mTaskFragment.isRunning())
+			{
+				// Bij eerste download van items start(false)
+				// bij latere download van extra items (niet aan de
+				// orde in deze class) start(true)
+				mTaskFragment.start(false);
+			}
+			else
+			{
+				Log.i("HermLog", "DetailActivity: mTaskFragment.isRunning(): " + mTaskFragment.isRunning());
+			}
+		}
+		// Als geen verbinding, toon knop voor opnieuw proberen
+		else
+		{
+			Log.i("HermLog", "DetailActivity: geen verbinding");
+			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
+		}
+	}
+
+	// Netwerkverbinding ja/nee
+	private boolean isNetworkConnected()
+	{
+		ConnectivityManager connMgr = (ConnectivityManager)
+			getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		return networkInfo != null && networkInfo.isConnected();
+	}
+
+	// Toon foutboodschap
+	// toon knop probeer opnieuw
+	// eventueel cancel download
+	// zet 	hasDownloaded flag op false
+	private void tryAgain(String mMsg)
+	{	
+		TextView txtview = (TextView) findViewById(R.id.txtTryAgain_detailactivity);
+		txtview.setText(mMsg);
+
+		View viewTryAgain = findViewById(R.id.notConnectedLinLayout_detailactivity);
+		viewTryAgain.setVisibility(View.VISIBLE);
+
+		// verberg nestedscrollview
+		View viewNestedScroll = findViewById(R.id.nestedscrollview_detail);
+		viewNestedScroll.setVisibility(View.GONE);
+
+		Log.i("HermLog", "DetailActivity: tryAgain()");
+
+		if (mTaskFragment.isRunning())
+		{
+			mTaskFragment.cancel();
+		}
 	}
 
 	private String makeUrl(Boolean secondTry)
@@ -143,61 +248,58 @@ public class DetailActivity extends AppCompatActivity
 	// afbeelding proberen te downloaden
 	private void downloadImage(Boolean secondTry)
 	{
-		if (mWeHaveData)
+		mImageview = (ImageView) findViewById(R.id.image_detail);
+
+		// Poging 1
+		if (!secondTry)
 		{
-			mImageview = (ImageView) findViewById(R.id.image_detail);
+			// progress bar indeterminate (draaiende cirkel)
+			// zichtbaar maken tijdens downloaden afbeelding
+			mProgressBar = (ProgressBar) findViewById(R.id.image_detail_progress_bar);
+			mProgressBar.setVisibility(ProgressBar.VISIBLE);
 
-			// Poging 1
-			if (!secondTry)
-			{
-				// progress bar indeterminate (draaiende cirkel)
-				// zichtbaar maken tijdens downloaden afbeelding
-				mProgressBar = (ProgressBar) findViewById(R.id.image_detail_progress_bar);
-				mProgressBar.setVisibility(ProgressBar.VISIBLE);
-				
-				// Laad grote afbeelding
-				Picasso
-					.with(mContext)
-					.load(makeUrl(secondTry))
-					.into(mImageview, new Callback()
+			// Laad grote afbeelding
+			Picasso
+				.with(mContext)
+				.load(makeUrl(secondTry))
+				.into(mImageview, new Callback()
+				{
+					@Override
+					public void onSuccess()
 					{
-						@Override
-						public void onSuccess()
-						{
-							mProgressBar.setVisibility(ProgressBar.GONE);
-						}
+						mProgressBar.setVisibility(ProgressBar.GONE);
+					}
 
-						@Override
-						public void onError()
-						{
-							Log.i("HermLog", "1e poging: afbeelding downloadfout");
-							downloadImage(true);
-						}
-					});				
-			}
-			else
-			{
-				// Poging 2
-				Picasso
-					.with(mContext)
-					.load(makeUrl(secondTry))
-					.resize(mUrlWidth, 0)
-					.into(mImageview, new Callback()
+					@Override
+					public void onError()
 					{
-						@Override
-						public void onSuccess()
-						{
-							mProgressBar.setVisibility(ProgressBar.GONE);
-						}
+						Log.i("HermLog", "1e poging: afbeelding downloadfout");
+						downloadImage(true);
+					}
+				});				
+		}
+		else
+		{
+			// Poging 2
+			Picasso
+				.with(mContext)
+				.load(makeUrl(secondTry))
+				.resize(mUrlWidth, 0)
+				.into(mImageview, new Callback()
+				{
+					@Override
+					public void onSuccess()
+					{
+						mProgressBar.setVisibility(ProgressBar.GONE);
+					}
 
-						@Override
-						public void onError()
-						{
-							mProgressBar.setVisibility(ProgressBar.GONE);
-							Log.i("HermLog", "2e poging: afbeelding downloadfout");
-						}
-					});
-			}
+					@Override
+					public void onError()
+					{
+						mProgressBar.setVisibility(ProgressBar.GONE);
+						Log.i("HermLog", "2e poging: afbeelding downloadfout");
+					}
+				});
 		}
 	}
 
@@ -210,15 +312,194 @@ public class DetailActivity extends AppCompatActivity
 		mTextViewCreator = (TextView) findViewById(R.id.creator_detail);
 		mTextViewContent = (TextView) findViewById(R.id.content_detail);
 
-		if (mWeHaveData)
+		// Setting text views
+		mTextViewTitle.setText(Html.fromHtml(mTitle));
+		mTextViewPubdate.setText(Html.fromHtml(mPubdate));
+		mTextViewCreator.setText(Html.fromHtml(mCreator));
+		mTextViewContent.setText(Html.fromHtml(mContent));
+		// Maak links klikbaar
+		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
+	/*********************************/
+	/***** TASK CALLBACK METHODS *****/
+	/*********************************/
+
+	@Override
+	public void onPreExecute()
+	{
+		Log.i("HermLog", "DetailActivity: onPreExecute()");
+
+		// Progressbar tonen
+		showProgressBar();
+	}
+
+	@Override
+	public void onProgressUpdate(int percent)
+	{
+		// ...
+	}
+
+	@Override
+	public void onCancelled()
+	{
+		// ...
+		Log.i("HermLog", "DetailActivity: onCancelled()");
+	}
+
+	@Override
+	public void onPostExecute(String mResult, Boolean downloadMoreItems)
+	{
+		Log.i("HermLog", "DetailActivity: onPostExecute()");
+
+		// Verberg progress bar
+		hideProgressBar();
+
+		// Als niets gedownload, toon boodschap
+		// en knop probeer opnieuw
+		if (mResult == "Fout!")
 		{
-			// Setting text views
-			mTextViewTitle.setText(Html.fromHtml(mTitle));
-			mTextViewPubdate.setText(Html.fromHtml(mPubdate));
-			mTextViewCreator.setText(Html.fromHtml(mCreator));
-			mTextViewContent.setText(Html.fromHtml(mContent));
-			// Maak links klikbaar
-			mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
+			Log.i("HermLog", "DetailActivity: Niets gedownload");
+			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
+			return;
+		}		
+
+		// Als download blijkbaar goed is gegaan
+		// resultaat parsen in een arraylist
+		parseResult(mResult, downloadMoreItems);
+
+		if (!TextUtils.isEmpty(mImageUrl))
+			mWeHaveData = true;
+
+		// Als data aanwezig zijn in de lijst,
+		// update de UI met de data
+		if (!TextUtils.isEmpty(mImageUrl))
+		{
+			Log.i("HermLog", "DetailActivity: data gedownload, update UI");
+
+			// Download afbeelding
+			downloadImage(false);
+
+			// Zet tekst in textviews
+			setText();
 		}
+	}
+
+	// json string verwerken na download
+	// Zet json data in variabelen
+	private void parseResult(String result, Boolean downloadMoreItems)
+	{
+		Log.i("HermLog", "DetailActivity: parseResult()");
+
+        try
+		{
+            JSONObject response = new JSONObject(result);
+            JSONArray posts = response.optJSONArray("data");
+			JSONObject post = posts.optJSONObject(0);
+
+			mImageUrl = post.optString("mediacontent");
+			// mImgWidth en mImgHeight zijn afmetingen van de oorspronkelijke niet verkleinde afbeelding
+			mImgWidth = post.optInt("imgwidth");
+			mImgHeight = post.optInt("imgheight");
+			mTitle = post.optString("title");
+			mPubdate = formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss");
+			mCreator = post.optString("creator");
+			mContent = post.optString("content");
+        }
+		catch (JSONException e)
+		{
+			Log.i("HermLog", "DetailActivity: JSON Exception in parseResult");
+            e.printStackTrace();
+        }
+    }
+
+	// Datum opmaken
+	private String formatDate(String mDateString, String dateFormat)
+	{
+		try
+		{
+			Date mDate = new SimpleDateFormat(dateFormat).parse(mDateString);
+			String mFormattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(mDate);
+			return mFormattedDate;
+		}
+		catch (Exception e)
+		{
+			Log.i("HermLog", "DetailActivity: Date format exception in parseResult");
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	// Progressbar tonen
+	private void showProgressBar()
+	{
+		View mProgressbar = findViewById(R.id.toolbar_progress_bar_detailactivity);
+		mProgressbar.setVisibility(View.VISIBLE);
+		return;
+	}
+
+	// Progressbar verbergen
+	private void hideProgressBar()
+	{
+		View mProgressbar = findViewById(R.id.toolbar_progress_bar_detailactivity);
+		mProgressbar.setVisibility(View.GONE);
+	}
+
+
+	/************************/
+	/***** LOGS & STUFF *****/
+	/************************/
+
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+
+		Log.i("HermLog", "DetailActivity: onStart()");
+
+		// Progressbar tonen als downloadproces nog loopt
+		// na configuratie verandering
+		if (mTaskFragment.isRunning())
+		{
+			showProgressBar();
+		}
+
+		// Als er al data in de intent stonden,
+		// Wordt DetailActivity aangeroepen uit lijst,
+		// Zo niet, dan is deze Activity gestart uit een
+		// Notificatie, dan data nog downloaden
+		if (!mWeHaveData)
+		{
+			downloadXml();
+		}
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		Log.i("HermLog", "DetailActivity: onResume()");
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		Log.i("HermLog", "DetailActivity: onPause()");
+	}
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		Log.i("HermLog", "DetailActivity: onStop()");
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		Log.i("HermLog", "DetailActivity: onDestroy()");
 	}
 }

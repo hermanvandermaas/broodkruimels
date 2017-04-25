@@ -61,6 +61,7 @@ public class TaskFragment extends Fragment
 		mCallbacks = (TaskCallbacks) activity;
 
 		// itemsperpage is aantal items dat per keer opgehaald moet worden
+		Log.i("HermLog", "Class naam: " + getActivity().getClass().getSimpleName());
 		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);
 
 		// url is de basis url voor ophalen data
@@ -163,7 +164,7 @@ public class TaskFragment extends Fragment
 	 Query string heeft de vorm:
 	 ?s=0&n=40
 	 waarin:
-	 s=eerste op te halen item in de gesorteerde lijst met alle items,
+	 s=eerste op te halen item in de op datum gesorteerde lijst met alle items,
 	 let op: het eerste item is item 0
 	 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
 
