@@ -4,7 +4,8 @@ import android.app.*;
 import android.content.*;
 import android.media.*;
 import android.net.*;
-import android.support.v7.app.*;
+import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 // Class voor tonen van notification, na ontvangen en verwerken
 // van de intent die wordt verzonden na het afgaan van 
@@ -22,11 +23,10 @@ public class AlarmReceiver extends BroadcastReceiver
         Intent notificationIntent = new Intent(context,  DetailActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-			context, 
-			0, 
-			notificationIntent, 
-			PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent = 
+			TaskStackBuilder.create(context)
+			.addNextIntentWithParentStack(notificationIntent)
+			.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		

@@ -28,6 +28,7 @@ public class TaskFragment extends Fragment
 		void onPostExecute(String mResult, Boolean downloadMoreItems);
 	}
 
+	private static final String CLASSNAME_DETAIL_ACTIVITY = "DetailActivity";
 	private TaskCallbacks mCallbacks;
 	private DummyTask mTask;
 	private boolean mRunning;
@@ -61,9 +62,14 @@ public class TaskFragment extends Fragment
 		mCallbacks = (TaskCallbacks) activity;
 
 		// itemsperpage is aantal items dat per keer opgehaald moet worden
-		Log.i("HermLog", "Class naam: " + getActivity().getClass().getSimpleName());
+		// als deze taskfragment aan DetailActivity wordt verbonden,
+		// alleen meest recente item downloaden
+		String attachedClassName = getActivity().getClass().getSimpleName();
+		Log.i("HermLog", "Class naam: " + attachedClassName);
 		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);
-
+		if (attachedClassName.equals(CLASSNAME_DETAIL_ACTIVITY))
+			itemsPerPage = 1;
+		
 		// url is de basis url voor ophalen data
 		url = getActivity().getResources().getString(R.string.url_data);
 	}
