@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Velden in de lijst met feeditems vullen
                 item.setTitle(post.optString("title"));
+				item.setLink(post.optString("link"));
 				item.setPubdate(formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss"));
 				item.setCreator(post.optString("creator"));
 				item.setContent(post.optString("content"));
@@ -515,6 +516,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					mIntent.putExtra("imgwidth", item.getImgwidth());
 					mIntent.putExtra("imgheight", item.getImgheight());
 					mIntent.putExtra("title", item.getTitle());
+					mIntent.putExtra("link", item.getLink());
 					mIntent.putExtra("pubdate", item.getPubdate());
 					mIntent.putExtra("creator", item.getCreator());
 					mIntent.putExtra("content", item.getContent());

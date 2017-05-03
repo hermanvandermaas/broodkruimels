@@ -4,6 +4,7 @@ public class FeedItem
 {
 
     private String title;
+	private String link;
     private String pubdate;
     private String creator;
     private String content;
@@ -14,6 +15,16 @@ public class FeedItem
 	private String mediatype;
 	private int imgwidth;
 	private int imgheight;
+
+	public void setLink(String link)
+	{
+		this.link = link;
+	}
+
+	public String getLink()
+	{
+		return link;
+	}
 
 	public void setImgheight(int imgheight)
 	{

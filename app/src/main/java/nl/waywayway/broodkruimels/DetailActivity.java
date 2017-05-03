@@ -1,5 +1,6 @@
 package nl.waywayway.broodkruimels;
 
+import android.app.*;
 import android.content.*;
 import android.net.*;
 import android.os.*;
@@ -16,6 +17,7 @@ import java.text.*;
 import java.util.*;
 import org.json.*;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 
 public class DetailActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
@@ -28,6 +30,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	private int mImgWidth;
 	private int mImgHeight;
 	private String mTitle;
+	private String mLink;
 	private String mPubdate;
 	private String mCreator;
 	private String mContent;
@@ -58,7 +61,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		// Probeer data uit intent te halen
 		// indien data aanwezig dan wordt deze activity gestart
 		// vanuit de lijst en zijn data aanwezig;
-		// Indien data niet aanwezig dan wordt deze activity
+		// Indien data niet aanwezig dan wordt deze activity blijkbaar
 		// gestart vanuit een notification en moeten data nog
 		// worden downgeload
 		getDataFromIntent();
@@ -107,13 +110,21 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
-	
+
 	// Maak options menu in toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
 	{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+		
+		// Toon share knop, als content beschikbaar is
+		if (!TextUtils.isEmpty(mLink))
+		{
+			MenuItem shareItem = menu.findItem(R.id.action_share);
+			shareItem.setVisible(mWeHaveData);
+		}
+		
         return true;
     }
 
@@ -128,18 +139,29 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
         switch (id)
 		{
             case R.id.action_share:
-				// Ga naar share scherm
-				/*
-				Intent mIntent = new Intent(mContext, SettingsActivity.class);
-				mContext.startActivity(mIntent);
-				*/
-				
+				// Deel content via andere app
+				share();
 				return true;
 
 			default:
 				return super.onOptionsItemSelected(item);
         }
     }
+
+	// Deel content via andere app
+	private void share()
+	{		
+		Intent shareIntent = ShareCompat.IntentBuilder.from(DetailActivity.this)
+			.setType("text/plain")
+			.setText(mLink)
+			.setSubject(mTitle)
+			.getIntent();
+
+		if (shareIntent.resolveActivity(getPackageManager()) != null)
+		{
+			startActivity(shareIntent);
+		}
+	}
 
 	// Haal data uit intent
 	private void getDataFromIntent()
@@ -152,6 +174,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mImgWidth = mIntent.getIntExtra("imgwidth", 1);
 		mImgHeight = mIntent.getIntExtra("imgheight", 1);
 		mTitle = mIntent.getStringExtra("title");
+		mLink = mIntent.getStringExtra("link");
 		mPubdate = mIntent.getStringExtra("pubdate");
 		mCreator = mIntent.getStringExtra("creator");
 		mContent = mIntent.getStringExtra("content");
@@ -161,7 +184,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	private void downloadXml()
 	{
 		Log.i("HermLog", "downloadXml()");
-		
+
 		// Als verbinding, download json
 		if (isNetworkConnected())
 		{
@@ -402,7 +425,13 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		parseResult(mResult, downloadMoreItems);
 
 		if (!TextUtils.isEmpty(mImageUrl))
+		{
 			mWeHaveData = true;
+			
+			// Data zijn beschikbaar, toon share knop
+			// deze method roept onCreateOptionsMenu() aan
+			invalidateOptionsMenu();
+		}
 
 		// Als data aanwezig zijn in de lijst,
 		// update de UI met de data
@@ -435,6 +464,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			mImgWidth = post.optInt("imgwidth");
 			mImgHeight = post.optInt("imgheight");
 			mTitle = post.optString("title");
+			mLink = post.optString("link");
 			mPubdate = formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss");
 			mCreator = post.optString("creator");
 			mContent = post.optString("content");
