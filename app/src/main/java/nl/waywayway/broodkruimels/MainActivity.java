@@ -494,9 +494,12 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			}
 		};
 
+		// Drempelwaarde hoe ver van einde van de lijst voor extra data downloaden
+		int endlessScrollingThreshold = getResources().getInteger(R.integer.endlessScrollingThreshold);
+
 		// endless scrolling
 		Paginate.with(mRecyclerView, callbacks)
-			.setLoadingTriggerThreshold(2)
+			.setLoadingTriggerThreshold(endlessScrollingThreshold)
 			.addLoadingListItem(false)
 			.build();
 	}

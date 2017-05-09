@@ -122,7 +122,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		if (!TextUtils.isEmpty(mLink))
 		{
 			MenuItem shareItem = menu.findItem(R.id.action_share);
-			shareItem.setVisible(mWeHaveData);
+			shareItem.setVisible(true);
 		}
 		
         return true;
@@ -259,6 +259,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		String mOrientation = (mImgWidth > mImgHeight) ? ("landscape") : ("portrait");
 		mUrlWidth = getResources().getInteger(R.integer.activity_detail_image_size);
 
+		// Maak deel van URL met afmetingen van afbeelding
+		mAspectRatio = (float) mImgHeight / mImgWidth;
+		mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
+		mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
+		
+		/*
 		if (mOrientation == "landscape" && mSizeKnown)
 		{
 			mAspectRatio = (float) mImgHeight / mImgWidth;
@@ -273,6 +279,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			mUrlWidth = Math.round(mUrlHeight * mAspectRatio);
 			mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
 		}
+		*/
 
 		if (!mSizeKnown)
 		{
@@ -287,6 +294,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
 
 		Log.i("HermLog", "mOrientation: " + mOrientation);
+		Log.i("HermLog", "2e poging: " + secondTry);
 		Log.i("HermLog", "mSizeknown: " + mSizeKnown);
 		Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
 		Log.i("HermLog", "mUrlHeight: " + mUrlHeight);
@@ -315,6 +323,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			mProgressBar.setVisibility(ProgressBar.VISIBLE);
 
 			// Laad grote afbeelding
+			// maar wel verkleind
 			Picasso
 				.with(mContext)
 				.load(makeUrl(secondTry))
@@ -337,6 +346,8 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		else
 		{
 			// Poging 2
+			// Laad grote afbeelding
+			// onverkleind
 			Picasso
 				.with(mContext)
 				.load(makeUrl(secondTry))
@@ -528,6 +539,9 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			showProgressBar();
 		}
 
+		// Alleen share button tonen als link beschikbaar is
+		invalidateOptionsMenu();
+		
 		// Als er al data in de intent stonden,
 		// Wordt DetailActivity aangeroepen uit lijst,
 		// Zo niet, dan is deze Activity gestart uit een

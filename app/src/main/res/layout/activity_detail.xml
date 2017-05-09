@@ -19,7 +19,7 @@
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			app:popupTheme="@style/overflow_menu"
 			app:layout_scrollFlags="scroll|enterAlways">
-			
+
 			<ProgressBar
 				android:id="@+id/toolbar_progress_bar_detailactivity"
 				android:layout_width="wrap_content"
@@ -73,6 +73,7 @@
 					android:id="@+id/image_detail"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:maxWidth="@dimen/detail_activity_textwidth"
 					android:layout_alignParentTop="true"
 					android:layout_centerInParent="false"
 					android:adjustViewBounds="true" />
@@ -88,8 +89,8 @@
 
 			<TextView
 				android:id="@+id/title_detail"
-				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
 				android:padding="8dp"
 				android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 				android:textColor="#444"
@@ -98,8 +99,8 @@
 
 			<TextView
 				android:id="@+id/pubdate_detail"
-				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
 				android:maxLines="1"
 				android:paddingLeft="8dp"
 				android:paddingRight="8dp"
@@ -111,8 +112,8 @@
 
 			<TextView
 				android:id="@+id/creator_detail"
-				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
 				android:maxLines="1"
 				android:paddingLeft="8dp"
 				android:paddingRight="8dp"
@@ -124,8 +125,8 @@
 
 			<TextView
 				android:id="@+id/content_detail"
-				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
 				android:paddingLeft="8dp"
 				android:paddingRight="8dp"
 				android:paddingBottom="8dp"				
