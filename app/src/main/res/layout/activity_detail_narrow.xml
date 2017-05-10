@@ -73,7 +73,6 @@
 					android:id="@+id/image_detail"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:maxWidth="@dimen/detail_activity_textwidth"
 					android:layout_alignParentTop="true"
 					android:layout_centerInParent="false"
 					android:adjustViewBounds="true" />
