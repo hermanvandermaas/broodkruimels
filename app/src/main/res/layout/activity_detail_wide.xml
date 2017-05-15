@@ -102,16 +102,6 @@
 					android:textColor="#444"
 					android:textSize="18dp"
 					android:textStyle="bold"/>
-				<TextView
-					android:id="@+id/title_detail_test"
-					android:text="activity_detail_wide.xml"
-					android:layout_height="wrap_content"
-					android:layout_width="match_parent"
-					android:padding="8dp"
-					android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-					android:textColor="#444"
-					android:textSize="18dp"
-					android:textStyle="bold"/>
 
 				<TextView
 					android:id="@+id/pubdate_detail"

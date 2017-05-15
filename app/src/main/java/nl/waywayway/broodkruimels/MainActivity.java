@@ -407,8 +407,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		else
 			this.mScreenWidth = "wide";
 
-		// Log.i("HermLog", "AppWidthDp: " + AppWidthDp);
-		// Log.i("HermLog", "Density: " + displayMetrics.density);
+		Log.i("HermLog", "AppWidthDp: " + appWidthDp);
+		Log.i("HermLog", "Density: " + displayMetrics.density);
 	}
 
 	private int getNumberOfColumns()
