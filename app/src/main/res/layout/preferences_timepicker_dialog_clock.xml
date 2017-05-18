@@ -3,6 +3,9 @@
 <TimePicker 
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/preferences_timepicker"
+	android:timePickerMode="clock"
+	android:paddingTop="18dp"
+	android:paddingBottom="18dp"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:theme="@style/AppAlertDialogContent" />
