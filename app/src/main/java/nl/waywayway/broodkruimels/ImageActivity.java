@@ -1,5 +1,8 @@
 package nl.waywayway.broodkruimels;
  
+TODO:
+- in DetailActivity bij click op afbeelding
+  intent maken en ImageActivity starten
 
 import android.content.*;
 import android.net.*;
@@ -40,16 +43,6 @@ public class ImageActivity extends AppCompatActivity
 
 		// Data uit intent halen
 		getDataFromIntent();
-		if (!TextUtils.isEmpty(mImageUrl))
-			mWeHaveData = true;
-
-		Log.i("HermLog", "mWeHaveData: " + mWeHaveData);
-
-		if (mWeHaveData)
-		{
-			// Download afbeelding
-			downloadImage(false);
-		}
 
 		// Klik knop probeer opnieuw:
 		// check verbinding, indien ok dan afbeelding laden
