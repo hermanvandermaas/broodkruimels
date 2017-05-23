@@ -90,11 +90,16 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		Button button = (Button) findViewById(R.id.btnTryAgain_detailactivity);
         button.setOnClickListener(new View.OnClickListener()
 			{
+				@Override
 				public void onClick(View v)
 				{
 					downloadXml();
 				}
 			});
+			
+		// Open Activity voor fullscreen afbeelding bij klik 
+		// op kleinere afbeelding
+		setImageClickAction();
 
 		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
@@ -374,6 +379,26 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 					}
 				});
 		}
+	}
+	
+	// Actie bij klik op afbeelding
+	private void setImageClickAction()
+	{
+		ImageView mImage = (ImageView) findViewById(R.id.image_detail);
+        mImage.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Intent mImageIntent = new Intent(mContext, ImageActivity.class);
+
+					mImageIntent.putExtra("mediacontent", mImageUrl);
+					mImageIntent.putExtra("imgwidth", mImgWidth);
+					mImageIntent.putExtra("imgheight", mImgHeight);
+
+					mContext.startActivity(mImageIntent);
+				}
+			});
 	}
 
 	private void setText()

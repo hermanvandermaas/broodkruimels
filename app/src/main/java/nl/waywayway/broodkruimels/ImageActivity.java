@@ -1,8 +1,4 @@
 package nl.waywayway.broodkruimels;
- 
-TODO:
-- in DetailActivity bij click op afbeelding
-  intent maken en ImageActivity starten
 
 import android.content.*;
 import android.net.*;
@@ -16,15 +12,12 @@ import com.squareup.picasso.*;
 
 public class ImageActivity extends AppCompatActivity
 {
-	private Boolean mWeHaveData = false;
 	private Intent mIntent;
 	private String mImageUrl;
-	private TaskFragment mTaskFragment;
 	private int mImgWidth;
 	private int mImgHeight;
 	private Context mContext;
 	private ImageView mImageview;
-	private ProgressBar mProgressBar;
 	private String mUrlDimensions;
 	private int mUrlWidth;
 	private int mUrlHeight;
