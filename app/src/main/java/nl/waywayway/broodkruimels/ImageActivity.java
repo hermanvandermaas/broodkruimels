@@ -23,13 +23,13 @@ public class ImageActivity extends AppCompatActivity
 	private int mUrlWidth;
 	private int mUrlHeight;
 	private Float mAspectRatio;
-	
+
 	@Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image);
-		
+
 		Log.i("HermLog", "ImageActivity.java");
 
 		// zet referentie naar context van deze activity in een variabele
@@ -40,6 +40,9 @@ public class ImageActivity extends AppCompatActivity
 
 		// Actie bij klik op knop probeer opnieuw
 		setClickActionTryAgain();
+
+		// Bij klik op scherm fullscreen aan of uit zetten
+		fullscreenToggle();
 	}
 
 	// Haal data uit intent
@@ -67,7 +70,88 @@ public class ImageActivity extends AppCompatActivity
 				}
 			});
 	}
-	
+
+	// Instellen:
+	// bij klik op scherm fullscreen aan of uit zetten
+	private void fullscreenToggle()
+	{
+		// View contentView = this.getWindow().getDecorView();
+		View contentView = findViewById(R.id.image_activity_rootview);
+		contentView.setClickable(true);
+
+        final GestureDetector clickDetector = new GestureDetector(this,
+			new GestureDetector.SimpleOnGestureListener()
+			{
+				@Override
+				public boolean onSingleTapUp(MotionEvent e)
+				{
+					boolean visible = (getWindow().getDecorView().getSystemUiVisibility()
+						& View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
+
+					if (visible)
+					{
+						Log.i("HermLog", "visible: ja, nu weg uit fullscreen...");
+						exitFullscreen();
+					}
+					else
+					{
+						Log.i("HermLog", "visible: nee, nu naar fullscreen...");
+						setFullscreen();
+					}
+
+					return true;
+				}
+			});
+
+        contentView.setOnTouchListener(new View.OnTouchListener()
+			{
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent)
+				{
+					return clickDetector.onTouchEvent(motionEvent);
+				}
+			});
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus)
+	{
+        super.onWindowFocusChanged(hasFocus);
+		if (hasFocus) setFullscreen();
+	}
+
+	// Fullscreen
+	private void setFullscreen()
+	{
+		Log.i("HermLog", "setFullscreen()");
+		
+		View mDecorView = this.getWindow().getDecorView();
+
+		// Set the IMMERSIVE flag.
+		// Set the content to appear under the system bars so that the content
+		// doesn't resize when the system bars hide and show.
+		mDecorView.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+            | View.SYSTEM_UI_FLAG_IMMERSIVE);
+	}
+
+	// Verlaat fullscreen
+	private void exitFullscreen()
+	{
+		Log.i("HermLog", "exitFullscreen()");
+		
+		View mDecorView = this.getWindow().getDecorView();
+
+		mDecorView.setSystemUiVisibility(
+			View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+			| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+			| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+	}
+
 	// Controleer netwerkverbinding, toon knop
 	// 'probeer opnieuw'  indien nodig
 	private void downloadImageOrTryAgain()
@@ -80,7 +164,7 @@ public class ImageActivity extends AppCompatActivity
 			// verberg knop
 			View mNotConnectedLayout = findViewById(R.id.notConnectedLinLayout_image_activity);
 			mNotConnectedLayout.setVisibility(View.GONE);
-			
+
 			downloadImage(false);
 		}
 		else
@@ -89,7 +173,7 @@ public class ImageActivity extends AppCompatActivity
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
 	}
-	
+
 	// Netwerkverbinding ja/nee
 	private boolean isNetworkConnected()
 	{
@@ -124,7 +208,7 @@ public class ImageActivity extends AppCompatActivity
 		mAspectRatio = (float) mImgHeight / mImgWidth;
 		mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
 		mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-		
+
 		if (!mSizeKnown)
 		{
 			// Als afmetingen niet bekend, of als
@@ -157,6 +241,7 @@ public class ImageActivity extends AppCompatActivity
 	private void downloadImage(Boolean secondTry)
 	{
 		mImageview = (PhotoView) findViewById(R.id.image_big);
+		// secondTry = true;
 
 		// Poging 1
 		if (!secondTry)
@@ -185,6 +270,8 @@ public class ImageActivity extends AppCompatActivity
 		}
 		else
 		{
+			showProgressBar();
+			
 			// Poging 2
 			// Laad grote afbeelding
 			// onverkleind
@@ -205,7 +292,7 @@ public class ImageActivity extends AppCompatActivity
 					{
 						hideProgressBar();
 						tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
-						
+
 						Log.i("HermLog", "2e poging ook mislukt: afbeelding downloadfout");
 					}
 				});
@@ -237,7 +324,7 @@ public class ImageActivity extends AppCompatActivity
 	{
 		super.onStart();
 		Log.i("HermLog", "ImageActivity: onStart()");
-		
+
 		downloadImageOrTryAgain();
 	}
 
