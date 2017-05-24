@@ -52,21 +52,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		feedsList = new ArrayList<>();
 
 		// Maak toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		ActionBar actionBar = getSupportActionBar();
+		makeToolbar();
 
-		// Klik knop probeer opnieuw:
-		// check verbinding, indien ok dan json laden
-		Button button = (Button) findViewById(R.id.btnTryAgain);
-        button.setOnClickListener(new View.OnClickListener()
-			{
-				public void onClick(View v)
-				{
-					// Perform action on click
-					downloadXml(false);
-				}
-			});
+		// Actie bij klik op knop probeer opnieuw
+		setClickActionTryAgain();
 
 		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
@@ -79,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment = new TaskFragment();
 			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
 		}
-		
+
 		// Als extra data voor endless scrolling nog aan het downloaden is na bv. schermrotatie (configuration change),
 		// stop downloaden (want eerst moet eerste 'page' downloaden), daarbij wordt getExtraPage op false gezet om
 		// om aan te geven wat de status van de taskfragment is: eerste page downloaden of extra data voor endless scrolling
-		if (mTaskFragment.isRunning() && mTaskFragment.getGetExtraPage() )
+		if (mTaskFragment.isRunning() && mTaskFragment.getGetExtraPage())
 		{
 			mTaskFragment.cancel();
 		}
@@ -95,6 +84,29 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
     }
+
+	// Maak toolbar
+	private void makeToolbar()
+	{
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		ActionBar actionBar = getSupportActionBar();
+	}
+
+	// Klik knop probeer opnieuw:
+	// check verbinding, indien ok dan json laden
+	private void setClickActionTryAgain()
+	{
+		Button button = (Button) findViewById(R.id.btnTryAgain);
+		button.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View v)
+				{
+					// Perform action on click
+					downloadXml(false);
+				}
+			});
+	}
 
 	// Toon foutboodschap
 	// toon knop probeer opnieuw
@@ -171,11 +183,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			Log.i("HermLog", "Date format exception in parseResult");
 			e.printStackTrace();
 		}
-		
+
 		return "";
 	}
-	
-	
+
+
 	// json string verwerken na download
 	// Zet json string per item in List<E>
 	private void parseResult(String result, Boolean downloadMoreItems)
@@ -241,9 +253,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				Intent mIntent = new Intent(mContext, SettingsActivity.class);
 				mContext.startActivity(mIntent);
 				return true;
-				
+
 			default:
-	        return super.onOptionsItemSelected(item);
+				return super.onOptionsItemSelected(item);
         }
     }
 
@@ -271,12 +283,12 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onPreExecute()
 	{
 		Log.i("HermLog", "onPreExecute()");
-		
+
 		// Appbar tonen, zodat progressbar (draaiende cirkel) zichtbaar wordt
 		// tijdens laden data
 		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
 		appBarLayout.setExpanded(true, true);
-		
+
 		// Progressbar tonen
 		showProgressBar();
 	}
@@ -313,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			downloadXml(false);
 			return;
 		}
-		
+
 		// Als niets gedownload, toon boodschap
 		// en knop probeer opnieuw
 		if (mResult == "Fout!")
@@ -322,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
 		}		
-		
+
 		// Als download blijkbaar goed is gegaan
 		// resultaat parsen in een arraylist
 		parseResult(mResult, downloadMoreItems);
@@ -338,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			hasLoadedAllItems = true;
 			return;
 		}
-		
+
 		// Als data aanwezig zijn in de lijst,
 		// en deze data komen uit de eerste download (niet extra 'page' voor endless scrolling),
 		// maak recyclerview
@@ -347,12 +359,12 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			Log.i("HermLog", "Lengte List: " + String.valueOf(feedsList.size()));
 
 			makeRecyclerView();
-			
+
 			// recyclerViewListSize is voor endless scrolling, bijhouden van
 			// lengte datalijst die bekend is bij recyclerview adapter
 			recyclerViewListSize = feedsList.size();
 		}
-		
+
 		// Als data aanwezig zijn in de lijst,
 		// en deze data komen uit extra 'page' voor endless scrolling),
 		// update recyclerview met extra data
@@ -363,11 +375,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			// Geef toevoeging aan listarray van gedownloade items door aan recyclerview adapter
 			// Zodat ze zichtbaar worden in recyclerview, met animatie
 			adapter.notifyItemRangeInserted(recyclerViewListSize, feedsList.size() - recyclerViewListSize);
-			
+
 			// recyclerViewListSize is voor endless scrolling, bijhouden van
 			// lengte datalijst die bekend is bij recyclerview adapter
 			recyclerViewListSize = feedsList.size();
-			
+
 			// Volgende 'page' downloaden mag vanaf nu weer
 			pageLoadingInProgress = false;
 		}
@@ -419,10 +431,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		int mNumberOfColumns = Math.round((float) appWidthDp / mColumnWidth);
 
 		// Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
-		
+
 		return mNumberOfColumns;
 	}
-	
+
 	// 
 	private void setLayoutManager()
 	{
@@ -439,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 		}
 	}
-	
+
 	// Koppel adapter
 	private void setAdapter()
 	{
@@ -468,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
 				Log.i("HermLog", "in onLoadMore() isLoading(): " + isLoading());
 				Log.i("HermLog", "in onLoadMore() hasLoadedAllItems(): " + hasLoadedAllItems());
-				
+
 				if (hasLoadedAllItems) return;
 				if (pageLoadingInProgress) return;
 
@@ -503,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			.addLoadingListItem(false)
 			.build();
 	}
-	
+
 	// Actie bij klik op item
 	private void setClickAction()
 	{
@@ -526,9 +538,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 					mContext.startActivity(mIntent);
 				}
-		});
+			});
 	}
-	
+
 	// Vul recyclerview:
 	// Koppel layoutmanager, verbind adapter, 
 	// instellen endless scrolling, actie bij aanklikken item
@@ -542,13 +554,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Koppel juiste layoutmanager
 		setLayoutManager();
-		
+
 		// Koppel adapter
 		setAdapter();
 
 		// Endless scrolling
 		endlessScrolling();
-		
+
 		// Actie bij klik op item
 		setClickAction();
 	}

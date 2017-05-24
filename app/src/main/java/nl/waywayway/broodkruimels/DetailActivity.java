@@ -1,5 +1,5 @@
 package nl.waywayway.broodkruimels;
- 
+
 import android.app.*;
 import android.content.*;
 import android.net.*;
@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-		
+
 		// De layouts voor verschillende schermbreedten staan in de map layouts
 		// uit deze layouts kiest het systeem de juiste op basis van
 		// de qualifiers (achtervoegsel mapnaam) voor screen width (w800dp)
@@ -85,18 +85,9 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			setText();
 		}
 
-		// Klik knop probeer opnieuw:
-		// check verbinding, indien ok dan json laden
-		Button button = (Button) findViewById(R.id.btnTryAgain_detailactivity);
-        button.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					downloadXml();
-				}
-			});
-			
+		// Actie bij klik op knop probeer opnieuw
+		setClickActionTryAgain();
+
 		// Open Activity voor fullscreen afbeelding bij klik 
 		// op kleinere afbeelding
 		setImageClickAction();
@@ -128,14 +119,14 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
-		
+
 		// Toon share knop, als content beschikbaar is
 		if (!TextUtils.isEmpty(mLink))
 		{
 			MenuItem shareItem = menu.findItem(R.id.action_share);
 			shareItem.setVisible(true);
 		}
-		
+
         return true;
     }
 
@@ -158,6 +149,21 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 				return super.onOptionsItemSelected(item);
         }
     }
+
+	private void setClickActionTryAgain()
+	{
+		// Klik knop probeer opnieuw:
+		// check verbinding, indien ok dan json laden
+		Button button = (Button) findViewById(R.id.btnTryAgain_detailactivity);
+		button.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					downloadXml();
+				}
+			});
+	}
 
 	// Deel content via andere app
 	private void share()
@@ -274,23 +280,23 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mAspectRatio = (float) mImgHeight / mImgWidth;
 		mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
 		mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-		
-		/*
-		if (mOrientation == "landscape" && mSizeKnown)
-		{
-			mAspectRatio = (float) mImgHeight / mImgWidth;
-			mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
-			mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-		}
 
-		if (mOrientation == "portrait" && mSizeKnown)
-		{
-			mUrlHeight = mUrlWidth;
-			mAspectRatio = (float) mImgWidth / mImgHeight;
-			mUrlWidth = Math.round(mUrlHeight * mAspectRatio);
-			mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-		}
-		*/
+		/*
+		 if (mOrientation == "landscape" && mSizeKnown)
+		 {
+		 mAspectRatio = (float) mImgHeight / mImgWidth;
+		 mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
+		 mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
+		 }
+
+		 if (mOrientation == "portrait" && mSizeKnown)
+		 {
+		 mUrlHeight = mUrlWidth;
+		 mAspectRatio = (float) mImgWidth / mImgHeight;
+		 mUrlWidth = Math.round(mUrlHeight * mAspectRatio);
+		 mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
+		 }
+		 */
 
 		if (!mSizeKnown)
 		{
@@ -380,7 +386,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 				});
 		}
 	}
-	
+
 	// Actie bij klik op afbeelding
 	private void setImageClickAction()
 	{
@@ -469,7 +475,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		if (!TextUtils.isEmpty(mImageUrl))
 		{
 			mWeHaveData = true;
-			
+
 			// Data zijn beschikbaar, toon share knop
 			// deze method roept onCreateOptionsMenu() aan
 			invalidateOptionsMenu();
@@ -572,7 +578,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 
 		// Alleen share button tonen als link beschikbaar is
 		invalidateOptionsMenu();
-		
+
 		// Als er al data in de intent stonden,
 		// Wordt DetailActivity aangeroepen uit lijst,
 		// Zo niet, dan is deze Activity gestart uit een

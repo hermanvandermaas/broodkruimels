@@ -9,6 +9,7 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.squareup.picasso.*;
+import com.github.chrisbanes.photoview.*;
 
 public class ImageActivity extends AppCompatActivity
 {
@@ -17,7 +18,7 @@ public class ImageActivity extends AppCompatActivity
 	private int mImgWidth;
 	private int mImgHeight;
 	private Context mContext;
-	private ImageView mImageview;
+	private PhotoView mImageview;
 	private String mUrlDimensions;
 	private int mUrlWidth;
 	private int mUrlHeight;
@@ -37,16 +38,8 @@ public class ImageActivity extends AppCompatActivity
 		// Data uit intent halen
 		getDataFromIntent();
 
-		// Klik knop probeer opnieuw:
-		// check verbinding, indien ok dan afbeelding laden
-		Button button = (Button) findViewById(R.id.btnTryAgain_image_activity);
-        button.setOnClickListener(new View.OnClickListener()
-			{
-				public void onClick(View v)
-				{
-					downloadImageOrTryAgain();
-				}
-			});
+		// Actie bij klik op knop probeer opnieuw
+		setClickActionTryAgain();
 	}
 
 	// Haal data uit intent
@@ -61,6 +54,20 @@ public class ImageActivity extends AppCompatActivity
 		mImgHeight = mIntent.getIntExtra("imgheight", 1);
 	}
 
+	// Actie bij klik op knop probeer opnieuw:
+	// check verbinding, indien ok dan afbeelding laden
+	private void setClickActionTryAgain()
+	{
+		Button button = (Button) findViewById(R.id.btnTryAgain_image_activity);
+        button.setOnClickListener(new View.OnClickListener()
+			{
+				public void onClick(View v)
+				{
+					downloadImageOrTryAgain();
+				}
+			});
+	}
+	
 	// Controleer netwerkverbinding, toon knop
 	// 'probeer opnieuw'  indien nodig
 	private void downloadImageOrTryAgain()
@@ -149,7 +156,7 @@ public class ImageActivity extends AppCompatActivity
 	// afbeelding proberen te downloaden
 	private void downloadImage(Boolean secondTry)
 	{
-		mImageview = (ImageView) findViewById(R.id.image_big);
+		mImageview = (PhotoView) findViewById(R.id.image_big);
 
 		// Poging 1
 		if (!secondTry)
