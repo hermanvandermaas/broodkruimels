@@ -5,4 +5,5 @@
     <color name="accent">#9E9E9E</color>
 	<color name="overflow_background">#FFFFFF</color>
 	<color name="overflow_text">#212121</color>
+	<color name="image_background">#000000</color>
 </resources>

@@ -32,6 +32,8 @@ public class ImageActivity extends AppCompatActivity
 
 		Log.i("HermLog", "ImageActivity.java");
 
+		mImageview = (PhotoView) findViewById(R.id.image_big);
+		
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
 
@@ -41,8 +43,9 @@ public class ImageActivity extends AppCompatActivity
 		// Actie bij klik op knop probeer opnieuw
 		setClickActionTryAgain();
 
-		// Bij klik op scherm fullscreen aan of uit zetten
-		fullscreenToggle();
+		// Instellen:
+		// bij klik op scherm fullscreen aan of uit zetten
+		InitializeFullscreenToggle();
 	}
 
 	// Haal data uit intent
@@ -73,46 +76,35 @@ public class ImageActivity extends AppCompatActivity
 
 	// Instellen:
 	// bij klik op scherm fullscreen aan of uit zetten
-	private void fullscreenToggle()
+	private void InitializeFullscreenToggle()
 	{
-		// View contentView = this.getWindow().getDecorView();
-		View contentView = findViewById(R.id.image_activity_rootview);
-		contentView.setClickable(true);
+		PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImageview);
 
-        final GestureDetector clickDetector = new GestureDetector(this,
-			new GestureDetector.SimpleOnGestureListener()
+		mAttacher.setOnPhotoTapListener(new OnPhotoTapListener()
 			{
-				@Override
-				public boolean onSingleTapUp(MotionEvent e)
+				public void onPhotoTap(ImageView view, float x, float y)
 				{
-					boolean visible = (getWindow().getDecorView().getSystemUiVisibility()
-						& View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0;
-
-					if (visible)
-					{
-						Log.i("HermLog", "visible: ja, nu weg uit fullscreen...");
-						exitFullscreen();
-					}
-					else
-					{
-						Log.i("HermLog", "visible: nee, nu naar fullscreen...");
-						setFullscreen();
-					}
-
-					return true;
+					Toast.makeText(mContext, "Op de foto... Tik!", Toast.LENGTH_SHORT).show();
+					toggleFullscreen();
 				}
 			});
 
-        contentView.setOnTouchListener(new View.OnTouchListener()
+		mAttacher.setOnOutsidePhotoTapListener(new OnOutsidePhotoTapListener()
 			{
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent)
+				public void onOutsidePhotoTap(ImageView view)
 				{
-					return clickDetector.onTouchEvent(motionEvent);
+					Toast.makeText(mContext, "Buiten de foto... Tik!", Toast.LENGTH_SHORT).show();
+					toggleFullscreen();
 				}
 			});
 	}
 
+	private void toggleFullscreen()
+	{
+		
+		
+	}
+	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
@@ -124,32 +116,57 @@ public class ImageActivity extends AppCompatActivity
 	private void setFullscreen()
 	{
 		Log.i("HermLog", "setFullscreen()");
-		
+		Toast.makeText(mContext, "Build version SDK int: " + Build.VERSION.SDK_INT, Toast.LENGTH_SHORT).show();
+
 		View mDecorView = this.getWindow().getDecorView();
 
-		// Set the IMMERSIVE flag.
-		// Set the content to appear under the system bars so that the content
-		// doesn't resize when the system bars hide and show.
-		mDecorView.setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-            | View.SYSTEM_UI_FLAG_IMMERSIVE);
+		if (Build.VERSION.SDK_INT >= 19)
+		{
+			Toast.makeText(mContext, "setFullscreen() api>=19", Toast.LENGTH_SHORT).show();
+
+			// Set the IMMERSIVE flag.
+			// Set the content to appear under the system bars so that the content
+			// doesn't resize when the system bars hide and show.
+			mDecorView.setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+				| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+				| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+				| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+				| View.SYSTEM_UI_FLAG_IMMERSIVE);
+		}
+		else
+		{
+			Toast.makeText(mContext, "setFullscreen() api<19", Toast.LENGTH_SHORT).show();
+			
+			findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		}
 	}
 
 	// Verlaat fullscreen
 	private void exitFullscreen()
 	{
 		Log.i("HermLog", "exitFullscreen()");
-		
+
 		View mDecorView = this.getWindow().getDecorView();
 
-		mDecorView.setSystemUiVisibility(
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-			| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-			| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		if (Build.VERSION.SDK_INT >= 19)
+		{
+			Toast.makeText(mContext, "exitFullscreen() api>=19", Toast.LENGTH_SHORT).show();
+			
+			mDecorView.setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+				| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		}
+		else
+		{
+			Toast.makeText(mContext, "exitFullscreen() api<19", Toast.LENGTH_SHORT).show();
+			
+			findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		}
 	}
 
 	// Controleer netwerkverbinding, toon knop
@@ -240,7 +257,6 @@ public class ImageActivity extends AppCompatActivity
 	// afbeelding proberen te downloaden
 	private void downloadImage(Boolean secondTry)
 	{
-		mImageview = (PhotoView) findViewById(R.id.image_big);
 		// secondTry = true;
 
 		// Poging 1
@@ -271,7 +287,7 @@ public class ImageActivity extends AppCompatActivity
 		else
 		{
 			showProgressBar();
-			
+
 			// Poging 2
 			// Laad grote afbeelding
 			// onverkleind
