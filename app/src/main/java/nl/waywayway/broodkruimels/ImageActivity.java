@@ -19,6 +19,7 @@ public class ImageActivity extends AppCompatActivity
 	private int mImgHeight;
 	private Context mContext;
 	private PhotoView mImageview;
+	private View mDecorView;
 	private String mUrlDimensions;
 	private int mUrlWidth;
 	private int mUrlHeight;
@@ -32,9 +33,13 @@ public class ImageActivity extends AppCompatActivity
 
 		Log.i("HermLog", "ImageActivity.java");
 
+		// Referentie naar afbeelding
 		mImageview = (PhotoView) findViewById(R.id.image_big);
 		
-		// zet referentie naar context van deze activity in een variabele
+		// Referentie naar decorview
+		mDecorView = this.getWindow().getDecorView();
+		
+		// Referentie naar context van deze activity
 		mContext = this;
 
 		// Data uit intent halen
@@ -84,7 +89,6 @@ public class ImageActivity extends AppCompatActivity
 			{
 				public void onPhotoTap(ImageView view, float x, float y)
 				{
-					Toast.makeText(mContext, "Op de foto... Tik!", Toast.LENGTH_SHORT).show();
 					toggleFullscreen();
 				}
 			});
@@ -93,40 +97,61 @@ public class ImageActivity extends AppCompatActivity
 			{
 				public void onOutsidePhotoTap(ImageView view)
 				{
-					Toast.makeText(mContext, "Buiten de foto... Tik!", Toast.LENGTH_SHORT).show();
 					toggleFullscreen();
 				}
 			});
 	}
 
+	private boolean isFullscreen()
+	{
+		View mDecorView = this.getWindow().getDecorView();
+		int mFlags = mDecorView.getSystemUiVisibility();
+		
+		Boolean mVisible;
+		
+		if (Build.VERSION.SDK_INT >= 19)
+		{
+			mVisible = ((mFlags & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0);
+		}
+		else
+		{
+			mVisible = ((mFlags & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0);
+		}
+		
+		if (mVisible)
+		{
+			Log.i("HermLog", "visible");
+			return true;
+		}
+		else
+		{
+			Log.i("HermLog", "invisible");
+			return false;
+		}
+	}
+	
 	private void toggleFullscreen()
 	{
-		
-		
+		if (isFullscreen()) exitFullscreen();
+		else enterFullscreen();
 	}
 	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
         super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) setFullscreen();
+		if (hasFocus) enterFullscreen();
 	}
 
 	// Fullscreen
-	private void setFullscreen()
+	private void enterFullscreen()
 	{
-		Log.i("HermLog", "setFullscreen()");
-		Toast.makeText(mContext, "Build version SDK int: " + Build.VERSION.SDK_INT, Toast.LENGTH_SHORT).show();
+		Log.i("HermLog", "enterFullscreen()");
 
 		View mDecorView = this.getWindow().getDecorView();
 
 		if (Build.VERSION.SDK_INT >= 19)
 		{
-			Toast.makeText(mContext, "setFullscreen() api>=19", Toast.LENGTH_SHORT).show();
-
-			// Set the IMMERSIVE flag.
-			// Set the content to appear under the system bars so that the content
-			// doesn't resize when the system bars hide and show.
 			mDecorView.setSystemUiVisibility(
 				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 				| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -137,10 +162,8 @@ public class ImageActivity extends AppCompatActivity
 		}
 		else
 		{
-			Toast.makeText(mContext, "setFullscreen() api<19", Toast.LENGTH_SHORT).show();
-			
-			findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+			mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+			mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		}
 	}
 
@@ -153,8 +176,6 @@ public class ImageActivity extends AppCompatActivity
 
 		if (Build.VERSION.SDK_INT >= 19)
 		{
-			Toast.makeText(mContext, "exitFullscreen() api>=19", Toast.LENGTH_SHORT).show();
-			
 			mDecorView.setSystemUiVisibility(
 				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 				| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -162,10 +183,7 @@ public class ImageActivity extends AppCompatActivity
 		}
 		else
 		{
-			Toast.makeText(mContext, "exitFullscreen() api<19", Toast.LENGTH_SHORT).show();
-			
-			findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+			mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 		}
 	}
 
@@ -238,6 +256,7 @@ public class ImageActivity extends AppCompatActivity
 		String mRegex = "(?i)(.+)(-\\d+x\\d+)(\\.jpg|\\.jpeg|\\.png)";
 		mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
 
+		/*
 		Log.i("HermLog", "mOrientation: " + mOrientation);
 		Log.i("HermLog", "2e poging: " + secondTry);
 		Log.i("HermLog", "mSizeknown: " + mSizeKnown);
@@ -247,7 +266,8 @@ public class ImageActivity extends AppCompatActivity
 		Log.i("HermLog", "mImgWidth: " + mImgWidth);
 		Log.i("HermLog", "mImgHeight: " + mImgHeight);
 		Log.i("HermLog", "mImageUrl: " + mImageUrl);
-
+		*/
+		
 		return mImageUrl;
 	}
 
