@@ -2,7 +2,9 @@ package nl.waywayway.broodkruimels;
 
 import android.content.*;
 import android.content.res.*;
+import android.os.*;
 import android.support.v7.preference.*;
+import android.text.format.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
@@ -127,7 +129,7 @@ public class TimePreference extends DialogPreference
 	}
 
 	@Override
-	public void onDialogClosed(boolean positiveResult)
+	protected void onDialogClosed(boolean positiveResult)
 	{
 		Log.i("HermLog", "onDialogClosed()");
 

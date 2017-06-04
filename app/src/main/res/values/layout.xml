@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="activity_detail" type="layout">@layout/activity_detail_narrow</item>
-	<item name="preferences_timepicker_dialog" type="layout">@layout/preferences_timepicker_dialog_spinner</item>
 </resources>
