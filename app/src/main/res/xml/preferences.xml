@@ -11,7 +11,6 @@
         android:defaultValue="false" />
 	
 	<nl.waywayway.broodkruimels.TimePreference
-		style="@style/AppPreference.DialogPreference"
 		android:dependency="pref_notify"
 		android:key="pref_notify_time"
         android:title="@string/pref_notify_time"

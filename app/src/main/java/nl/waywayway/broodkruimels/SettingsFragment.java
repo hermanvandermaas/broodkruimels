@@ -69,7 +69,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	// In time preference bij summary de ingestelde tijd vermelden
 	private void setPrefTimeSummary(String prefKey)
 	{
-		TimePreference prefTime = (TimePreference) getPreferenceManager().findPreference(prefKey);
+		// Directe toegang tot TimePreference lukt niet vanuit deze class,
+		// (methods voor vinden van preferences in deze class geven
+		// allemaal 'support library v7' type preference terug,
+		// TimePreference is echter standaard DialogPreference, casten lukt ook niet)
+		// daarom toegang via een extra class MyPreferenceFragment
+		MyPreferenceFragment mHelper = new MyPreferenceFragment();
+		TimePreference prefTime = mHelper.getTimePreference();
 
 		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);

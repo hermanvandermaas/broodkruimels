@@ -3,7 +3,7 @@ package nl.waywayway.broodkruimels;
 import android.content.*;
 import android.content.res.*;
 import android.os.*;
-import android.support.v7.preference.*;
+import android.preference.*;
 import android.text.format.*;
 import android.util.*;
 import android.view.*;
@@ -107,11 +107,8 @@ public class TimePreference extends DialogPreference
 
 		// Get the time from the related Preference
 		Integer minutesAfterMidnight = null;
-		DialogPreference preference = getPreference();
-		if (preference instanceof TimePreference)
-		{
-			minutesAfterMidnight = ((TimePreference) preference).getTime();
-		}
+		TimePreference preference = (TimePreference) findPreferenceInHierarchy("pref_notify_time");
+		minutesAfterMidnight = preference.getTime();
 
 		// Set the time to the TimePicker
 		if (minutesAfterMidnight != null)
@@ -121,8 +118,17 @@ public class TimePreference extends DialogPreference
 			boolean is24hour = DateFormat.is24HourFormat(getContext());
 
 			mTimePicker.setIs24HourView(is24hour);
-			mTimePicker.setCurrentHour(hours);
-			mTimePicker.setCurrentMinute(minutes);
+			
+			if (Build.VERSION.SDK_INT >= 23)
+			{
+				mTimePicker.setHour(hours);
+				mTimePicker.setMinute(minutes);
+			}
+			else
+			{
+				mTimePicker.setCurrentHour(hours);
+				mTimePicker.setCurrentMinute(minutes);
+			}
 
 			Log.i("HermLog", "onBindDialogView(): timepicker gezet op: " + hours + ":" + minutes);
 		}
@@ -155,19 +161,15 @@ public class TimePreference extends DialogPreference
 			int minutesAfterMidnight = (hours * 60) + minutes;
 
 			// Save the value
-			DialogPreference preference = getPreference();
-			if (preference instanceof TimePreference)
+			TimePreference timePreference = (TimePreference) findPreferenceInHierarchy("pref_notify_time");
+			
+			// This allows the client to ignore the user value.
+			if (timePreference.callChangeListener(minutesAfterMidnight))
 			{
-				TimePreference timePreference = ((TimePreference) preference);
+				// Save the value
+				timePreference.setTime(minutesAfterMidnight);
 
-				// This allows the client to ignore the user value.
-				if (timePreference.callChangeListener(minutesAfterMidnight))
-				{
-					// Save the value
-					timePreference.setTime(minutesAfterMidnight);
-
-					Log.i("HermLog", "onDialogClosed: bewaarde tijd: " + minutesAfterMidnight);
-				}
+				Log.i("HermLog", "onDialogClosed: bewaarde tijd in minuten na 00:00 : " + minutesAfterMidnight);
 			}
 		}
 	}
