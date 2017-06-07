@@ -90,7 +90,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //Setting text views
         customViewHolder.textViewTitle.setText(Html.fromHtml(feedItem.getTitle()));
         customViewHolder.textViewPubdate.setText(Html.fromHtml(feedItem.getPubdate()));
-		customViewHolder.textViewContent.setText(Html.fromHtml(feedItem.getContent()));
 
         View.OnClickListener listener = new View.OnClickListener()
 		{
@@ -104,7 +103,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         customViewHolder.imageView.setOnClickListener(listener);
         customViewHolder.textViewTitle.setOnClickListener(listener);
         customViewHolder.textViewPubdate.setOnClickListener(listener);
-		customViewHolder.textViewContent.setOnClickListener(listener);
     }
 
     @Override
@@ -119,7 +117,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         protected ImageView imageView;
         protected TextView textViewTitle;
         protected TextView textViewPubdate;
-		protected TextView textViewContent;
 
         public CustomViewHolder(View view)
 		{
@@ -127,7 +124,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
             this.textViewTitle = (TextView) view.findViewById(R.id.title);
             this.textViewPubdate = (TextView) view.findViewById(R.id.pubdate);
-			this.textViewContent = (TextView) view.findViewById(R.id.content);
         }
     }
 	

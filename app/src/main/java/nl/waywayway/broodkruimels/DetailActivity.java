@@ -310,6 +310,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		String mRegex = "(?i)(.+)(-\\d+x\\d+)(\\.jpg|\\.jpeg|\\.png)";
 		mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
 
+		/*
 		Log.i("HermLog", "mOrientation: " + mOrientation);
 		Log.i("HermLog", "2e poging: " + secondTry);
 		Log.i("HermLog", "mSizeknown: " + mSizeKnown);
@@ -319,7 +320,8 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		Log.i("HermLog", "mImgWidth: " + mImgWidth);
 		Log.i("HermLog", "mImgHeight: " + mImgHeight);
 		Log.i("HermLog", "mImageUrl: " + mImageUrl);
-
+		*/
+		
 		return mImageUrl;
 	}
 
