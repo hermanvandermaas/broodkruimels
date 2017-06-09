@@ -27,7 +27,8 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:layout_alignParentTop="true"
-				android:scaleType="fitStart"/>
+				android:adjustViewBounds="true"
+				android:scaleType="fitXY"/>
 
 			<TextView
 				android:id="@+id/title"
@@ -35,8 +36,11 @@
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/thumbnail"
 				android:layout_marginLeft="4dp"
-				android:maxLines="1"
-				android:padding="4dp"
+				android:maxLines="3"
+				android:paddingTop="12dp"
+				android:paddingLeft="4dp"
+				android:paddingRight="4dp"
+				android:paddingBottom="8dp"
 				android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 			
 			<TextView
@@ -48,7 +52,7 @@
 				android:maxLines="1"
 				android:paddingLeft="4dp"
 				android:paddingRight="4dp"
-				android:paddingBottom="4dp"				
+				android:paddingBottom="8dp"
 				android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
 		</RelativeLayout>
