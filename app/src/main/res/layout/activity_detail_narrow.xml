@@ -65,6 +65,26 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 
+			<TextView
+				android:id="@+id/title_detail"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:paddingTop="24dp"
+				android:paddingLeft="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="8dp"
+				android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+			<TextView
+				android:id="@+id/pubdate_detail"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:maxLines="1"
+				android:paddingLeft="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="16dp"
+				android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+			
 			<RelativeLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
@@ -75,6 +95,7 @@
 					android:layout_height="wrap_content"
 					android:layout_alignParentTop="true"
 					android:layout_centerInParent="false"
+					android:scaleType="fitXY"
 					android:adjustViewBounds="true" />
 
 				<ProgressBar
@@ -87,22 +108,15 @@
 			</RelativeLayout>
 
 			<TextView
-				android:id="@+id/title_detail"
+				android:id="@+id/content_detail"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
-				android:padding="8dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-
-			<TextView
-				android:id="@+id/pubdate_detail"
-				android:layout_height="wrap_content"
-				android:layout_width="match_parent"
-				android:maxLines="1"
+				android:paddingTop="16dp"
 				android:paddingLeft="8dp"
 				android:paddingRight="8dp"
-				android:paddingBottom="8dp"				
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
+				android:paddingBottom="16dp"				
+				android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+			
 			<TextView
 				android:id="@+id/creator_detail"
 				android:layout_height="wrap_content"
@@ -110,17 +124,8 @@
 				android:maxLines="1"
 				android:paddingLeft="8dp"
 				android:paddingRight="8dp"
-				android:paddingBottom="8dp"				
+				android:paddingBottom="16dp"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-			<TextView
-				android:id="@+id/content_detail"
-				android:layout_height="wrap_content"
-				android:layout_width="match_parent"
-				android:paddingLeft="8dp"
-				android:paddingRight="8dp"
-				android:paddingBottom="8dp"				
-				android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
 		</LinearLayout>		
 	</android.support.v4.widget.NestedScrollView>
