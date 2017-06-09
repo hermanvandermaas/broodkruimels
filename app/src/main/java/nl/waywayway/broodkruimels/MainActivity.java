@@ -563,11 +563,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Actie bij klik op item
 		setClickAction();
-		
-		TextView tv = (TextView) findViewById(R.id.title);
-		float size = tv.getTextSize();
-		showSnackbar(String.valueOf(size));
-		
 	}
 
 	/************************/
