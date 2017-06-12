@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="preferences_timepicker_dialog" type="layout">@layout/preferences_timepicker_dialog_clock</item>
-</resources>

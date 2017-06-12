@@ -19,6 +19,10 @@
 	<style name="activity_detail_max_width">
 		<item name="android:layout_width">match_parent</item>
 	</style>
+
+	<style name="activity_preferences_clock_mode">
+		<item name="android:timePickerMode">spinner</item>
+	</style>
 	
 	<!-- Custom Preference Theme inherits from the v14 support library Material Theme -->
     <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
