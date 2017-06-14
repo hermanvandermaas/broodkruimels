@@ -425,6 +425,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mTextViewContent.setText(Html.fromHtml(mContent));
 		// Maak links klikbaar
 		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		/*
+		TextView tv = (TextView) findViewById(R.id.title_detail);
+		float ts = tv.getTextSize();
+		Toast.makeText(mContext, String.valueOf(ts), Toast.LENGTH_SHORT).show();
+		*/
 	}
 
 	/*********************************/

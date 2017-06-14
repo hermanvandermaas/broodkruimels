@@ -41,7 +41,8 @@
 				android:paddingLeft="4dp"
 				android:paddingRight="4dp"
 				android:paddingBottom="8dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+				android:textIsSelectable="true"
+				style="@style/text_title" />
 			
 			<TextView
 				android:id="@+id/pubdate"
@@ -53,6 +54,7 @@
 				android:paddingLeft="4dp"
 				android:paddingRight="4dp"
 				android:paddingBottom="8dp"
+				android:textIsSelectable="true"
 				android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
 		</RelativeLayout>

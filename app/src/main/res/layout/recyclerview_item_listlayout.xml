@@ -35,7 +35,8 @@
 				android:layout_marginLeft="4dp"
 				android:maxLines="1"
 				android:padding="4dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+				android:textIsSelectable="true"
+				style="@style/text_title" />
 			
 			<TextView
 				android:id="@+id/pubdate"
@@ -47,7 +48,8 @@
 				android:maxLines="1"
 				android:paddingLeft="4dp"
 				android:paddingRight="4dp"
-				android:paddingBottom="4dp"				
+				android:paddingBottom="4dp"
+				android:textIsSelectable="true"
 				android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
 		</RelativeLayout>

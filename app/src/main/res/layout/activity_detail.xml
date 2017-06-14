@@ -79,6 +79,7 @@
 					android:paddingLeft="8dp"
 					android:paddingRight="8dp"
 					android:paddingBottom="8dp"
+					android:textIsSelectable="true"
 					android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
 				<TextView
@@ -89,6 +90,7 @@
 					android:paddingLeft="8dp"
 					android:paddingRight="8dp"
 					android:paddingBottom="16dp"
+					android:textIsSelectable="true"
 					android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
 				<RelativeLayout
@@ -120,7 +122,8 @@
 					android:paddingTop="16dp"
 					android:paddingLeft="8dp"
 					android:paddingRight="8dp"
-					android:paddingBottom="16dp"				
+					android:paddingBottom="16dp"
+					android:textIsSelectable="true"
 					android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 				<TextView
@@ -131,6 +134,7 @@
 					android:paddingLeft="8dp"
 					android:paddingRight="8dp"
 					android:paddingBottom="16dp"
+					android:textIsSelectable="true"
 					android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 			</LinearLayout>

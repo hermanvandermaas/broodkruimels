@@ -16,6 +16,10 @@
 	<style name="overflow_menu" parent="ThemeOverlay.AppCompat.Light">
 	</style>
 	
+	<style name="text_title" parent="TextAppearance.AppCompat.Headline">
+		<item name="android:textSize">18sp</item>
+	</style>
+	
 	<style name="activity_detail_max_width">
 		<item name="android:layout_width">match_parent</item>
 	</style>
