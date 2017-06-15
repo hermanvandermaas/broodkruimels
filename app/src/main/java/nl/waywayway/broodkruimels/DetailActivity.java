@@ -123,6 +123,8 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		// Toon share knop, als content beschikbaar is
 		if (!TextUtils.isEmpty(mLink))
 		{
+			// Toast.makeText(mContext, "mLink: " + mLink, Toast.LENGTH_SHORT).show();
+			
 			MenuItem shareItem = menu.findItem(R.id.action_share);
 			shareItem.setVisible(true);
 		}
