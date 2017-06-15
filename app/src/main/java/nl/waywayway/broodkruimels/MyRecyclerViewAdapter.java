@@ -99,10 +99,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 onItemClickListener.onItemClick(feedItem);
             }
         };
-
+		
         customViewHolder.imageView.setOnClickListener(listener);
         customViewHolder.textViewTitle.setOnClickListener(listener);
         customViewHolder.textViewPubdate.setOnClickListener(listener);
+		customViewHolder.itemView.setOnClickListener(listener);
+		
     }
 
     @Override
@@ -117,13 +119,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         protected ImageView imageView;
         protected TextView textViewTitle;
         protected TextView textViewPubdate;
-
+		protected CardView cardView;
+		
         public CustomViewHolder(View view)
 		{
             super(view);
             this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
             this.textViewTitle = (TextView) view.findViewById(R.id.title);
             this.textViewPubdate = (TextView) view.findViewById(R.id.pubdate);
+			this.cardView = (CardView) view.findViewById(R.id.card);
         }
     }
 	
