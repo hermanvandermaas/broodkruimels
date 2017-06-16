@@ -119,14 +119,17 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+		MenuItem shareItem = menu.findItem(R.id.action_share);
 
 		// Toon share knop, als content beschikbaar is
 		if (!TextUtils.isEmpty(mLink))
 		{
 			// Toast.makeText(mContext, "mLink: " + mLink, Toast.LENGTH_SHORT).show();
-			
-			MenuItem shareItem = menu.findItem(R.id.action_share);
 			shareItem.setVisible(true);
+		}
+		else
+		{
+			shareItem.setVisible(false);
 		}
 
         return true;
@@ -144,6 +147,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		{
             case R.id.action_share:
 				// Deel content via andere app
+				// Toast.makeText(mContext, "mLink: " + mLink, Toast.LENGTH_SHORT).show();
 				share();
 				return true;
 
