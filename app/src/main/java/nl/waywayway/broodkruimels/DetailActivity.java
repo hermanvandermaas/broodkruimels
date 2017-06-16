@@ -51,11 +51,6 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
     {
         super.onCreate(savedInstanceState);
 
-		// De layouts voor verschillende schermbreedten staan in de map layouts
-		// uit deze layouts kiest het systeem de juiste op basis van
-		// de qualifiers (achtervoegsel mapnaam) voor screen width (w800dp)
-		// en landscape/portrait (land of port); de verwijzing naar
-		// de juiste layouts staan in de 'values(-qualifier)' mappen
 		setContentView(R.layout.activity_detail);
 
 		// zet referentie naar context van deze activity in een variabele
