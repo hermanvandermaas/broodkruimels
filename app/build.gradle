@@ -20,6 +20,8 @@ android {
 }
 
 dependencies {
+	compile 'com.google.firebase:firebase-messaging:+'
+	compile 'com.google.firebase:firebase-core:+'
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 	compile 'com.android.support:preference-v14:24.2.1'
 	compile 'com.android.support:preference-v7:24.2.1'
@@ -31,3 +33,5 @@ dependencies {
 	compile 'com.github.markomilos:paginate:0.5.1'
 	compile 'com.github.chrisbanes:PhotoView:2.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
