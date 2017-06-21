@@ -61,13 +61,11 @@
 			</intent-filter>
 		</receiver>
 
-		<service
-			android:name=".MyFirebaseMessagingService">
-			<intent-filter>
-				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
-			</intent-filter>
-		</service>
-
+		<intent-filter>
+			<action android:name=".DetailActivity" />
+			<category android:name="android.intent.category.DEFAULT" />
+		</intent-filter>
+		
 		<meta-data
 			android:name="com.google.firebase.messaging.default_notification_icon"
 			android:resource="@drawable/ic_stat_bible" />
