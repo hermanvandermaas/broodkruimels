@@ -1,21 +1,24 @@
 package nl.waywayway.broodkruimels;
 
+import android.app.*;
 import android.content.*;
 import android.net.*;
 import android.os.*;
 import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+import com.google.android.gms.common.*;
 import com.paginate.*;
 import java.text.*;
 import java.util.*;
 import org.json.*;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
@@ -85,6 +88,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
     }
 
+	// Check beschikbaarheid Play Services
+	protected void isPlayServicesAvailable() {
+		int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext);
+
+		if (resultCode != ConnectionResult.SUCCESS){
+			GoogleApiAvailability.getInstance().getErrorDialog((Activity) mContext, resultCode, 1).show();
+		}
+	}
+	
 	// Maak toolbar
 	private void makeToolbar()
 	{
@@ -597,6 +609,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		super.onResume();
 		Log.i("HermLog", "onResume()");
+		
+		// Check beschikbaarheid Google Play services
+		// is nodig voor Push notifications
+		isPlayServicesAvailable();
 	}
 
 	@Override
