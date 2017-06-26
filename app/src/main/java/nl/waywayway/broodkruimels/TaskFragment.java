@@ -63,7 +63,7 @@ public class TaskFragment extends Fragment
 
 		// itemsperpage is aantal items dat per keer opgehaald moet worden
 		// als deze taskfragment aan DetailActivity wordt verbonden,
-		// alleen meest recente item downloaden
+		// alleen een enkel, meest recente, item downloaden
 		String attachedClassName = getActivity().getClass().getSimpleName();
 		Log.i("HermLog", "Class naam: " + attachedClassName);
 		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);

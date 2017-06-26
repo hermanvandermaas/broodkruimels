@@ -86,17 +86,23 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
+
+		// Check of deze activity is gestart vanuit een push melding,
+		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
+		ifStartedFromPushNotificationStartOtherActivity();
     }
 
 	// Check beschikbaarheid Play Services
-	protected void isPlayServicesAvailable() {
+	protected void isPlayServicesAvailable()
+	{
 		int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext);
 
-		if (resultCode != ConnectionResult.SUCCESS){
+		if (resultCode != ConnectionResult.SUCCESS)
+		{
 			GoogleApiAvailability.getInstance().getErrorDialog((Activity) mContext, resultCode, 1).show();
 		}
 	}
-	
+
 	// Maak toolbar
 	private void makeToolbar()
 	{
@@ -142,6 +148,28 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			mTaskFragment.cancel();
 		}
+	}
+	
+	// Check of deze activity is gestart vanuit een push melding,
+	// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
+	private void ifStartedFromPushNotificationStartOtherActivity()
+	{
+		if (getIntent().getExtras() != null)
+		{
+			// Haal data uit Extras van de intent
+            for (String key : getIntent().getExtras().keySet())
+			{
+                Object value = getIntent().getExtras().get(key);
+                Log.i("HermLog", "Key: " + key + ", Value: " + value);
+				
+				// TO DO
+				// Doe iets met de data uit de push melding
+            }
+			
+			// Start activity
+			Intent mIntent = new Intent(mContext, DetailActivity.class);
+			mContext.startActivity(mIntent);
+        }
 	}
 
 	// Start download json (was eerst xml, vandaar de method naam)
@@ -609,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		super.onResume();
 		Log.i("HermLog", "onResume()");
-		
+
 		// Check beschikbaarheid Google Play services
 		// is nodig voor Push notifications
 		isPlayServicesAvailable();
