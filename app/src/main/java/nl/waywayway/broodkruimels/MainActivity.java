@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
     private List<FeedItem> feedsList;
+	private boolean dialogWasShowed = false;
     private RecyclerView mRecyclerView;
 	private String mScreenWidth;
 	private LinearLayoutManager mLinearLayoutManager;
@@ -95,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	// Check beschikbaarheid Play Services
 	protected void isPlayServicesAvailable()
 	{
+		if (dialogWasShowed) return;
+		
 		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
 		int resultCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
 
@@ -104,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			if (apiAvailability.isUserResolvableError(resultCode))
 			{
 				apiAvailability.getErrorDialog((Activity) mContext, resultCode, 9000).show();
+				dialogWasShowed = true;
 			}
 		}
 	}
