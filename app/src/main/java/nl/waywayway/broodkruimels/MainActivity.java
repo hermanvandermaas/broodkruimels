@@ -95,11 +95,16 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	// Check beschikbaarheid Play Services
 	protected void isPlayServicesAvailable()
 	{
-		int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext);
+		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
 
 		if (resultCode != ConnectionResult.SUCCESS)
 		{
-			GoogleApiAvailability.getInstance().getErrorDialog((Activity) mContext, resultCode, 1).show();
+			Log.i("HermLog", "Play Services fout");
+			if (apiAvailability.isUserResolvableError(resultCode))
+			{
+				apiAvailability.getErrorDialog((Activity) mContext, resultCode, 9000).show();
+			}
 		}
 	}
 
@@ -149,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			mTaskFragment.cancel();
 		}
 	}
-	
+
 	// Check of deze activity is gestart vanuit een push melding,
 	// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
 	private void ifStartedFromPushNotificationStartOtherActivity()
@@ -161,14 +166,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
                 Object value = getIntent().getExtras().get(key);
                 Log.i("HermLog", "Key: " + key + ", Value: " + value);
-				
-				// TO DO
-				// Doe iets met de data uit de push melding
+
+				// "Data" in de json moet een sleutel "Activity" bevatten
+				if (key == "Activity")
+				{
+					// Start activity
+					Intent mIntent = new Intent(mContext, DetailActivity.class);
+					mContext.startActivity(mIntent);
+				}
             }
-			
-			// Start activity
-			Intent mIntent = new Intent(mContext, DetailActivity.class);
-			mContext.startActivity(mIntent);
         }
 	}
 
