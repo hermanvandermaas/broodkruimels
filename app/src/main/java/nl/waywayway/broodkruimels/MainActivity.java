@@ -165,16 +165,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		if (getIntent().getExtras() != null)
 		{
-			String extras = getIntent().getExtras().toString();
-			Log.i("HermLog", "Extras: " + extras);
-			
 			// Haal data uit Extras van de intent
             for (String key : getIntent().getExtras().keySet())
 			{
                 Object value = getIntent().getExtras().get(key);
                 Log.i("HermLog", "Key: " + key + ", Value: " + value);
 
-				// "Data" in de json moet een sleutel "Activity" bevatten
+				// In de Extras van de Intent moet een sleutel "Activity" staan
+				// zo ja, dan wordt de Activity 'DetailActivity' opgestart
 				if (key == "Activity")
 				{
 					// Start activity
