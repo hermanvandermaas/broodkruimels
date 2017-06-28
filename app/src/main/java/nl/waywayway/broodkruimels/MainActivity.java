@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		setContentView(R.layout.activity_main);
 
 		Log.i("HermLog", "onCreate()");
+		
+		// Check of deze activity is gestart vanuit een push melding,
+		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
+		ifStartedFromPushNotificationStartOtherActivity();
 
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
@@ -87,10 +91,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
-
-		// Check of deze activity is gestart vanuit een push melding,
-		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
-		ifStartedFromPushNotificationStartOtherActivity();
     }
 
 	// Check beschikbaarheid Play Services
@@ -165,6 +165,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		if (getIntent().getExtras() != null)
 		{
+			String extras = getIntent().getExtras().toString();
+			Log.i("HermLog", "Extras: " + extras);
+			
 			// Haal data uit Extras van de intent
             for (String key : getIntent().getExtras().keySet())
 			{
@@ -177,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					// Start activity
 					Intent mIntent = new Intent(mContext, DetailActivity.class);
 					mContext.startActivity(mIntent);
+					this.finish();
 				}
             }
         }
