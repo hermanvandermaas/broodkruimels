@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// In de Extras van de Intent moet een sleutel "Activity" staan
 				// zo ja, dan wordt de Activity 'DetailActivity' opgestart
-				if (key == "Activity")
+				if (key.equalsIgnoreCase("Activity"))
 				{
 					// Start activity
 					Intent mIntent = new Intent(mContext, DetailActivity.class);
