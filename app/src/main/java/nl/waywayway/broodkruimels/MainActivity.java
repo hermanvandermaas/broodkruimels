@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		if (getIntent().getExtras() != null)
 		{
+			boolean used = getIntent().getExtras().getBoolean("used");
+			
 			// Haal data uit Extras van de intent
             for (String key : getIntent().getExtras().keySet())
 			{
@@ -169,10 +171,18 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Toast.makeText(mContext, "Key: " + key + "Value: " + value, Toast.LENGTH_SHORT).show();
 				
-				// In de Extras van de Intent moet een sleutel "Activity" staan
+				// In de Extras van de Intent moet een sleutel "url" staan
 				// zo ja, dan wordt de Activity 'DetailActivity' opgestart
-				if (key.equalsIgnoreCase("Activity"))
+				if (key.equalsIgnoreCase("url") && !used)
 				{
+					// Tag de Intent dat deze is gebruikt. 
+					// Als in de Intent extras staan vanuit een push
+					// notification, worden deze opgemerkt in mainactivity
+					// en stuurt mainactivity telkens terug naar detailactivity.
+					// Deze tag voorkomt dit.
+
+					getIntent().putExtra("used", true);
+					
 					// Start activity
 					Intent mIntent = new Intent(mContext, DetailActivity.class);
 					mContext.startActivity(mIntent);

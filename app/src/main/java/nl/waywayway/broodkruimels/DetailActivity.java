@@ -70,7 +70,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			mWeHaveData = true;
 
 		Log.i("HermLog", "mWeHaveData: " + mWeHaveData);
-
+		
 		if (mWeHaveData)
 		{
 			// Download afbeelding
@@ -312,17 +312,17 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
 
 		/*
-		Log.i("HermLog", "mOrientation: " + mOrientation);
-		Log.i("HermLog", "2e poging: " + secondTry);
-		Log.i("HermLog", "mSizeknown: " + mSizeKnown);
-		Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
-		Log.i("HermLog", "mUrlHeight: " + mUrlHeight);
-		Log.i("HermLog", "mAspectratio: " + mAspectRatio);			
-		Log.i("HermLog", "mImgWidth: " + mImgWidth);
-		Log.i("HermLog", "mImgHeight: " + mImgHeight);
-		Log.i("HermLog", "mImageUrl: " + mImageUrl);
-		*/
-		
+		 Log.i("HermLog", "mOrientation: " + mOrientation);
+		 Log.i("HermLog", "2e poging: " + secondTry);
+		 Log.i("HermLog", "mSizeknown: " + mSizeKnown);
+		 Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
+		 Log.i("HermLog", "mUrlHeight: " + mUrlHeight);
+		 Log.i("HermLog", "mAspectratio: " + mAspectRatio);			
+		 Log.i("HermLog", "mImgWidth: " + mImgWidth);
+		 Log.i("HermLog", "mImgHeight: " + mImgHeight);
+		 Log.i("HermLog", "mImageUrl: " + mImageUrl);
+		 */
+
 		return mImageUrl;
 	}
 
@@ -426,12 +426,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mTextViewContent.setText(Html.fromHtml(mContent));
 		// Maak links klikbaar
 		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
-		
+
 		/*
-		TextView tv = (TextView) findViewById(R.id.title_detail);
-		float ts = tv.getTextSize();
-		Toast.makeText(mContext, String.valueOf(ts), Toast.LENGTH_SHORT).show();
-		*/
+		 TextView tv = (TextView) findViewById(R.id.title_detail);
+		 float ts = tv.getTextSize();
+		 Toast.makeText(mContext, String.valueOf(ts), Toast.LENGTH_SHORT).show();
+		 */
 	}
 
 	/*********************************/
