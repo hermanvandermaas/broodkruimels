@@ -49,10 +49,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		Log.i("HermLog", "onCreate()");
 		
-		// Check of deze activity is gestart vanuit een push melding,
-		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
-		ifStartedFromPushNotificationStartOtherActivity();
-
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
 
@@ -171,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
                 Object value = getIntent().getExtras().get(key);
                 Log.i("HermLog", "Key: " + key + ", Value: " + value);
 
+				// Toast.makeText(mContext, "Key: " + key + "Value: " + value, Toast.LENGTH_SHORT).show();
+				
 				// In de Extras van de Intent moet een sleutel "Activity" staan
 				// zo ja, dan wordt de Activity 'DetailActivity' opgestart
 				if (key.equalsIgnoreCase("Activity"))
@@ -178,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					// Start activity
 					Intent mIntent = new Intent(mContext, DetailActivity.class);
 					mContext.startActivity(mIntent);
-					this.finish();
 				}
             }
         }
@@ -620,7 +617,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	/************************/
 	/***** LOGS & STUFF *****/
 	/************************/
-
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.i("HermLog", "onNewIntent()");
+		
+		setIntent(intent);
+	}
+	
 	@Override
 	protected void onStart()
 	{
@@ -653,6 +658,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Check beschikbaarheid Google Play services
 		// is nodig voor Push notifications
 		isPlayServicesAvailable();
+		
+		// Check of deze activity is gestart vanuit een push melding,
+		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
+		ifStartedFromPushNotificationStartOtherActivity();
 	}
 
 	@Override
