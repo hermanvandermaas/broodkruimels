@@ -177,8 +177,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				{
 					// Tag de Intent dat deze is gebruikt. 
 					// Als in de Intent extras staan vanuit een push
-					// notification, worden deze opgemerkt in mainactivity
-					// en stuurt mainactivity telkens terug naar detailactivity.
+					// notification, worden deze opgemerkt in MainActivity
+					// en stuurt MainActivity telkens terug naar DetailActivity.
 					// Deze tag voorkomt dit.
 
 					getIntent().putExtra("used", true);
