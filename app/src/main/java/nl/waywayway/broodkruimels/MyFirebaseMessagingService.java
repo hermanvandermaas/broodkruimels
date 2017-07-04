@@ -11,9 +11,9 @@ import java.util.*;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
-	private Boolean hasData;
-	private Boolean hasNotification;
-	private Boolean hasUrl;
+	private boolean hasData;
+	private boolean hasNotification;
+	private boolean hasUrl;
 	private String url;
 	
 	// Called when message is received.
@@ -56,7 +56,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 			hasNotification = true;
         }
 		
-		if (hasUrl && hasNotification) 
+		if (hasUrl && hasNotification)
 			sendNotification(
 				remoteMessage.getNotification().getTitle(),
 				remoteMessage.getNotification().getBody(),
