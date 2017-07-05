@@ -28,7 +28,7 @@
 		android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-		<settingsfragment
+		<fragment
 			android:name="nl.waywayway.broodkruimels.SettingsFragment"
 			android:id="@+id/settings_fragment"
 			android:layout_width="match_parent"

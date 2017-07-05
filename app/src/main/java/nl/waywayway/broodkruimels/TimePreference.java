@@ -38,6 +38,8 @@ public class TimePreference extends DialogPreference
 	{
 		super(context, attrs, defStyleAttr, defStyleRes);
 
+		Log.i("HermLog", "TimePreference constructor aangeroepen");
+		
 		/*		
 		 setPositiveButtonText("Ok");
 		 setNegativeButtonText("Annuleren");
@@ -83,6 +85,7 @@ public class TimePreference extends DialogPreference
 				getPersistedInt(mTime) : (int) defaultValue);
 	}
 
+	/*
 	@Override
     protected View onCreateDialogView()
 	{
@@ -90,6 +93,7 @@ public class TimePreference extends DialogPreference
 
         return(mTimePicker);
     }
+	*/
 
 	@Override
 	protected void onBindDialogView(View view)

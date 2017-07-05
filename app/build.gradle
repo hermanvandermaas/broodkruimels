@@ -31,7 +31,7 @@ dependencies {
 	compile 'com.squareup.okhttp3:okhttp:3.7.0'
 	compile 'com.squareup.picasso:picasso:2.5.2' 
 	compile 'com.github.markomilos:paginate:0.5.1'
-	compile 'com.github.chrisbanes:PhotoView:2.0.0'
+	compile 'com.github.chrisbanes:PhotoView:2.0.0' 
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
