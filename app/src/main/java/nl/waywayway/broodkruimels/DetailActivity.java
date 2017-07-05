@@ -51,11 +51,6 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
     {
         super.onCreate(savedInstanceState);
 
-		// De layouts voor verschillende schermbreedten staan in de map layouts
-		// uit deze layouts kiest het systeem de juiste op basis van
-		// de qualifiers (achtervoegsel mapnaam) voor screen width (w800dp)
-		// en landscape/portrait (land of port); de verwijzing naar
-		// de juiste layouts staan in de 'values(-qualifier)' mappen
 		setContentView(R.layout.activity_detail);
 
 		// zet referentie naar context van deze activity in een variabele
@@ -75,7 +70,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			mWeHaveData = true;
 
 		Log.i("HermLog", "mWeHaveData: " + mWeHaveData);
-
+		
 		if (mWeHaveData)
 		{
 			// Download afbeelding
@@ -119,12 +114,17 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+		MenuItem shareItem = menu.findItem(R.id.action_share);
 
 		// Toon share knop, als content beschikbaar is
 		if (!TextUtils.isEmpty(mLink))
 		{
-			MenuItem shareItem = menu.findItem(R.id.action_share);
+			// Toast.makeText(mContext, "mLink: " + mLink, Toast.LENGTH_SHORT).show();
 			shareItem.setVisible(true);
+		}
+		else
+		{
+			shareItem.setVisible(false);
 		}
 
         return true;
@@ -142,6 +142,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		{
             case R.id.action_share:
 				// Deel content via andere app
+				// Toast.makeText(mContext, "mLink: " + mLink, Toast.LENGTH_SHORT).show();
 				share();
 				return true;
 
@@ -310,15 +311,17 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		String mRegex = "(?i)(.+)(-\\d+x\\d+)(\\.jpg|\\.jpeg|\\.png)";
 		mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
 
-		Log.i("HermLog", "mOrientation: " + mOrientation);
-		Log.i("HermLog", "2e poging: " + secondTry);
-		Log.i("HermLog", "mSizeknown: " + mSizeKnown);
-		Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
-		Log.i("HermLog", "mUrlHeight: " + mUrlHeight);
-		Log.i("HermLog", "mAspectratio: " + mAspectRatio);			
-		Log.i("HermLog", "mImgWidth: " + mImgWidth);
-		Log.i("HermLog", "mImgHeight: " + mImgHeight);
-		Log.i("HermLog", "mImageUrl: " + mImageUrl);
+		/*
+		 Log.i("HermLog", "mOrientation: " + mOrientation);
+		 Log.i("HermLog", "2e poging: " + secondTry);
+		 Log.i("HermLog", "mSizeknown: " + mSizeKnown);
+		 Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
+		 Log.i("HermLog", "mUrlHeight: " + mUrlHeight);
+		 Log.i("HermLog", "mAspectratio: " + mAspectRatio);			
+		 Log.i("HermLog", "mImgWidth: " + mImgWidth);
+		 Log.i("HermLog", "mImgHeight: " + mImgHeight);
+		 Log.i("HermLog", "mImageUrl: " + mImageUrl);
+		 */
 
 		return mImageUrl;
 	}
@@ -423,6 +426,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mTextViewContent.setText(Html.fromHtml(mContent));
 		// Maak links klikbaar
 		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
+
+		/*
+		 TextView tv = (TextView) findViewById(R.id.title_detail);
+		 float ts = tv.getTextSize();
+		 Toast.makeText(mContext, String.valueOf(ts), Toast.LENGTH_SHORT).show();
+		 */
 	}
 
 	/*********************************/

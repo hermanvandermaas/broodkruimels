@@ -15,7 +15,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-		
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -51,7 +51,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.waywayway.broodkruimels.DetailActivity" />
         </activity>
-		
+
 		<receiver android:name=".AlarmReceiver" />
 		<receiver
 			android:name=".BootReceiver"
@@ -60,5 +60,28 @@
 				<action android:name="android.intent.action.BOOT_COMPLETED"></action>
 			</intent-filter>
 		</receiver>
-    </application>
+
+		<intent-filter>
+			<action android:name=".DetailActivity" />
+			<category android:name="android.intent.category.DEFAULT" />
+		</intent-filter>
+
+		<service
+			android:name=".MyFirebaseMessagingService">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+			</intent-filter>
+		</service>
+		
+		<service
+			android:name=".MyFirebaseInstanceIDService">
+			<intent-filter>
+				<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+			</intent-filter>
+		</service>
+		
+		<meta-data
+			android:name="com.google.firebase.messaging.default_notification_icon"
+			android:resource="@drawable/ic_stat_bible" />
+	</application>
 </manifest>

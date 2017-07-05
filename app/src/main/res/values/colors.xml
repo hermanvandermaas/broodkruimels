@@ -2,7 +2,8 @@
 <resources>
 	<color name="primary">#03A9F4</color>
     <color name="primary_dark">#0288D1</color>
-    <color name="accent">#9E9E9E</color>
+    <color name="accent">#FFC107</color>
+	<color name="primary_text">#212121</color>
 	<color name="overflow_background">#FFFFFF</color>
 	<color name="overflow_text">#212121</color>
 	<color name="image_background">#000000</color>

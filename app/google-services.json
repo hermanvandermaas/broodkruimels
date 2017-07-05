@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "368542430929",
+    "firebase_url": "https://dagelijksebroodkruimels.firebaseio.com",
+    "project_id": "dagelijksebroodkruimels",
+    "storage_bucket": "dagelijksebroodkruimels.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368542430929:android:38554983c79f7af5",
+        "android_client_info": {
+          "package_name": "nl.waywayway.broodkruimels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368542430929-hkkmt88d3dpc87fo6u1675ttp8nae2l7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0AQN6np6_Nn4_L-bVcOc8UoSLlEgBIP4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

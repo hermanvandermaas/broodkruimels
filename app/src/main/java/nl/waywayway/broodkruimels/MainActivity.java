@@ -1,21 +1,24 @@
 package nl.waywayway.broodkruimels;
 
+import android.app.*;
 import android.content.*;
 import android.net.*;
 import android.os.*;
 import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
+import com.google.android.gms.common.*;
 import com.paginate.*;
 import java.text.*;
 import java.util.*;
 import org.json.*;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
     private List<FeedItem> feedsList;
+	private boolean dialogWasShowed = false;
     private RecyclerView mRecyclerView;
 	private String mScreenWidth;
 	private LinearLayoutManager mLinearLayoutManager;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		setContentView(R.layout.activity_main);
 
 		Log.i("HermLog", "onCreate()");
-
+		
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
 
@@ -84,6 +88,25 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
     }
+
+	// Check beschikbaarheid Play Services
+	protected void isPlayServicesAvailable()
+	{
+		if (dialogWasShowed) return;
+		
+		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
+
+		if (resultCode != ConnectionResult.SUCCESS)
+		{
+			Log.i("HermLog", "Play Services fout");
+			if (apiAvailability.isUserResolvableError(resultCode))
+			{
+				apiAvailability.getErrorDialog((Activity) mContext, resultCode, 9000).show();
+				dialogWasShowed = true;
+			}
+		}
+	}
 
 	// Maak toolbar
 	private void makeToolbar()
@@ -130,6 +153,42 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			mTaskFragment.cancel();
 		}
+	}
+
+	// Check of deze activity is gestart vanuit een push melding,
+	// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
+	private void ifStartedFromPushNotificationStartOtherActivity()
+	{
+		if (getIntent().getExtras() != null)
+		{
+			boolean used = getIntent().getExtras().getBoolean("used");
+			
+			// Haal data uit Extras van de intent
+            for (String key : getIntent().getExtras().keySet())
+			{
+                Object value = getIntent().getExtras().get(key);
+                Log.i("HermLog", "Key: " + key + ", Value: " + value);
+
+				// Toast.makeText(mContext, "Key: " + key + "Value: " + value, Toast.LENGTH_SHORT).show();
+				
+				// In de Extras van de Intent moet een sleutel "url" staan
+				// zo ja, dan wordt de Activity 'DetailActivity' opgestart
+				if (key.equalsIgnoreCase("url") && !used)
+				{
+					// Tag de Intent dat deze is gebruikt. 
+					// Als in de Intent extras staan vanuit een push
+					// notification, worden deze opgemerkt in MainActivity
+					// en stuurt MainActivity telkens terug naar DetailActivity.
+					// Deze tag voorkomt dit.
+
+					getIntent().putExtra("used", true);
+					
+					// Start activity
+					Intent mIntent = new Intent(mContext, DetailActivity.class);
+					mContext.startActivity(mIntent);
+				}
+            }
+        }
 	}
 
 	// Start download json (was eerst xml, vandaar de method naam)
@@ -568,7 +627,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	/************************/
 	/***** LOGS & STUFF *****/
 	/************************/
-
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.i("HermLog", "onNewIntent()");
+		
+		setIntent(intent);
+	}
+	
 	@Override
 	protected void onStart()
 	{
@@ -597,6 +664,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		super.onResume();
 		Log.i("HermLog", "onResume()");
+
+		// Check beschikbaarheid Google Play services
+		// is nodig voor Push notifications
+		isPlayServicesAvailable();
+		
+		// Check of deze activity is gestart vanuit een push melding,
+		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
+		ifStartedFromPushNotificationStartOtherActivity();
 	}
 
 	@Override
