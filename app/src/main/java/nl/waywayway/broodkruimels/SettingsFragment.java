@@ -3,17 +3,20 @@ package nl.waywayway.broodkruimels;
 import android.content.*;
 import android.content.pm.*;
 import android.os.*;
-import android.support.v4.app.*;
+import android.preference.*;
 import android.support.v7.preference.*;
 import android.util.*;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
+import android.support.v7.preference.PreferenceManager;
+
+public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 	Context mContext;
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String s)
+    public void onCreate(Bundle savedInstanceState)
 	{
+		super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
     }
 
@@ -40,7 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	// In switch preference bij summary 'aan' of 'uit' vermelden
 	private void setPrefNotifySummary(String prefKey)
 	{
-		SwitchPreferenceCompat prefNotify = (SwitchPreferenceCompat) getPreferenceManager().findPreference(prefKey);
+		SwitchPreference prefNotify = (SwitchPreference) getPreferenceManager().findPreference(prefKey);
 		Boolean prefNotifyIsSetTo = getBooleanPref(prefKey);
 
 		Log.i("HermLog", "prefNotifyIsSetTo: " + prefNotifyIsSetTo);
@@ -69,13 +72,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	// In time preference bij summary de ingestelde tijd vermelden
 	private void setPrefTimeSummary(String prefKey)
 	{
-		// Directe toegang tot TimePreference lukt niet vanuit deze class,
-		// (methods voor vinden van preferences in deze class geven
-		// allemaal 'support library v7' type preference terug,
-		// TimePreference is echter standaard DialogPreference, casten lukt ook niet)
-		// daarom toegang via een extra class MyPreferenceFragment
-		MyPreferenceFragment mHelper = new MyPreferenceFragment();
-		TimePreference prefTime = mHelper.getTimePreference();
+		TimePreference prefTime = (TimePreference) getPreferenceManager().findPreference(prefKey);
 
 		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
