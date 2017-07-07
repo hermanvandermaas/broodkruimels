@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<style name="activity_preferences_clock_mode">
-		<item name="android:timePickerMode">clock</item>
-	</style>
-</resources>
-
