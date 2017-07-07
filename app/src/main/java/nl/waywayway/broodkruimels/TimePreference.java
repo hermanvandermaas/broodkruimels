@@ -3,13 +3,13 @@ package nl.waywayway.broodkruimels;
 import android.content.*;
 import android.content.res.*;
 import android.os.*;
-import android.preference.*;
+import android.support.v7.preference.*;
 import android.text.format.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
 
-public class TimePreference extends DialogPreference
+public class TimePreference extends Preference
 {
 	private TimePicker mTimePicker = null;
 	private int mTime; // De tijd in hele minuten na middernacht
@@ -37,15 +37,8 @@ public class TimePreference extends DialogPreference
 	public  TimePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
 	{
 		super(context, attrs, defStyleAttr, defStyleRes);
-
-		Log.i("HermLog", "TimePreference constructor aangeroepen");
-		
-		/*		
-		 setPositiveButtonText("Ok");
-		 setNegativeButtonText("Annuleren");
-		 */
 	}
-
+	
 	// Getter en setter voor de tijd
 	public int getTime()
 	{
@@ -63,44 +56,10 @@ public class TimePreference extends DialogPreference
 
 		Log.i("HermLog", "setTime(): " + time);
 	}
-
-	@Override
-    public int getDialogLayoutResource()
-	{
-        return mDialogLayoutResId;
-    }
-
-	@Override
-	protected Object onGetDefaultValue(TypedArray a, int index)
-	{
-		//  Default  value  from  attribute.  Fallback  value  is  set  to  0.
-		return a.getInt(index,  0);
-	}
-
-	@Override
-	protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue)
-	{
-		// Read the value. Use the default value if it is not possible.
-		setTime(restorePersistedValue ?
-				getPersistedInt(mTime) : (int) defaultValue);
-	}
-
-	/*
-	@Override
-    protected View onCreateDialogView()
-	{
-        mTimePicker = new TimePicker(getContext());
-
-        return(mTimePicker);
-    }
-	*/
-
-	@Override
-	protected void onBindDialogView(View view)
+	
+	private void onBindDialogView(View view)
 	{
 		Log.i("HermLog", "onBindDialogView()");
-
-		super.onBindDialogView(view);
 
 		mTimePicker = (TimePicker) view.findViewById(R.id.preferences_timepicker);
 
@@ -138,8 +97,7 @@ public class TimePreference extends DialogPreference
 		}
 	}
 
-	@Override
-	protected void onDialogClosed(boolean positiveResult)
+	private void onDialogClosed(boolean positiveResult)
 	{
 		Log.i("HermLog", "onDialogClosed()");
 

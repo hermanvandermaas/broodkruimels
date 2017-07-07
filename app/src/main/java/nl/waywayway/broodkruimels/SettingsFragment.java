@@ -3,21 +3,17 @@ package nl.waywayway.broodkruimels;
 import android.content.*;
 import android.content.pm.*;
 import android.os.*;
-import android.preference.*;
 import android.support.v7.preference.*;
 import android.util.*;
 
-import android.support.v7.preference.PreferenceManager;
-
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 	Context mContext;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
 	{
-		super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+        setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
 	// code binnen onAttach wordt pas uitgevoerd als dit fragment aan
@@ -43,7 +39,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 	// In switch preference bij summary 'aan' of 'uit' vermelden
 	private void setPrefNotifySummary(String prefKey)
 	{
-		SwitchPreference prefNotify = (SwitchPreference) getPreferenceManager().findPreference(prefKey);
+		SwitchPreferenceCompat prefNotify = (SwitchPreferenceCompat) getPreferenceManager().findPreference(prefKey);
 		Boolean prefNotifyIsSetTo = getBooleanPref(prefKey);
 
 		Log.i("HermLog", "prefNotifyIsSetTo: " + prefNotifyIsSetTo);
@@ -72,7 +68,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 	// In time preference bij summary de ingestelde tijd vermelden
 	private void setPrefTimeSummary(String prefKey)
 	{
-		TimePreference prefTime = (TimePreference) getPreferenceManager().findPreference(prefKey);
+		Preference prefTime = getPreferenceManager().findPreference(prefKey);
 
 		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
