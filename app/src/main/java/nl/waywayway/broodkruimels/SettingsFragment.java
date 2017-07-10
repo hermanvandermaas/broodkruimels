@@ -5,8 +5,10 @@ import android.content.pm.*;
 import android.os.*;
 import android.support.v7.preference.*;
 import android.util.*;
+import android.widget.*;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragmentCompat 
+implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 	Context mContext;
 
@@ -26,8 +28,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
 		super.onAttach(context);
 		mContext = context;
+		//setTimePickerPreferenceClickAction();
 	}
 
+	@Override
+	public boolean onPreferenceTreeClick(Preference preference)
+	{
+		switch (preference.getKey())
+		{
+			case SettingsActivity.KEY_PREF_NOTIFY_TIME:
+				showTimePickerDialog(preference);
+				break;
+		}
+	
+		return super.onPreferenceTreeClick(preference);
+	}
+	
+	private void showTimePickerDialog(Preference preference)
+	{
+		Toast.makeText(mContext, preference.getKey(), Toast.LENGTH_SHORT).show();
+	}
+	
 	// Lees wel/niet instelling
 	private Boolean getBooleanPref(String key)
 	{
@@ -95,7 +116,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 			Log.i("HermLog", "setPrefNotifyAlarm(): Instelling is false: return");
 			return;
 		}
-		
+
 		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 		int prefTimeDefault = getActivity().getResources().getInteger(R.integer.preferences_time_default);
@@ -129,7 +150,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
 		MyAlarm mAlarm = new MyAlarm(context);
 		mAlarm.cancelAlarm();
-		
+
 		// Onderstaande code maakt registratie 'boot receiver'
 		// in het systeem ongedaan
 		ComponentName receiver = new ComponentName(context, BootReceiver.class);
