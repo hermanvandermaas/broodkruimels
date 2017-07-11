@@ -12,7 +12,7 @@ import android.widget.*;
 import android.support.v4.app.DialogFragment;
 
 public class TimePickerFragment extends DialogFragment
-implements TimePickerDialog.OnTimeSetListener
+	implements TimePickerDialog.OnTimeSetListener
 {
 	private Context mContext;
 	private int mTime; // De tijd in hele minuten na middernacht
