@@ -7,14 +7,15 @@ import android.support.v4.app.*;
 import android.support.v7.preference.*;
 import android.util.*;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragmentCompat 
+implements SharedPreferences.OnSharedPreferenceChangeListener
 {
 	Context mContext;
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String s)
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
 	{
-        addPreferencesFromResource(R.xml.preferences);
+        setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
 	// code binnen onAttach wordt pas uitgevoerd als dit fragment aan
@@ -27,8 +28,30 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
 		super.onAttach(context);
 		mContext = context;
+		//setTimePickerPreferenceClickAction();
 	}
 
+	@Override
+	public boolean onPreferenceTreeClick(Preference preference)
+	{
+		switch (preference.getKey())
+		{
+			case SettingsActivity.KEY_PREF_NOTIFY_TIME:
+				showTimePickerDialog(preference);
+				break;
+		}
+	
+		return super.onPreferenceTreeClick(preference);
+	}
+	
+	private void showTimePickerDialog(Preference preference)
+	{
+		DialogFragment newFragment = new TimePickerFragment();
+		newFragment.show(getFragmentManager(), "timePicker");
+		
+		// Toast.makeText(mContext, preference.getKey(), Toast.LENGTH_SHORT).show();
+	}
+	
 	// Lees wel/niet instelling
 	private Boolean getBooleanPref(String key)
 	{
@@ -69,7 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	// In time preference bij summary de ingestelde tijd vermelden
 	private void setPrefTimeSummary(String prefKey)
 	{
-		TimePreference prefTime = (TimePreference) getPreferenceManager().findPreference(prefKey);
+		Preference prefTime = getPreferenceManager().findPreference(prefKey);
 
 		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -96,7 +119,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 			Log.i("HermLog", "setPrefNotifyAlarm(): Instelling is false: return");
 			return;
 		}
-		
+
 		// Lees ingestelde tijd, als geen ingestelde tijd is gevonden, neem default
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 		int prefTimeDefault = getActivity().getResources().getInteger(R.integer.preferences_time_default);
@@ -130,7 +153,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
 		MyAlarm mAlarm = new MyAlarm(context);
 		mAlarm.cancelAlarm();
-		
+
 		// Onderstaande code maakt registratie 'boot receiver'
 		// in het systeem ongedaan
 		ComponentName receiver = new ComponentName(context, BootReceiver.class);
@@ -172,6 +195,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 	}
 
 	// Bij verandering in instelling, geef de nieuwe instelling direct weer in de summary
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
 	{
 		switch (key)
@@ -188,35 +212,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 				break;
 		}
 	}
-
-	@Override
-    public void onDisplayPreferenceDialog(Preference preference)
-	{
-        // Try if the preference is one of our custom Preferences
-        DialogFragment dialogFragment = null;
-
-        if (preference instanceof TimePreference)
-		{
-            // Create a new instance of TimePreferenceDialogFragment with the key of the related
-            // Preference
-            dialogFragment = TimePreferenceDialogFragmentCompat.newInstance(preference.getKey());
-        }
-
-
-        if (dialogFragment != null)
-		{
-            // The dialog was created (it was one of our custom Preferences), show the dialog for it
-            dialogFragment.setTargetFragment(this, 0);
-            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference" +
-								".PreferenceFragment.DIALOG");
-        }
-		else
-		{
-            // Dialog creation could not be handled here. Try with the super method.
-            super.onDisplayPreferenceDialog(preference);
-        }
-
-    }
 }
 
 
