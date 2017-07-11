@@ -3,9 +3,9 @@ package nl.waywayway.broodkruimels;
 import android.content.*;
 import android.content.pm.*;
 import android.os.*;
+import android.support.v4.app.*;
 import android.support.v7.preference.*;
 import android.util.*;
-import android.widget.*;
 
 public class SettingsFragment extends PreferenceFragmentCompat 
 implements SharedPreferences.OnSharedPreferenceChangeListener
@@ -46,7 +46,10 @@ implements SharedPreferences.OnSharedPreferenceChangeListener
 	
 	private void showTimePickerDialog(Preference preference)
 	{
-		Toast.makeText(mContext, preference.getKey(), Toast.LENGTH_SHORT).show();
+		DialogFragment newFragment = new TimePickerFragment();
+		newFragment.show(getFragmentManager(), "timePicker");
+		
+		// Toast.makeText(mContext, preference.getKey(), Toast.LENGTH_SHORT).show();
 	}
 	
 	// Lees wel/niet instelling
@@ -192,6 +195,7 @@ implements SharedPreferences.OnSharedPreferenceChangeListener
 	}
 
 	// Bij verandering in instelling, geef de nieuwe instelling direct weer in de summary
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) 
 	{
 		switch (key)
