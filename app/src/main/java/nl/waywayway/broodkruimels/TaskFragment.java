@@ -168,11 +168,11 @@ public class TaskFragment extends Fragment
 	
 	/** Maak URL voor downloaden data
 	 Query string heeft de vorm:
-	 ?s=0&n=40
+	 ‎https://www.dagelijksebroodkruimels.nl/wp-json/wp/v2/posts?_embed&offset=1&per_page=50
 	 waarin:
-	 s=eerste op te halen item in de op datum gesorteerde lijst met alle items,
-	 let op: het eerste item is item 0
-	 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
+	 offset=eerste op te halen item in de op datum gesorteerde lijst met alle items,
+	 let op: het eerste item is item 1
+	 per_page=aantal op te halen items binnen de lijst met alle items
 
 	 Endless scrolling:
 	 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
@@ -181,9 +181,9 @@ public class TaskFragment extends Fragment
 	private String getUrl(int startItem, int itemsPerPage)
 	{
 		String mUrl = url
-			+ "s="
+			+ "&offset="
 			+ Integer.toString(startItem)
-			+ "&n="
+			+ "&per_page="
 			+ Integer.toString(itemsPerPage);
 
 		Log.i("HermLog", "mUrl: " + mUrl);
@@ -225,7 +225,7 @@ public class TaskFragment extends Fragment
 			if (!downloadMoreItems[0])
 			{
 				// In geval eerste download
-				startItem = 0;
+				startItem = 1;
 				Log.i("HermLog", "eerste download");
 			}
 			else
