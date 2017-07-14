@@ -201,7 +201,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	// Start download json (was eerst xml, vandaar de method naam)
 	private void downloadXml()
 	{
-		Log.i("HermLog", "downloadXml()");
+		Log.i("HermLog", "DetailActivity: downloadXml()");
 
 		// Als verbinding, download json
 		if (isNetworkConnected())

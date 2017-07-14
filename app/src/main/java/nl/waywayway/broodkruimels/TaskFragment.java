@@ -65,7 +65,7 @@ public class TaskFragment extends Fragment
 		// als deze taskfragment aan DetailActivity wordt verbonden,
 		// alleen een enkel, meest recente, item downloaden
 		String attachedClassName = getActivity().getClass().getSimpleName();
-		Log.i("HermLog", "Class naam: " + attachedClassName);
+		// Log.i("HermLog", "Class naam: " + attachedClassName);
 		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);
 		if (attachedClassName.equals(CLASSNAME_DETAIL_ACTIVITY))
 			itemsPerPage = 1;
@@ -74,9 +74,6 @@ public class TaskFragment extends Fragment
 		url = getActivity().getResources().getString(R.string.url_data);
 	}
 
-	/**
-	 * This method is called once when the Fragment is first created.
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -168,7 +165,7 @@ public class TaskFragment extends Fragment
 	
 	/** Maak URL voor downloaden data
 	 Query string heeft de vorm:
-	 ‎https://www.dagelijksebroodkruimels.nl/wp-json/wp/v2/posts?_embed&offset=1&per_page=50
+	 &offset=1&per_page=50
 	 waarin:
 	 offset=eerste op te halen item in de op datum gesorteerde lijst met alle items,
 	 let op: het eerste item is item 1
@@ -213,8 +210,8 @@ public class TaskFragment extends Fragment
 		@Override
 		protected String doInBackground(Boolean... downloadMoreItems)
 		{
-			Log.i("HermLog", "doInBackground");
-			Log.i("HermLog", "downloadMoreItems[0]: " + downloadMoreItems[0].toString());
+			// Log.i("HermLog", "doInBackground");
+			// Log.i("HermLog", "downloadMoreItems[0]: " + downloadMoreItems[0].toString());
 
 			// De asynchrone taak
 			OkHttpClient mClient = new OkHttpClient.Builder()
