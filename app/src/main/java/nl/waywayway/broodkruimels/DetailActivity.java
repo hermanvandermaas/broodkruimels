@@ -1,6 +1,5 @@
 package nl.waywayway.broodkruimels;
 
-import android.app.*;
 import android.content.*;
 import android.net.*;
 import android.os.*;
@@ -17,7 +16,6 @@ import java.text.*;
 import java.util.*;
 import org.json.*;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 
 public class DetailActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
@@ -195,9 +193,18 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mLink = mIntent.getStringExtra("link");
 		mPubdate = mIntent.getStringExtra("pubdate");
 		mCreator = mIntent.getStringExtra("creator");
-		mContent = mIntent.getStringExtra("content");
+		mContent = makeVideoLinks(mIntent.getStringExtra("content"));
 	}
 
+	// Maak klikbare link van embedded video (youtube) iframes
+	private String makeVideoLinks(String myHtml)
+	{
+		String pattern = "<iframe\\s+.*?\\s+src=(\".*?\").*?<\\/iframe>";
+		String putThisInstead = "<a href=$1>Bekijk video</a>";
+		
+		return myHtml.replaceAll(pattern, putThisInstead);
+	}
+	
 	// Start download json (was eerst xml, vandaar de method naam)
 	private void downloadXml()
 	{
