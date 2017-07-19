@@ -3,6 +3,7 @@
     <string name="app_name">Broodkruimels</string>
 	<string name="action_settings">Instellingen</string>
 	<string name="action_share">Delen</string>
+	<string name="txt_watch_video">Bekijk video</string>
 	<string name="txt_try_again_nointernet">Geen internetverbinding</string>
 	<string name="txt_try_again_nodownload">Gegevens downloaden niet gelukt</string>
 	<string name="btn_try_again">Opnieuw proberen</string>

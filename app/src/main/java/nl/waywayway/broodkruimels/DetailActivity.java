@@ -193,18 +193,9 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mLink = mIntent.getStringExtra("link");
 		mPubdate = mIntent.getStringExtra("pubdate");
 		mCreator = mIntent.getStringExtra("creator");
-		mContent = makeVideoLinks(mIntent.getStringExtra("content"));
+		mContent = mIntent.getStringExtra("content");
 	}
 
-	// Maak klikbare link van embedded video (youtube) iframes
-	private String makeVideoLinks(String myHtml)
-	{
-		String pattern = "<iframe\\s+.*?\\s+src=(\".*?\").*?<\\/iframe>";
-		String putThisInstead = "<a href=$1>Bekijk video</a>";
-		
-		return myHtml.replaceAll(pattern, putThisInstead);
-	}
-	
 	// Start download json (was eerst xml, vandaar de method naam)
 	private void downloadXml()
 	{
@@ -430,7 +421,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		mTextViewTitle.setText(Html.fromHtml(mTitle));
 		mTextViewPubdate.setText(Html.fromHtml(mPubdate));
 		mTextViewCreator.setText(Html.fromHtml(mCreator));
-		mTextViewContent.setText(Html.fromHtml(mContent));
+		mTextViewContent.setText(Html.fromHtml(makeVideoLinks(mContent)));
 		// Maak links klikbaar
 		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -439,6 +430,18 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		 float ts = tv.getTextSize();
 		 Toast.makeText(mContext, String.valueOf(ts), Toast.LENGTH_SHORT).show();
 		 */
+	}
+	
+	// Maak klikbare links van embedded video (youtube) iframes
+	private String makeVideoLinks(String myHtml)
+	{
+		if (TextUtils.isEmpty(myHtml)) return myHtml;
+
+		String pattern = "<iframe\\s+.*?\\s+src=(\".*?\").*?<\\/iframe>";
+		String watchVideo = getResources().getString(R.string.txt_watch_video);
+		String replacement = "<a href=$1>" + watchVideo + "</a>";
+
+		return myHtml.replaceAll(pattern, replacement);
 	}
 
 	/*********************************/
