@@ -312,6 +312,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				Intent mIntent = new Intent(mContext, SettingsActivity.class);
 				mContext.startActivity(mIntent);
 				return true;
+				
+			case R.id.action_select_category:
+				showSnackbar("Kies");
+				return true;
 
 			default:
 				return super.onOptionsItemSelected(item);

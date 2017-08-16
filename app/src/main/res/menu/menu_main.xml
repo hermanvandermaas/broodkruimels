@@ -8,4 +8,10 @@
 		android:icon="@drawable/ic_settings_white_24dp"
 		android:orderInCategory="20"
 		app:showAsAction="ifRoom"/>
+	
+	<item android:id="@+id/action_select_category"
+		android:title="@string/action_select_category"
+		android:icon="@drawable/ic_check_white_24dp"
+		android:orderInCategory="10"
+		app:showAsAction="ifRoom"/>
 </menu>
