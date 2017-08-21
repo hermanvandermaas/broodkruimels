@@ -17,6 +17,7 @@ import java.text.*;
 import java.util.*;
 import org.json.*;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
     private List<FeedItem> feedsList;
+    private List<CategoryItem> categoryList;
 	private boolean dialogWasShowed = false;
     private RecyclerView mRecyclerView;
 	private String mScreenWidth;
@@ -255,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
         try
 		{
+			// Items
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("data");
 
@@ -278,6 +281,22 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				item.setImgheight(post.optInt("imgheight"));
 
                 feedsList.add(item);
+            }
+			
+			// Categorieen
+            JSONArray categories = response.optJSONArray("categories");
+
+            for (int i = 0; i < categories.length(); i++)
+			{
+                JSONObject category = categories.optJSONObject(i);
+                CategoryItem categoryItem = new CategoryItem();
+
+				// Velden in de lijst met categoryItems vullen
+                categoryItem.setNumber(category.optInt("number"));
+                categoryItem.setName(category.optString("name"));
+                categoryItem.setParent(category.optInt("parent"));
+
+                categoryList.add(categoryItem);
             }
         }
 		catch (JSONException e)
@@ -314,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				return true;
 				
 			case R.id.action_select_category:
-				showSnackbar("Kies");
+				showCategoryDialog();
 				return true;
 
 			default:
@@ -322,6 +341,12 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
         }
     }
 
+	private void showCategoryDialog()
+	{
+		DialogFragment categoryDialog = new CategoryDialogFragment();
+		categoryDialog.show(getSupportFragmentManager(), "category");
+	}
+	
 	// Netwerkverbinding ja/nee
 	private boolean isNetworkConnected()
 	{

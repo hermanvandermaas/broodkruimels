@@ -2,7 +2,8 @@
 <resources>
     <string name="app_name">Broodkruimels</string>
 	<string name="action_settings">Instellingen</string>
-	<string name="action_select_category">Kies categorieën</string>
+	<string name="dialog_category_title">Kies categorieën</string>
+	<string name="action_select_category">Categorieën</string>
 	<string name="action_share">Delen</string>
 	<string name="txt_watch_video">Bekijk video</string>
 	<string name="txt_try_again_nointernet">Geen internetverbinding</string>
