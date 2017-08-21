@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
 
-		// maak lege feedsList aan
+		// maak lege feedsList en categoryList aan
 		feedsList = new ArrayList<>();
+		categoryList = new ArrayList<>();
 
 		// Maak toolbar
 		makeToolbar();
@@ -296,6 +297,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
                 categoryItem.setName(category.optString("name"));
                 categoryItem.setParent(category.optInt("parent"));
 
+				Log.i("HermLog", "categoryItem: " + (categoryItem == null));
+				Log.i("HermLog", "categoryList: " + (categoryList == null));
+				
                 categoryList.add(categoryItem);
             }
         }
