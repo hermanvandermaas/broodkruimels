@@ -165,10 +165,10 @@ public class TaskFragment extends Fragment
 	
 	/** Maak URL voor downloaden data
 	 Query string heeft de vorm:
-	 &offset=1&per_page=50
+	 &offset=0&per_page=30
 	 waarin:
 	 offset=eerste op te halen item in de op datum gesorteerde lijst met alle items,
-	 let op: het eerste item is item 1
+	 let op: het eerste item heeft index 0
 	 per_page=aantal op te halen items binnen de lijst met alle items
 
 	 Endless scrolling:
