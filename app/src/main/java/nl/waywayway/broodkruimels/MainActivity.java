@@ -297,9 +297,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
                 categoryItem.setName(category.optString("name"));
                 categoryItem.setParent(category.optInt("parent"));
 
-				Log.i("HermLog", "categoryItem: " + (categoryItem == null));
-				Log.i("HermLog", "categoryList: " + (categoryList == null));
-				
                 categoryList.add(categoryItem);
             }
         }
@@ -347,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 	private void showCategoryDialog()
 	{
-		DialogFragment categoryDialog = new CategoryDialogFragment();
+		DialogFragment categoryDialog = new CategoryDialogFragment((ArrayList) categoryList);
 		categoryDialog.show(getSupportFragmentManager(), "category");
 	}
 	

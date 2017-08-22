@@ -5,19 +5,49 @@ import android.content.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
+import java.util.*;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 public class CategoryDialogFragment extends DialogFragment
 {
+	private List<CategoryItem> mCategoryList;
+	private String[] mCategoryArray;
+	private ArrayList mSelectedItems;
+	
+	public CategoryDialogFragment(ArrayList categoryList)
+	{
+		this.mCategoryList = categoryList;
+	}
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		mCategoryArray = new String[]{"Kruipen", "Lopen", "Rennen"};
+		mSelectedItems = new ArrayList();
 		
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder
-			.setMessage(R.string.dialog_category_title)
+			.setTitle(R.string.dialog_category_title)
+			.setMultiChoiceItems(mCategoryArray, null,
+				new DialogInterface.OnMultiChoiceClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which, boolean isChecked)
+					{
+						if (isChecked)
+						{
+							// If the user checked the item, add it to the selected items
+							mSelectedItems.add(which);
+						}
+						else if (mSelectedItems.contains(which))
+						{
+							// Else, if the item is already in the array, remove it
+							mSelectedItems.remove(Integer.valueOf(which));
+						}
+					}
+				})
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 				{
 					public void onClick(DialogInterface dialog, int id)
