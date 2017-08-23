@@ -12,13 +12,13 @@ import android.support.v7.app.AlertDialog;
 
 public class CategoryDialogFragment extends DialogFragment
 {
-	private List<CategoryItem> mCategoryList;
+	private List<CategoryItem> categoryList;
 	private String[] mCategoryArray;
 	private ArrayList mSelectedItems;
 	
-	public CategoryDialogFragment(ArrayList categoryList)
+	public void setCategoryList(ArrayList categoryList)
 	{
-		this.mCategoryList = categoryList;
+		this.categoryList = categoryList;
 	}
 	
 	@Override
