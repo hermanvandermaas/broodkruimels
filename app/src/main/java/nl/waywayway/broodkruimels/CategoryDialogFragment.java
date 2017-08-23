@@ -27,13 +27,12 @@ public class CategoryDialogFragment extends DialogFragment
 	{
 		if (savedInstanceState != null)
 		{
+			Log.i("HermLog", "CategoryDialogFragment: restore savedInstanceState");
 			super.onCreateDialog(savedInstanceState);
 			categoryArray = savedInstanceState.getStringArray("savedCategoryArray");
 		}
 		else
 		{
-			// categoryArray = new String[]{"Kruipen", "Lopen", "Rennen"};
-			Log.i("HermLog", "categoryList is null? " + (categoryList == null));
 			categoryArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
 		}
 
@@ -81,6 +80,7 @@ public class CategoryDialogFragment extends DialogFragment
 	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
+		Log.i("HermLog", "CategoryDialogFragment: save savedInstanceState");
 		super.onSaveInstanceState(outState);
 
 		if (categoryArray != null)
@@ -98,15 +98,9 @@ public class CategoryDialogFragment extends DialogFragment
 		for (CategoryItem item : categoryList)
 		{
 			String name = item.getName();
-			Log.i("HermLog", name);
-			Log.i("HermLog", "categoryArrayList is null? " + (categoryArrayList == null));
 			categoryArrayList.add(name);
 		}
-
-		Log.i("HermLog", "categoryArrayList is null? " + (categoryArrayList == null));
-		Log.i("HermLog", "categoryArray is null? " + (categoryArray == null));
-		Log.i("HermLog", "(new String[0]) is null? " + ((new String[0]) == null));
-
+		
 		categoryArray = categoryArrayList.toArray(new String[0]);
 		return categoryArray;
 	}
