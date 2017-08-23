@@ -5,6 +5,7 @@ import android.content.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
+import android.util.*;
 import java.util.*;
 
 import android.support.v4.app.DialogFragment;
@@ -13,10 +14,10 @@ import android.support.v7.app.AlertDialog;
 public class CategoryDialogFragment extends DialogFragment
 {
 	private List<CategoryItem> categoryList;
-	private String[] mCategoryArray;
+	private String[] categoryArray;
 	private ArrayList mSelectedItems;
 	
-	public void setCategoryList(ArrayList categoryList)
+	public void setCategoryList(List<CategoryItem> categoryList)
 	{
 		this.categoryList = categoryList;
 	}
@@ -24,13 +25,15 @@ public class CategoryDialogFragment extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
-		mCategoryArray = new String[]{"Kruipen", "Lopen", "Rennen"};
+		// categoryArray = new String[]{"Kruipen", "Lopen", "Rennen"};
+		Log.i("HermLog", "categoryList is null? " + (categoryList == null));
+		categoryArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
 		mSelectedItems = new ArrayList();
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder
 			.setTitle(R.string.dialog_category_title)
-			.setMultiChoiceItems(mCategoryArray, null,
+			.setMultiChoiceItems(categoryArray, null,
 				new DialogInterface.OnMultiChoiceClickListener()
 				{
 					@Override
@@ -64,5 +67,27 @@ public class CategoryDialogFragment extends DialogFragment
 				});
 				
 		return builder.create();
+	}
+	
+	private String[] makeCategoryArray(ArrayList<CategoryItem> categoryList)
+	{
+		// Maak ArrayList<String> van ArrayList<CategoryItem>
+		// maak daarna String[] van ArrayList<String>
+		ArrayList<String> categoryArrayList = new ArrayList<String>();
+		
+		for (CategoryItem item : categoryList)
+		{
+			String name = item.getName();
+			Log.i("HermLog", name);
+			Log.i("HermLog", "categoryArrayList is null? " + (categoryArrayList == null));
+			categoryArrayList.add(name);
+		}
+		
+		Log.i("HermLog", "categoryArrayList is null? " + (categoryArrayList == null));
+		Log.i("HermLog", "categoryArray is null? " + (categoryArray == null));
+		Log.i("HermLog", "(new String[0]) is null? " + ((new String[0]) == null));
+		
+		categoryArray = categoryArrayList.toArray(new String[0]);
+		return categoryArray;
 	}
 }

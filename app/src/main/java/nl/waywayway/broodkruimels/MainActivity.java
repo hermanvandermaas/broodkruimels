@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private void showCategoryDialog()
 	{
 		CategoryDialogFragment categoryDialog = new CategoryDialogFragment();
-		categoryDialog.setCategoryList((ArrayList) categoryList);
+		categoryDialog.setCategoryList((ArrayList<CategoryItem>) categoryList);
 		categoryDialog.show(getSupportFragmentManager(), "category");
 	}
 	
