@@ -6,4 +6,10 @@
 	<integer name="items_per_page">50</integer>
 	<integer name="preferences_time_default">390</integer>
 	<integer name="endlessScrollingThreshold">3</integer>
+	<integer-array name="parent_categories_exclude_children">
+		<item>15</item>
+    </integer-array>
+	<integer-array name="categories_exclude">
+		<item>582</item>
+    </integer-array>
 </resources>

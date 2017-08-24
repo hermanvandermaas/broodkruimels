@@ -93,15 +93,27 @@ public class CategoryDialogFragment extends DialogFragment
 	{
 		// Maak ArrayList<String> van ArrayList<CategoryItem>
 		// maak daarna String[] van ArrayList<String>
+		// Filter niet gewenste categorieen er uit
 		ArrayList<String> categoryArrayList = new ArrayList<String>();
+		int[] exclude_children_array = getResources().getIntArray(R.array.parent_categories_exclude_children);
 
 		for (CategoryItem item : categoryList)
 		{
 			String name = item.getName();
-			categoryArrayList.add(name);
+
+			if (!arrayContains(exclude_children_array, item.getParent()))
+			{
+				categoryArrayList.add(name);
+			}
 		}
-		
+
 		categoryArray = categoryArrayList.toArray(new String[0]);
 		return categoryArray;
 	}
+
+	private boolean arrayContains(int[] array, int key)
+	{  
+		Arrays.sort(array);
+		return Arrays.binarySearch(array, key) >= 0;  
+	}  
 }
