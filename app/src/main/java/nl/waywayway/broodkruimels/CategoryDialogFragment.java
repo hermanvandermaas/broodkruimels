@@ -6,6 +6,7 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.util.*;
+import android.widget.*;
 import java.util.*;
 
 import android.support.v4.app.DialogFragment;
@@ -14,8 +15,9 @@ import android.support.v7.app.AlertDialog;
 public class CategoryDialogFragment extends DialogFragment
 {
 	private List<CategoryItem> categoryList;
-	private String[] categoryArray;
-	private ArrayList mSelectedItems;
+	private String[] categoryNameArray;
+	private Integer[] categoryNumberArray;
+	private ArrayList<Integer> mSelectedItems;
 
 	public void setCategoryList(List<CategoryItem> categoryList)
 	{
@@ -29,19 +31,21 @@ public class CategoryDialogFragment extends DialogFragment
 		{
 			Log.i("HermLog", "CategoryDialogFragment: restore savedInstanceState");
 			super.onCreateDialog(savedInstanceState);
-			categoryArray = savedInstanceState.getStringArray("savedCategoryArray");
+			categoryNameArray = savedInstanceState.getStringArray("savedCategoryArray");
 		}
 		else
 		{
-			categoryArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
+			categoryNameArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
 		}
 
-		mSelectedItems = new ArrayList();
+		// mSelectedItems is een ArrayList met de categorienummers uit WordPress,
+		// niet het volgnummer 'which' van de lijst in de dialog
+		mSelectedItems = new ArrayList<>();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder
 			.setTitle(R.string.dialog_category_title)
-			.setMultiChoiceItems(categoryArray, null,
+			.setMultiChoiceItems(categoryNameArray, null,
 			new DialogInterface.OnMultiChoiceClickListener()
 			{
 				@Override
@@ -50,12 +54,14 @@ public class CategoryDialogFragment extends DialogFragment
 					if (isChecked)
 					{
 						// If the user checked the item, add it to the selected items
-						mSelectedItems.add(which);
+						mSelectedItems.add(categoryNumberArray[which]);
+						Log.i("HermLog", "mSelectedItems na add: " + Arrays.toString(mSelectedItems.toArray()));
 					}
-					else if (mSelectedItems.contains(which))
+					else if (mSelectedItems.contains(categoryNumberArray[which]))
 					{
 						// Else, if the item is already in the array, remove it
-						mSelectedItems.remove(Integer.valueOf(which));
+						mSelectedItems.remove(categoryNumberArray[which]);
+						Log.i("HermLog", "mSelectedItems na remove: " + Arrays.toString(mSelectedItems.toArray()));
 					}
 				}
 			})
@@ -83,9 +89,9 @@ public class CategoryDialogFragment extends DialogFragment
 		Log.i("HermLog", "CategoryDialogFragment: save savedInstanceState");
 		super.onSaveInstanceState(outState);
 
-		if (categoryArray != null)
+		if (categoryNameArray != null)
 		{
-			outState.putStringArray("savedCategoryArray", categoryArray);
+			outState.putStringArray("savedCategoryArray", categoryNameArray);
 		}
 	}
 
@@ -94,23 +100,30 @@ public class CategoryDialogFragment extends DialogFragment
 		// Maak ArrayList<String> van ArrayList<CategoryItem>
 		// maak daarna String[] van ArrayList<String>
 		// Filter niet gewenste categorieen er uit
-		ArrayList<String> categoryArrayList = new ArrayList<String>();
-		int[] exclude_children_array = getResources().getIntArray(R.array.parent_categories_exclude_children);
+		ArrayList<String> categoryNameArrayList = new ArrayList<String>();
+		ArrayList<Integer> categoryNumberArrayList = new ArrayList<Integer>();
+		int[] exclude_children = getResources().getIntArray(R.array.parent_categories_exclude_children);
+		int[] exclude_categories = getResources().getIntArray(R.array.categories_exclude);
 
 		for (CategoryItem item : categoryList)
 		{
 			String name = item.getName();
+			Integer number = item.getNumber();
 
-			if (!arrayContains(exclude_children_array, item.getParent()))
+			if (!arrayContains(exclude_children, item.getParent())
+				&& !arrayContains(exclude_categories, item.getNumber()))
 			{
-				categoryArrayList.add(name);
+				categoryNameArrayList.add(name);
+				categoryNumberArrayList.add(number);
 			}
 		}
 
-		categoryArray = categoryArrayList.toArray(new String[0]);
-		return categoryArray;
+		categoryNameArray = categoryNameArrayList.toArray(new String[0]);
+		categoryNumberArray = categoryNumberArrayList.toArray(new Integer[0]);
+		return categoryNameArray;
 	}
 
+	// Test of getal in getallen(int)array zit
 	private boolean arrayContains(int[] array, int key)
 	{  
 		Arrays.sort(array);

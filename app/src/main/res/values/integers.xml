@@ -10,6 +10,6 @@
 		<item>15</item>
     </integer-array>
 	<integer-array name="categories_exclude">
-		<item>582</item>
+		<item>755</item>
     </integer-array>
 </resources>
