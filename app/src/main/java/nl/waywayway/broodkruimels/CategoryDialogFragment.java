@@ -32,6 +32,8 @@ public class CategoryDialogFragment extends DialogFragment
 			Log.i("HermLog", "CategoryDialogFragment: restore savedInstanceState");
 			super.onCreateDialog(savedInstanceState);
 			categoryNameArray = savedInstanceState.getStringArray("savedCategoryArray");
+			categoryNumberArray = (Integer[]) savedInstanceState.getSerializable("savedNumberArray");
+			mSelectedItems = savedInstanceState.getIntegerArrayList("savedSelectedItems");
 		}
 		else
 		{
@@ -89,9 +91,13 @@ public class CategoryDialogFragment extends DialogFragment
 		Log.i("HermLog", "CategoryDialogFragment: save savedInstanceState");
 		super.onSaveInstanceState(outState);
 
-		if (categoryNameArray != null)
+		if (categoryNameArray != null
+			&& categoryNumberArray != null
+			&& mSelectedItems != null)
 		{
 			outState.putStringArray("savedCategoryArray", categoryNameArray);
+			outState.putSerializable("savedNumberArray", categoryNumberArray);
+			outState.putIntegerArrayList("savedSelectedItems", mSelectedItems);
 		}
 	}
 

@@ -13,5 +13,6 @@
 		android:title="@string/action_select_category"
 		android:icon="@drawable/ic_toc_white_24dp"
 		android:orderInCategory="10"
-		app:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom"
+		android:visibility="gone"/>
 </menu>

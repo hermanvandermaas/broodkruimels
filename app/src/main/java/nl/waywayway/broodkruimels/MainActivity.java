@@ -314,6 +314,21 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+		MenuItem categoryItem = menu.findItem(R.id.action_select_category);
+
+		Log.i("HermLog", "categoryList.size(): " + categoryList.size());
+		
+		// Toon categorie knop, als content beschikbaar is
+		if (categoryList.size() > 0)
+		{
+			categoryItem.setVisible(true);
+		}
+		else
+		{
+			categoryItem.setVisible(false);
+		}
+		
+		
         return true;
     }
 
@@ -429,6 +444,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// resultaat parsen in een arraylist
 		parseResult(mResult, downloadMoreItems);
 
+		// Data zijn beschikbaar, toon categorie knop
+		// deze method roept onCreateOptionsMenu() aan
+		if (categoryList.size() > 0)
+		{
+			// Data zijn beschikbaar, toon share knop
+			// deze method roept onCreateOptionsMenu() aan
+			invalidateOptionsMenu();
+		}
 
 		// Als er geen extra data meer zijn gedownload,
 		// geef aan dat laatste 'page' met data is gedownload
