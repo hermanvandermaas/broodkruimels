@@ -231,9 +231,9 @@ public class CategoryDialogFragment extends DialogFragment
 			i++;
 		}
 
-		Log.i("HermLog", "categoryCheckedArray: " + categoryCheckedArray.toString());
-		Log.i("HermLog", "categoryNameArray: " + categoryNameArray.toString());
-		Log.i("HermLog", "categoryNumberArray: " + categoryNumberArray.toString());
+		Log.i("HermLog", "categoryCheckedArray: " + Arrays.toString(categoryCheckedArray) + "  lengte: " + categoryCheckedArray.length);
+		Log.i("HermLog", "categoryNameArray: " + Arrays.toString(categoryNameArray) + "  lengte: " + categoryNameArray.length);
+		Log.i("HermLog", "categoryNumberArray: " + Arrays.toString(categoryNumberArray) + "  lengte: " + categoryNumberArray.length);
 
 		return categoryNameArray;
 	}
@@ -243,35 +243,5 @@ public class CategoryDialogFragment extends DialogFragment
 	{  
 		Arrays.sort(array);
 		return Arrays.binarySearch(array, key) >= 0;  
-	}
-
-	public static int[] convertIntegers(List<Integer> integers)
-	{
-		int[] ret = new int[integers.size()];
-		for (int i=0; i < ret.length; i++)
-		{
-			ret[i] = integers.get(i).intValue();
-		}
-		return ret;
-	}
-	
-	public static String[] convertStrings(List<String> strings)
-	{
-		String[] ret = new String[strings.size()];
-		for (int i=0; i < ret.length; i++)
-		{
-			ret[i] = strings.get(i).toString();
-		}
-		return ret;
-	}
-	
-	public static boolean[] convertBooleans(List<Boolean> booleans)
-	{
-		boolean[] ret = new boolean[booleans.size()];
-		for (int i=0; i < ret.length; i++)
-		{
-			ret[i] = booleans.get(i).booleanValue();
-		}
-		return ret;
 	}
 }
