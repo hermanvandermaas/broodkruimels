@@ -39,6 +39,7 @@ public class TaskFragment extends Fragment
 	private int startItem;
 	private int itemsPerPage;
 	private int feedsListSize;
+	private String categoriesParameter;
 	String url;
 	private Boolean getExtraPage;
 
@@ -152,8 +153,20 @@ public class TaskFragment extends Fragment
 	{
 		return feedsListSize;
 	}
-
-	// setter en getter voor getExtraPage, gebruikt voor bepalen
+	
+	// Setter voor URL query string parameter voor te
+	// downloaden categorieen
+	public void setCategoriesParameter(String categoriesParameter)
+	{
+		if(categoriesParameter != null && !categoriesParameter.trim().isEmpty())
+			this.categoriesParameter = "&" + categoriesParameter;
+		else
+			this.categoriesParameter = "";
+			
+		Log.i("HermLog", "categoriesParameter: " + categoriesParameter);
+	}
+	
+	// Setter en getter voor getExtraPage, gebruikt voor bepalen
 	// of taskfragment gebruikt wordt voor eerste download data of extra 'page' met data
 	// voor endless scrolling
 	public void setGetExtraPage(Boolean getExtraPage)
@@ -168,11 +181,12 @@ public class TaskFragment extends Fragment
 	
 	/** Maak URL voor downloaden data
 	 Query string heeft de vorm:
-	 ?s=0&n=40
+	 ?s=0&n=40&c=3,406,15
 	 waarin:
 	 s=eerste op te halen item in de op datum gesorteerde lijst met alle items,
 	 let op: het eerste item is item 0
 	 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
+	 c=lijst met categorieen waarvan items worden opgehaald
 
 	 Endless scrolling:
 	 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
@@ -184,7 +198,8 @@ public class TaskFragment extends Fragment
 			+ "s="
 			+ Integer.toString(startItem)
 			+ "&n="
-			+ Integer.toString(itemsPerPage);
+			+ Integer.toString(itemsPerPage)
+			+ categoriesParameter;
 
 		Log.i("HermLog", "mUrl: " + mUrl);
 

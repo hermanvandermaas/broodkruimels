@@ -7,6 +7,7 @@ import android.os.*;
 import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
+import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
@@ -17,7 +18,6 @@ import java.text.*;
 import java.util.*;
 import org.json.*;
 
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -60,6 +60,10 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Maak toolbar
 		makeToolbar();
+		
+		// Haal te downloaden categorieen uit opgeslagen
+		// SharedPreferences, indien aanwezig
+		getCategories();
 
 		// Actie bij klik op knop probeer opnieuw
 		setClickActionTryAgain();
@@ -91,6 +95,18 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
     }
+
+	private String getCategories()
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		String prefDefault = "";
+		String savedCategoriesString = sharedPref.getString(CategoryDialogFragment.KEY_PREF_CATEGORIES, prefDefault);
+		Log.i("HermLog", "MainActivity: savedCategoriesString: " + savedCategoriesString);
+		String commaSeparatedList = savedCategoriesString.replaceAll("[|]", "");
+		Log.i("HermLog", "CommaSeparatedList: " + commaSeparatedList);
+		
+		return commaSeparatedList;
+	}
 
 	// Check beschikbaarheid Play Services
 	protected void isPlayServicesAvailable()
@@ -195,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	}
 
 	// Start download json (was eerst xml, vandaar de method naam)
-	private void downloadXml(Boolean downloadMoreItems)
+	public void downloadXml(Boolean downloadMoreItems)
 	{
 		// Als verbinding, download json
 		if (isNetworkConnected())
@@ -214,6 +230,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
 				// Geef bestaande lijstgrootte door, voor aanvullend data downloaden bij endless scrolling
 				mTaskFragment.setFeedsListSize(feedsList.size());
+				
+				// Geef te downloaden categorieen door
+				mTaskFragment.setCategoriesParameter(getCategories());
 
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items start(true)

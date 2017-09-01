@@ -95,6 +95,9 @@ public class CategoryDialogFragment extends DialogFragment
 						Log.i("HermLog", "Categorieen opgeslagen");
 					else
 						Log.i("HermLog", "Fout: categorieen niet opgeslagen");
+						
+					Activity context = (Activity) mContext.getApplicationContext();
+					context.
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -129,10 +132,9 @@ public class CategoryDialogFragment extends DialogFragment
 	private ArrayList<Integer> restoreCategories()
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-		String prefDefault = ""; //categoryNumberArray.toString();
-		Log.i("HermLog", "Categorieen prefDefault: " + prefDefault);
+		String prefDefault = "";
 		String savedCategoriesString = sharedPref.getString(this.KEY_PREF_CATEGORIES, prefDefault);
-		Log.i("HermLog", "savedCategoriesString: " + savedCategoriesString);
+		Log.i("HermLog", "CategoryDialogFragment: savedCategoriesString: " + savedCategoriesString);
 
 		// Maak JSONarray van string
 		JSONArray categoriesJsonArray = null;
