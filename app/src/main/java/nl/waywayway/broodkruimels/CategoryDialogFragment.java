@@ -44,6 +44,8 @@ public class CategoryDialogFragment extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
+		// Als savedInstanceState opgeslagen, bv na schermrotatie, herstel oude toestand
+		// zo niet, haal gekozen categorieen op uit SharedPreferences
 		if (savedInstanceState != null)
 		{
 			Log.i("HermLog", "CategoryDialogFragment: restore savedInstanceState");
@@ -63,8 +65,7 @@ public class CategoryDialogFragment extends DialogFragment
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder
 			.setTitle(R.string.dialog_category_title)
-			.setMultiChoiceItems(categoryNameArray, categoryCheckedArray,
-			new DialogInterface.OnMultiChoiceClickListener()
+			.setMultiChoiceItems(categoryNameArray, categoryCheckedArray, new DialogInterface.OnMultiChoiceClickListener()
 			{
 				@Override
 				public void onClick(DialogInterface dialog, int which, boolean isChecked)
