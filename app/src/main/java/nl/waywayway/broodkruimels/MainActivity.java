@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		String savedCategoriesString = sharedPref.getString(CategoryDialogFragment.KEY_PREF_CATEGORIES, prefDefault);
 		Log.i("HermLog", "MainActivity: savedCategoriesString: " + savedCategoriesString);
 		String commaSeparatedList = savedCategoriesString.replaceAll("\\[|\\]", "").replaceAll("\\s", "");
-		Log.i("HermLog", "CommaSeparatedList: " + commaSeparatedList);
+		// Log.i("HermLog", "CommaSeparatedList: " + commaSeparatedList);
 
 		return commaSeparatedList;
 	}

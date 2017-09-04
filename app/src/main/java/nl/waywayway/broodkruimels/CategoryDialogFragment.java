@@ -91,12 +91,23 @@ public class CategoryDialogFragment extends DialogFragment
 					// FIRE ZE MISSILES!
 					// :-)
 
-					if (saveCategories())
-						Log.i("HermLog", "Categorieen opgeslagen");
+					// Alleen opnieuw downloaden als andere categorieen zijn gekozen
+					// dan voor meest recente download
+					if (!mSelectedItems.equals(restoreCategories()))
+					{
+						Log.i("HermLog", "Categorie selectie gewijzigd");
+
+						if (saveCategories())
+							Log.i("HermLog", "Categorieen opgeslagen");
+						else
+							Log.i("HermLog", "Fout: categorieen niet opgeslagen");
+
+						((MainActivity) mContext).downloadFromCategories();
+					}
 					else
-						Log.i("HermLog", "Fout: categorieen niet opgeslagen");
-						
-					((MainActivity) mContext).downloadFromCategories();
+					{
+						Log.i("HermLog", "Categorie selectie niet gewijzigd");
+					}
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
@@ -170,8 +181,8 @@ public class CategoryDialogFragment extends DialogFragment
 			} 
 		} 
 
-		Log.i("HermLog", "savedCategoriesList: " + savedCategoriesList.toString());
-		Log.i("HermLog", "savedCategoriesList.size(): " + savedCategoriesList.size());
+		// Log.i("HermLog", "savedCategoriesList: " + savedCategoriesList.toString());
+		// Log.i("HermLog", "savedCategoriesList.size(): " + savedCategoriesList.size());
 
 		return savedCategoriesList;
 	}
@@ -233,9 +244,9 @@ public class CategoryDialogFragment extends DialogFragment
 			i++;
 		}
 
-		Log.i("HermLog", "categoryCheckedArray: " + Arrays.toString(categoryCheckedArray) + "  lengte: " + categoryCheckedArray.length);
-		Log.i("HermLog", "categoryNameArray: " + Arrays.toString(categoryNameArray) + "  lengte: " + categoryNameArray.length);
-		Log.i("HermLog", "categoryNumberArray: " + Arrays.toString(categoryNumberArray) + "  lengte: " + categoryNumberArray.length);
+		// Log.i("HermLog", "categoryCheckedArray: " + Arrays.toString(categoryCheckedArray) + "  lengte: " + categoryCheckedArray.length);
+		// Log.i("HermLog", "categoryNameArray: " + Arrays.toString(categoryNameArray) + "  lengte: " + categoryNameArray.length);
+		// Log.i("HermLog", "categoryNumberArray: " + Arrays.toString(categoryNumberArray) + "  lengte: " + categoryNumberArray.length);
 
 		return categoryNameArray;
 	}
