@@ -159,7 +159,7 @@ public class TaskFragment extends Fragment
 	public void setCategoriesParameter(String categoriesParameter)
 	{
 		if(categoriesParameter != null && !categoriesParameter.trim().isEmpty())
-			this.categoriesParameter = "&" + categoriesParameter;
+			this.categoriesParameter = "&c=" + categoriesParameter;
 		else
 			this.categoriesParameter = "";
 			

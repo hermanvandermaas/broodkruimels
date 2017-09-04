@@ -27,14 +27,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
-    private List<FeedItem> feedsList;
-    private List<CategoryItem> categoryList;
+	private List<FeedItem> feedsList;
+	private List<CategoryItem> categoryList;
 	private boolean dialogWasShowed = false;
-    private RecyclerView mRecyclerView;
+	private RecyclerView mRecyclerView;
 	private String mScreenWidth;
 	private LinearLayoutManager mLinearLayoutManager;
 	private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
-    private MyRecyclerViewAdapter adapter;
+	private MyRecyclerViewAdapter adapter;
 	private Context mContext;
 	private float mLogicalDensity;
 	private int mColumnWidth;
@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private int recyclerViewListSize = 0;
 	int appWidthDp;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		Log.i("HermLog", "onCreate()");
-		
+
 		// zet referentie naar context van deze activity in een variabele
 		mContext = this;
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
-    }
+	}
 
 	private String getCategories()
 	{
@@ -98,9 +98,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		String prefDefault = "";
 		String savedCategoriesString = sharedPref.getString(CategoryDialogFragment.KEY_PREF_CATEGORIES, prefDefault);
 		Log.i("HermLog", "MainActivity: savedCategoriesString: " + savedCategoriesString);
-		String commaSeparatedList = savedCategoriesString.replaceAll("[|]", "");
+		String commaSeparatedList = savedCategoriesString.replaceAll("\\[|\\]", "").replaceAll("\\s", "");
 		Log.i("HermLog", "CommaSeparatedList: " + commaSeparatedList);
-		
+
 		return commaSeparatedList;
 	}
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	protected void isPlayServicesAvailable()
 	{
 		if (dialogWasShowed) return;
-		
+
 		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
 		int resultCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
 
@@ -177,15 +177,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		if (getIntent().getExtras() != null)
 		{
 			boolean used = getIntent().getExtras().getBoolean("used");
-			
+
 			// Haal data uit Extras van de intent
-            for (String key : getIntent().getExtras().keySet())
+			for (String key : getIntent().getExtras().keySet())
 			{
-                Object value = getIntent().getExtras().get(key);
-                Log.i("HermLog", "Key: " + key + ", Value: " + value);
+				Object value = getIntent().getExtras().get(key);
+				Log.i("HermLog", "Key: " + key + ", Value: " + value);
 
 				// Toast.makeText(mContext, "Key: " + key + "Value: " + value, Toast.LENGTH_SHORT).show();
-				
+
 				// In de Extras van de Intent moet een sleutel "url" staan
 				// zo ja, dan wordt de Activity 'DetailActivity' opgestart
 				if (key.equalsIgnoreCase("url") && !used)
@@ -197,13 +197,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					// Deze tag voorkomt dit.
 
 					getIntent().putExtra("used", true);
-					
+
 					// Start activity
 					Intent mIntent = new Intent(mContext, DetailActivity.class);
 					mContext.startActivity(mIntent);
 				}
-            }
-        }
+			}
+		}
 	}
 
 	// Start download json (was eerst xml, vandaar de method naam)
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
 				// Geef bestaande lijstgrootte door, voor aanvullend data downloaden bij endless scrolling
 				mTaskFragment.setFeedsListSize(feedsList.size());
-				
+
 				// Geef te downloaden categorieen door
 				mTaskFragment.setCategoriesParameter(getCategories());
 
@@ -244,6 +244,32 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			tryAgain(getResources().getString(R.string.txt_try_again_nointernet));
 		}
+	}
+
+	public void downloadFromCategories()
+	{
+		// Cancel eventueel lopende download
+		if (mTaskFragment.isRunning())
+		{
+			mTaskFragment.cancel();
+		}
+		
+		// Reset endless scrolling flags
+		pageLoadingInProgress = false;
+		hasLoadedAllItems = false;
+
+		// Wis eerder gedownloade data
+		feedsList.clear();
+		categoryList.clear();
+		
+		// Verberg categorie knop
+		// deze method roept onCreateOptionsMenu() aan
+		if (categoryList.size() > 0)
+		{
+			invalidateOptionsMenu();
+		}
+		
+		downloadXml(false);
 	}
 
 	// Datum opmaken
@@ -271,68 +297,71 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		Log.i("HermLog", "parseResult()");
 
-        try
+		try
 		{
-			// Items
-            JSONObject response = new JSONObject(result);
-            JSONArray posts = response.optJSONArray("data");
+			// Content items
+			JSONObject response = new JSONObject(result);
+			JSONArray posts = response.optJSONArray("data");
 
-            for (int i = 0; i < posts.length(); i++)
+			for (int i = 0; i < posts.length(); i++)
 			{
-                JSONObject post = posts.optJSONObject(i);
-                FeedItem item = new FeedItem();
+				JSONObject post = posts.optJSONObject(i);
+				FeedItem item = new FeedItem();
 
 				// Velden in de lijst met feeditems vullen
-                item.setTitle(post.optString("title"));
+				item.setTitle(post.optString("title"));
 				item.setLink(post.optString("link"));
 				item.setPubdate(formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss"));
 				item.setCreator(post.optString("creator"));
 				item.setContent(post.optString("content"));
-                item.setMediacontent(post.optString("mediacontent"));
+				item.setMediacontent(post.optString("mediacontent"));
 				item.setMediawidth(post.optInt("mediawidth"));
 				item.setMediaheight(post.optInt("mediaheight"));
-                item.setMediamedium(post.optString("mediamedium"));
-                item.setMediatype(post.optString("mediatype"));
+				item.setMediamedium(post.optString("mediamedium"));
+				item.setMediatype(post.optString("mediatype"));
 				item.setImgwidth(post.optInt("imgwidth"));
 				item.setImgheight(post.optInt("imgheight"));
 
-                feedsList.add(item);
-            }
+				feedsList.add(item);
+			}
+
+			// Categorieen alleen parsen als de lijst met categorieen leeg is
+			if (categoryList.size() > 0) return;
 			
 			// Categorieen
-            JSONArray categories = response.optJSONArray("categories");
+			JSONArray categories = response.optJSONArray("categories");
 
-            for (int i = 0; i < categories.length(); i++)
+			for (int i = 0; i < categories.length(); i++)
 			{
-                JSONObject category = categories.optJSONObject(i);
-                CategoryItem categoryItem = new CategoryItem();
+				JSONObject category = categories.optJSONObject(i);
+				CategoryItem categoryItem = new CategoryItem();
 
 				// Velden in de lijst met categoryItems vullen
-                categoryItem.setNumber(category.optInt("number"));
-                categoryItem.setName(category.optString("name"));
-                categoryItem.setParent(category.optInt("parent"));
+				categoryItem.setNumber(category.optInt("number"));
+				categoryItem.setName(category.optString("name"));
+				categoryItem.setParent(category.optInt("parent"));
 
-                categoryList.add(categoryItem);
-            }
-        }
+				categoryList.add(categoryItem);
+			}
+		}
 		catch (JSONException e)
 		{
 			Log.i("HermLog", "JSON Exception in parseResult");
-            e.printStackTrace();
-        }
-    }
+			e.printStackTrace();
+		}
+	}
 
 
 	// Maak options menu in toolbar
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		MenuItem categoryItem = menu.findItem(R.id.action_select_category);
 
 		Log.i("HermLog", "categoryList.size(): " + categoryList.size());
-		
+
 		// Toon categorie knop, als content beschikbaar is
 		if (categoryList.size() > 0)
 		{
@@ -342,35 +371,35 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			categoryItem.setVisible(false);
 		}
-		
-		
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
 	{
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
 
-        switch (id)
+		switch (id)
 		{
-            case R.id.action_settings:
+			case R.id.action_settings:
 				// Ga naar instellingen / preferences / settings scherm
 				Intent mIntent = new Intent(mContext, SettingsActivity.class);
 				mContext.startActivity(mIntent);
 				return true;
-				
+
 			case R.id.action_select_category:
 				showCategoryDialog();
 				return true;
 
 			default:
 				return super.onOptionsItemSelected(item);
-        }
-    }
+		}
+	}
 
 	private void showCategoryDialog()
 	{
@@ -378,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		categoryDialog.setCategoryList((ArrayList<CategoryItem>) categoryList);
 		categoryDialog.show(getSupportFragmentManager(), "category");
 	}
-	
+
 	// Netwerkverbinding ja/nee
 	private boolean isNetworkConnected()
 	{
@@ -463,8 +492,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// deze method roept onCreateOptionsMenu() aan
 		if (categoryList.size() > 0)
 		{
-			// Data zijn beschikbaar, toon share knop
-			// deze method roept onCreateOptionsMenu() aan
 			invalidateOptionsMenu();
 		}
 
@@ -696,15 +723,16 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	/************************/
 	/***** LOGS & STUFF *****/
 	/************************/
-	
+
 	@Override
-	protected void onNewIntent(Intent intent) {
+	protected void onNewIntent(Intent intent)
+	{
 		super.onNewIntent(intent);
 		Log.i("HermLog", "onNewIntent()");
-		
+
 		setIntent(intent);
 	}
-	
+
 	@Override
 	protected void onStart()
 	{
@@ -737,7 +765,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Check beschikbaarheid Google Play services
 		// is nodig voor Push notifications
 		isPlayServicesAvailable();
-		
+
 		// Check of deze activity is gestart vanuit een push melding,
 		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
 		ifStartedFromPushNotificationStartOtherActivity();
