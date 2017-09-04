@@ -96,8 +96,7 @@ public class CategoryDialogFragment extends DialogFragment
 					else
 						Log.i("HermLog", "Fout: categorieen niet opgeslagen");
 						
-					Activity context = (Activity) mContext.getApplicationContext();
-					context.
+					((MainActivity) mContext).downloadXml(false);
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()

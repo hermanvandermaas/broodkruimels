@@ -60,10 +60,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Maak toolbar
 		makeToolbar();
-		
-		// Haal te downloaden categorieen uit opgeslagen
-		// SharedPreferences, indien aanwezig
-		getCategories();
 
 		// Actie bij klik op knop probeer opnieuw
 		setClickActionTryAgain();
