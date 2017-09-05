@@ -216,6 +216,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			// Start asynchrone taak
 			if (!mTaskFragment.isRunning())
 			{
+				// Geef te downloaden categorieen door
+				// in dit geval is DetailActivity direct aangeroepen
+				// om het laatste item te tonen, ongeacht de categorie,
+				// dan moet categorie parameter leeg zijn
+				mTaskFragment.setCategoriesParameter("");
+				
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items (niet aan de
 				// orde in deze class) start(true)

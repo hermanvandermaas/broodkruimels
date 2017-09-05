@@ -24,6 +24,11 @@ public class CategoryDialogFragment extends DialogFragment
 	private boolean[] categoryCheckedArray;
 	private ArrayList<Integer> mSelectedItems;
 
+	public interface DownloadCategories
+	{
+		//ggg
+	}
+	
 	public void setCategoryList(List<CategoryItem> categoryList)
 	{
 		this.categoryList = categoryList;
@@ -91,9 +96,14 @@ public class CategoryDialogFragment extends DialogFragment
 					// FIRE ZE MISSILES!
 					// :-)
 
+					Collections.sort(mSelectedItems);
+					Log.i("HermLog", "mSelectedItems gesorteerd: " + mSelectedItems.toString());
+					ArrayList<Integer> savedCategories = restoreCategories();
+					Log.i("HermLog", "savedCategories gesorteerd: " + savedCategories.toString());
+					
 					// Alleen opnieuw downloaden als andere categorieen zijn gekozen
 					// dan voor meest recente download
-					if (!mSelectedItems.equals(restoreCategories()))
+					if (!mSelectedItems.equals(savedCategories))
 					{
 						Log.i("HermLog", "Categorie selectie gewijzigd");
 
@@ -184,6 +194,7 @@ public class CategoryDialogFragment extends DialogFragment
 		// Log.i("HermLog", "savedCategoriesList: " + savedCategoriesList.toString());
 		// Log.i("HermLog", "savedCategoriesList.size(): " + savedCategoriesList.size());
 
+		Collections.sort(savedCategoriesList);
 		return savedCategoriesList;
 	}
 

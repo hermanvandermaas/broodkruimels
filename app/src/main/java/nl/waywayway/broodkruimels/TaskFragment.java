@@ -186,7 +186,7 @@ public class TaskFragment extends Fragment
 	 s=eerste op te halen item in de op datum gesorteerde lijst met alle items,
 	 let op: het eerste item is item 0
 	 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
-	 c=lijst met categorieen waarvan items worden opgehaald
+	 c=komma gescheiden lijst met categorieen waarvan items worden opgehaald
 
 	 Endless scrolling:
 	 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
