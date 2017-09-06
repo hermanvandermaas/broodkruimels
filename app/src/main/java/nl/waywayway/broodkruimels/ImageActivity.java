@@ -4,12 +4,11 @@ import android.content.*;
 import android.net.*;
 import android.os.*;
 import android.support.v7.app.*;
-import android.text.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
-import com.squareup.picasso.*;
 import com.github.chrisbanes.photoview.*;
+import com.squareup.picasso.*;
 
 public class ImageActivity extends AppCompatActivity
 {

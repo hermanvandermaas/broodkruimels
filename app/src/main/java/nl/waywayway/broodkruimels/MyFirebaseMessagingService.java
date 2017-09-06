@@ -4,10 +4,12 @@ import android.app.*;
 import android.content.*;
 import android.media.*;
 import android.net.*;
-import android.support.v7.app.*;
+import android.support.v4.app.*;
 import android.util.*;
 import com.google.firebase.messaging.*;
 import java.util.*;
+
+import android.app.TaskStackBuilder;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {

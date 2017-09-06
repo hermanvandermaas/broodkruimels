@@ -1,10 +1,11 @@
 package nl.waywayway.broodkruimels;
 
+import android.*;
 import android.app.*;
 import android.content.*;
 import android.media.*;
 import android.net.*;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.*;
 import android.support.v4.app.TaskStackBuilder;
 
 // Class voor tonen van notification, na ontvangen en verwerken
