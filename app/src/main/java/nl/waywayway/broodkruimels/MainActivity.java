@@ -22,7 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
+public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks, CategoryDialogFragment.DownloadCategories
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
 	private ActionBar actionBar;
@@ -246,8 +246,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 	}
 
+	@Override
 	public void downloadFromCategories()
 	{
+					Log.i("HermLog", "downloadFromCategories");
+					
 		// Cancel eventueel lopende download
 		if (mTaskFragment.isRunning())
 		{

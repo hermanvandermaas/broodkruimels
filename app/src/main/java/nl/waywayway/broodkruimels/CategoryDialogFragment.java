@@ -18,6 +18,7 @@ public class CategoryDialogFragment extends DialogFragment
 {
 	public static final String KEY_PREF_CATEGORIES = "pref_categories";
 	private Context mContext;
+	private DownloadCategories mDownloadCategories;
 	private List<CategoryItem> categoryList;
 	private String[] categoryNameArray;
 	private Integer[] categoryNumberArray;
@@ -26,9 +27,9 @@ public class CategoryDialogFragment extends DialogFragment
 
 	public interface DownloadCategories
 	{
-		//ggg
+		public void downloadFromCategories();
 	}
-	
+
 	public void setCategoryList(List<CategoryItem> categoryList)
 	{
 		this.categoryList = categoryList;
@@ -44,6 +45,19 @@ public class CategoryDialogFragment extends DialogFragment
 
 		super.onAttach(context);
 		mContext = context;
+
+		// Maak referentie naar in dit fragment als interface
+		// gedefinieerde method geimplementeerd in MainActivity,
+		// om die method vanuit dit fragment aan te kunnen roepen
+
+		if (context instanceof DownloadCategories)
+		{
+            mDownloadCategories = (DownloadCategories) context;
+        }
+		else
+		{
+            throw new RuntimeException(context.toString() + " must implement DownloadCategories");
+        }
 	}
 
 	@Override
@@ -100,7 +114,7 @@ public class CategoryDialogFragment extends DialogFragment
 					Log.i("HermLog", "mSelectedItems gesorteerd: " + mSelectedItems.toString());
 					ArrayList<Integer> savedCategories = restoreCategories();
 					Log.i("HermLog", "savedCategories gesorteerd: " + savedCategories.toString());
-					
+
 					// Alleen opnieuw downloaden als andere categorieen zijn gekozen
 					// dan voor meest recente download
 					if (!mSelectedItems.equals(savedCategories))
@@ -112,7 +126,8 @@ public class CategoryDialogFragment extends DialogFragment
 						else
 							Log.i("HermLog", "Fout: categorieen niet opgeslagen");
 
-						((MainActivity) mContext).downloadFromCategories();
+						mDownloadCategories.downloadFromCategories();
+						// ((MainActivity) mContext).downloadFromCategories();
 					}
 					else
 					{

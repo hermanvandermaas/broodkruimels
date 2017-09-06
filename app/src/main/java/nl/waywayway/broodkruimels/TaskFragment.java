@@ -1,14 +1,12 @@
 package nl.waywayway.broodkruimels;
 
-import android.app.*;
+import android.content.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.util.*;
 import java.io.*;
 import java.util.concurrent.*;
 import okhttp3.*;
-
-import android.support.v4.app.Fragment;
 
 /**
  * TaskFragment manages a single background task and retains itself across
@@ -20,12 +18,12 @@ public class TaskFragment extends Fragment
 	 * Callback interface through which the fragment can report the task's
 	 * progress and results back to the Activity.
 	 */
-	static interface TaskCallbacks
+	public interface TaskCallbacks
 	{
-		void onPreExecute();
-		void onProgressUpdate(int percent);
-		void onCancelled();
-		void onPostExecute(String mResult, Boolean downloadMoreItems);
+		public void onPreExecute();
+		public void onProgressUpdate(int percent);
+		public void onCancelled();
+		public void onPostExecute(String mResult, Boolean downloadMoreItems);
 	}
 
 	private static final String CLASSNAME_DETAIL_ACTIVITY = "DetailActivity";
@@ -49,18 +47,18 @@ public class TaskFragment extends Fragment
 	 * newly created Activity after each configuration change.
 	 */
 	@Override
-	public void onAttach(Activity activity)
+	public void onAttach(Context context)
 	{
-		super.onAttach(activity);
+		super.onAttach(context);
 
-		if (!(activity instanceof TaskCallbacks))
+		if (!(context instanceof TaskCallbacks))
 		{
 			throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
 		}
 
 		// Hold a reference to the parent Activity so we can report back the task's
 		// current progress and results.
-		mCallbacks = (TaskCallbacks) activity;
+		mCallbacks = (TaskCallbacks) context;
 
 		// itemsperpage is aantal items dat per keer opgehaald moet worden
 		// als deze taskfragment aan DetailActivity wordt verbonden,
