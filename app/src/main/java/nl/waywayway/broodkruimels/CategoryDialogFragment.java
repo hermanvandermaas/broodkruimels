@@ -12,7 +12,6 @@ import org.json.*;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import java.net.*;
 
 public class CategoryDialogFragment extends DialogFragment
 {
@@ -152,21 +151,21 @@ public class CategoryDialogFragment extends DialogFragment
 		// Maak JSON string van ArrayList
 		JSONArray categoriesJsonArray = new JSONArray(mSelectedItems);
 
-		// Save to Shared Preferences
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString(this.KEY_PREF_CATEGORIES, categoriesJsonArray.toString());
+		// Opslaan in Shared Preferences
+		SharedPreferences categoriesPref = mContext.getSharedPreferences("categories", mContext.MODE_PRIVATE);
+		SharedPreferences.Editor edit = categoriesPref.edit();
+		edit.putString(this.KEY_PREF_CATEGORIES, categoriesJsonArray.toString());
 
 		Log.i("HermLog", "saveCategories(): " + categoriesJsonArray.toString());
 
-		return editor.commit();
+		return edit.commit();
 	}
 
 	// Gekozen categorieen ophalen uit SharedPreferences
 	// de default is: alle categorieen geselecteerd
 	private ArrayList<Integer> restoreCategories()
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		SharedPreferences sharedPref = mContext.getSharedPreferences("categories", mContext.MODE_PRIVATE);
 		String prefDefault = "";
 		String savedCategoriesString = sharedPref.getString(this.KEY_PREF_CATEGORIES, prefDefault);
 		Log.i("HermLog", "CategoryDialogFragment: savedCategoriesString: " + savedCategoriesString);

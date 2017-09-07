@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 	private String getCategories()
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+		SharedPreferences sharedPref = mContext.getSharedPreferences("categories", mContext.MODE_PRIVATE);
 		String prefDefault = "";
 		String savedCategoriesString = sharedPref.getString(CategoryDialogFragment.KEY_PREF_CATEGORIES, prefDefault);
 		Log.i("HermLog", "MainActivity: savedCategoriesString: " + savedCategoriesString);
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	@Override
 	public void downloadFromCategories()
 	{
-					Log.i("HermLog", "downloadFromCategories");
+		Log.i("HermLog", "downloadFromCategories");
 					
 		// Cancel eventueel lopende download
 		if (mTaskFragment.isRunning())
