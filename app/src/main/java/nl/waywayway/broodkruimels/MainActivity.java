@@ -25,6 +25,8 @@ import android.support.v7.widget.Toolbar;
 public class MainActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks, CategoryDialogFragment.DownloadCategories
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
+	private static final String KEY_PREF_CATEGORIES = "pref_categories";
+	private static final String FILENAME_PREF_CATEGORIES = "categories";
 	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
 	private List<FeedItem> feedsList;
@@ -94,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 	private String getCategories()
 	{
-		SharedPreferences sharedPref = mContext.getSharedPreferences("categories", mContext.MODE_PRIVATE);
+		SharedPreferences sharedPref = mContext.getSharedPreferences(this.FILENAME_PREF_CATEGORIES, mContext.MODE_PRIVATE);
 		String prefDefault = "";
-		String savedCategoriesString = sharedPref.getString(CategoryDialogFragment.KEY_PREF_CATEGORIES, prefDefault);
+		String savedCategoriesString = sharedPref.getString(this.KEY_PREF_CATEGORIES, prefDefault);
 		Log.i("HermLog", "MainActivity: savedCategoriesString: " + savedCategoriesString);
 		String commaSeparatedList = savedCategoriesString.replaceAll("\\[|\\]", "").replaceAll("\\s", "");
 		// Log.i("HermLog", "CommaSeparatedList: " + commaSeparatedList);
@@ -408,6 +410,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		CategoryDialogFragment categoryDialog = new CategoryDialogFragment();
 		categoryDialog.setCategoryList((ArrayList<CategoryItem>) categoryList);
+		categoryDialog.setPrefFilename(this.FILENAME_PREF_CATEGORIES);
+		categoryDialog.setPrefKey(this.KEY_PREF_CATEGORIES);
 		categoryDialog.show(getSupportFragmentManager(), "category");
 	}
 

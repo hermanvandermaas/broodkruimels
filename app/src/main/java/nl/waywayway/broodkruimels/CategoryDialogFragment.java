@@ -5,18 +5,18 @@ import android.content.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.support.v7.preference.*;
 import android.util.*;
 import java.util.*;
-import org.json.*;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 public class CategoryDialogFragment extends DialogFragment
 {
-	public static final String KEY_PREF_CATEGORIES = "pref_categories";
 	private Context mContext;
+	private String prefFilename;
+	private String prefKey;
+	private CategorySaveAndRestore catSaveRestore;
 	private DownloadCategories mDownloadCategories;
 	private List<CategoryItem> categoryList;
 	private String[] categoryNameArray;
@@ -34,6 +34,16 @@ public class CategoryDialogFragment extends DialogFragment
 		this.categoryList = categoryList;
 	}
 
+	public void setPrefFilename(String filename)
+	{
+		this.prefFilename = filename;
+	}
+
+	public void setPrefKey(String key)
+	{
+		this.prefKey = key;
+	}
+
 	// code binnen onAttach wordt pas uitgevoerd als dit fragment aan
 	// de parent activity is gekoppeld, zodat voor deze code
 	// 'context' beschikbaar is
@@ -46,7 +56,7 @@ public class CategoryDialogFragment extends DialogFragment
 		mContext = context;
 
 		// Maak referentie naar in dit fragment als interface
-		// gedefinieerde method geimplementeerd in MainActivity,
+		// gedefinieerde method geimplementeerd in gekoppelde Activity,
 		// om die method vanuit dit fragment aan te kunnen roepen
 
 		if (context instanceof DownloadCategories)
@@ -62,6 +72,8 @@ public class CategoryDialogFragment extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
+		Log.i("HermLog", "CategoryDialogFragment: onCreateDialog()");
+		
 		// Als savedInstanceState opgeslagen, bv na schermrotatie, herstel oude toestand
 		// zo niet, haal gekozen categorieen op uit SharedPreferences
 		if (savedInstanceState != null)
@@ -71,14 +83,22 @@ public class CategoryDialogFragment extends DialogFragment
 			categoryNameArray = savedInstanceState.getStringArray("savedCategoryArray");
 			categoryNumberArray = (Integer[]) savedInstanceState.getSerializable("savedNumberArray");
 			mSelectedItems = savedInstanceState.getIntegerArrayList("savedSelectedItems");
+			prefFilename = savedInstanceState.getString("savedPrefFilename");
+			prefKey = savedInstanceState.getString("savedPrefKey");
+			catSaveRestore = new CategorySaveAndRestore(mContext, prefFilename, prefKey);
+			Log.i("HermLog", "mSelectedItems na restore savedInstanceState: " + Arrays.toString(mSelectedItems.toArray()));
 		}
 		else
 		{
 			// mSelectedItems is een ArrayList met de categorienummers uit WordPress,
-			// mSelectedItems is niet het volgnummer 'which' van de lijst in de dialog
-			mSelectedItems = restoreCategories();
+			// mSelectedItems bevat niet de oplopende volgnummers 'which' van de lijst in de dialog
+			catSaveRestore = new CategorySaveAndRestore(mContext, prefFilename, prefKey);
+			mSelectedItems = catSaveRestore.restoreCategories();
 			categoryNameArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
 		}
+		
+		Log.i("HermLog", "CategoryDialogFragment: prefFilename: " + prefFilename);
+		Log.i("HermLog", "CategoryDialogFragment: prefKey: " + prefKey);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder
@@ -111,7 +131,7 @@ public class CategoryDialogFragment extends DialogFragment
 
 					Collections.sort(mSelectedItems);
 					Log.i("HermLog", "mSelectedItems gesorteerd: " + mSelectedItems.toString());
-					ArrayList<Integer> savedCategories = restoreCategories();
+					ArrayList<Integer> savedCategories = catSaveRestore.restoreCategories();
 					Log.i("HermLog", "savedCategories gesorteerd: " + savedCategories.toString());
 
 					// Alleen opnieuw downloaden als andere categorieen zijn gekozen
@@ -120,7 +140,7 @@ public class CategoryDialogFragment extends DialogFragment
 					{
 						Log.i("HermLog", "Categorie selectie gewijzigd");
 
-						if (saveCategories())
+						if (catSaveRestore.saveCategories(mSelectedItems))
 							Log.i("HermLog", "Categorieen opgeslagen");
 						else
 							Log.i("HermLog", "Fout: categorieen niet opgeslagen");
@@ -138,78 +158,11 @@ public class CategoryDialogFragment extends DialogFragment
 			{
 				public void onClick(DialogInterface dialog, int id)
 				{
-
+					// Doe niets Tammo
 				}
 			});
 
 		return builder.create();
-	}
-
-	// Gekozen categorieen opslaan in SharedPreferences
-	private Boolean saveCategories()
-	{
-		// Maak JSON string van ArrayList
-		JSONArray categoriesJsonArray = new JSONArray(mSelectedItems);
-
-		// Opslaan in Shared Preferences
-		SharedPreferences categoriesPref = mContext.getSharedPreferences("categories", mContext.MODE_PRIVATE);
-		SharedPreferences.Editor edit = categoriesPref.edit();
-		edit.putString(this.KEY_PREF_CATEGORIES, categoriesJsonArray.toString());
-
-		Log.i("HermLog", "saveCategories(): " + categoriesJsonArray.toString());
-
-		return edit.commit();
-	}
-
-	// Gekozen categorieen ophalen uit SharedPreferences
-	// de default is: alle categorieen geselecteerd
-	private ArrayList<Integer> restoreCategories()
-	{
-		SharedPreferences sharedPref = mContext.getSharedPreferences("categories", mContext.MODE_PRIVATE);
-		String prefDefault = "";
-		String savedCategoriesString = sharedPref.getString(this.KEY_PREF_CATEGORIES, prefDefault);
-		Log.i("HermLog", "CategoryDialogFragment: savedCategoriesString: " + savedCategoriesString);
-
-		// Maak JSONarray van string
-		JSONArray categoriesJsonArray = null;
-
-		try
-		{
-			categoriesJsonArray = new JSONArray(savedCategoriesString);
-		}
-		catch (JSONException e)
-		{
-			Log.i("HermLog", "JSON Exception in restoreCategories, categoriesJsonArray");
-            e.printStackTrace();
-        }
-
-		ArrayList<Integer> savedCategoriesList = new ArrayList<Integer>();
-
-		if (categoriesJsonArray != null)
-		{
-			int len = categoriesJsonArray.length();
-			for (int i=0; i < len; i++)
-			{
-				String val = null;
-				try
-				{
-					val = categoriesJsonArray.get(i).toString();
-				}
-				catch (JSONException e)
-				{
-					Log.i("HermLog", "JSON Exception in restoreCategories, savedCategoriesList");
-					e.printStackTrace();
-				}
-
-				savedCategoriesList.add(Integer.valueOf(val));
-			} 
-		} 
-
-		// Log.i("HermLog", "savedCategoriesList: " + savedCategoriesList.toString());
-		// Log.i("HermLog", "savedCategoriesList.size(): " + savedCategoriesList.size());
-
-		Collections.sort(savedCategoriesList);
-		return savedCategoriesList;
 	}
 
 	@Override
@@ -220,11 +173,15 @@ public class CategoryDialogFragment extends DialogFragment
 
 		if (categoryNameArray != null
 			&& categoryNumberArray != null
-			&& mSelectedItems != null)
+			&& mSelectedItems != null
+			&& prefFilename != null
+			&& prefKey != null)
 		{
 			outState.putStringArray("savedCategoryArray", categoryNameArray);
 			outState.putSerializable("savedNumberArray", categoryNumberArray);
 			outState.putIntegerArrayList("savedSelectedItems", mSelectedItems);
+			outState.putString("savedPrefFilename", prefFilename);
+			outState.putString("savedPrefKey", prefKey);
 		}
 	}
 
@@ -260,7 +217,7 @@ public class CategoryDialogFragment extends DialogFragment
 		categoryCheckedArray = new boolean[categoryCheckedArrayList.size()];
 
 		// Er is helaas pindakaas per se een boolean[] nodig in setMultiChoiceItems()
-		// dus Boolean[] (variabele lengte) naar boolean[] (vaste lengte) omzetten, kan niet 
+		// dus Boolean[] (variabele lengte) naar primitive boolean[] (vaste lengte) omzetten, kan niet 
 		// anders dan met een loop
 		int i = 0;
 		for (boolean yesOrNo : categoryCheckedArrayList)
