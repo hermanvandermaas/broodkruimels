@@ -1,6 +1,7 @@
 package nl.waywayway.broodkruimels;
+import java.io.*;
 
-public class CategoryItem
+public class CategoryItem implements Serializable
 {
 	private int number;
 	private String name;

@@ -17,4 +17,11 @@
         android:summary="@string/pref_notify_time_summ"
 		android:defaultValue="390" />
 	
+	<android.support.v7.preference.Preference
+		android:dependency="pref_notify"
+		android:key="pref_notify_categories"
+        android:title="@string/pref_notify_categories"
+        android:summary="@string/pref_notify_categories_summ"
+		android:defaultValue="" />
+	
 </android.support.v7.preference.PreferenceScreen>

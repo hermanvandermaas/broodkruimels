@@ -6,11 +6,19 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.preference.*;
 import android.util.*;
+import java.util.*;
 
-public class SettingsFragment extends PreferenceFragmentCompat 
-implements SharedPreferences.OnSharedPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
 {
+	private String FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES = "notify_categories";
+	private String FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES = "pref_notify_categories";
 	Context mContext;
+	List<CategoryItem> categoryList;
+
+	public void setCategoryList(List<CategoryItem> categoryList)
+	{
+		this.categoryList = categoryList;
+	}
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
@@ -39,19 +47,31 @@ implements SharedPreferences.OnSharedPreferenceChangeListener
 			case SettingsActivity.KEY_PREF_NOTIFY_TIME:
 				showTimePickerDialog(preference);
 				break;
+			case SettingsActivity.KEY_PREF_NOTIFY_CATEGORIES:
+				showCategoryDialog(preference);
+				break;
 		}
-	
+
 		return super.onPreferenceTreeClick(preference);
 	}
-	
+
 	private void showTimePickerDialog(Preference preference)
 	{
 		DialogFragment newFragment = new TimePickerFragment();
 		newFragment.show(getFragmentManager(), "timePicker");
-		
+
 		// Toast.makeText(mContext, preference.getKey(), Toast.LENGTH_SHORT).show();
 	}
 	
+	private void showCategoryDialog(Preference preference)
+	{
+		CategoryDialogFragment categoryDialog = new CategoryDialogFragment();
+		categoryDialog.setCategoryList((ArrayList<CategoryItem>) categoryList);
+		categoryDialog.setPrefFilename(this.FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES);
+		categoryDialog.setPrefKey(this.FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES);
+		categoryDialog.show(getFragmentManager(), "pref_category");
+	}
+
 	// Lees wel/niet instelling
 	private Boolean getBooleanPref(String key)
 	{
@@ -212,6 +232,14 @@ implements SharedPreferences.OnSharedPreferenceChangeListener
 				break;
 		}
 	}
+	
+	/*
+	@Override
+	public void downloadFromCategories()
+	{
+		// TODO: Implement this method
+	}
+	*/
 }
 
 

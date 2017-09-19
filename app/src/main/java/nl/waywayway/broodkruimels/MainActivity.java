@@ -394,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			case R.id.action_settings:
 				// Ga naar instellingen / preferences / settings scherm
 				Intent mIntent = new Intent(mContext, SettingsActivity.class);
+				mIntent.putExtra("categoryListExtra", (ArrayList<CategoryItem>) categoryList);
 				mContext.startActivity(mIntent);
 				return true;
 
