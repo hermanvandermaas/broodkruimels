@@ -24,7 +24,7 @@ public class SettingsActivity extends AppCompatActivity implements CategoryDialo
 		// Handler voor settings fragment
 		FragmentManager fm = getSupportFragmentManager();
 		mSettingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settings_fragment);
-		Log.i("HermLog", "mSettingsFragment: " + mSettingsFragment);
+		// Log.i("HermLog", "mSettingsFragment: " + mSettingsFragment);
 		
 		// Haal ArrayList met categorieen uit intent, geef door aan fragment
 		categoryList = (ArrayList<CategoryItem>) getIntent().getSerializableExtra("categoryListExtra");
@@ -35,16 +35,10 @@ public class SettingsActivity extends AppCompatActivity implements CategoryDialo
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
-
-	@Override
-	protected void onStart()
-	{
-		super.onStart();
-	}
 	
 	@Override
 	public void downloadFromCategories()
 	{
-		// TODO: Implement this method
+		// Doe niets Tjebbe
 	}
 }

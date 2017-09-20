@@ -46,6 +46,12 @@ public class CategorySaveAndRestore
 		String prefDefault = "";
 		String savedCategoriesString = sharedPref.getString(preferenceKey, prefDefault);
 		Log.i("HermLog", "CategorySaveAndRestore: restoredCategoriesString: " + savedCategoriesString);
+		
+		if (savedCategoriesString.isEmpty())
+		{
+			ArrayList<Integer> savedCategoriesList = new ArrayList<Integer>();
+			return savedCategoriesList;
+		}
 
 		// Maak JSONarray van string
 		JSONArray categoriesJsonArray = null;
@@ -74,7 +80,7 @@ public class CategorySaveAndRestore
 				}
 				catch (JSONException e)
 				{
-					Log.i("HermLog", "JSON Exception in restoreCategories, savedCategoriesList");
+					Log.i("HermLog", "JSON Exception in restoreCategories, field savedCategoriesList");
 					e.printStackTrace();
 				}
 

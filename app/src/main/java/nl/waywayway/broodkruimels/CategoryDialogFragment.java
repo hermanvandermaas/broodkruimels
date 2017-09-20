@@ -6,6 +6,7 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.util.*;
+import android.widget.*;
 import java.util.*;
 
 import android.support.v4.app.DialogFragment;
@@ -50,7 +51,7 @@ public class CategoryDialogFragment extends DialogFragment
 	@Override
 	public void onAttach(Context context)
 	{
-		Log.i("HermLog", "CategoryDialogFragment: onAttach()");
+		Log.i("HermLog", "CategoryDialogFragment: onAttach(), to: " + ((Activity) context).getLocalClassName());
 
 		super.onAttach(context);
 		mContext = context;
@@ -113,12 +114,14 @@ public class CategoryDialogFragment extends DialogFragment
 						// If the user checked the item, add it to the selected items
 						mSelectedItems.add(categoryNumberArray[which]);
 						Log.i("HermLog", "mSelectedItems na add: " + Arrays.toString(mSelectedItems.toArray()));
+						Toast.makeText(mContext, "Klik", Toast.LENGTH_SHORT).show();
 					}
 					else if (mSelectedItems.contains(categoryNumberArray[which]))
 					{
 						// Else, if the item is already in the array, remove it
 						mSelectedItems.remove(categoryNumberArray[which]);
 						Log.i("HermLog", "mSelectedItems na remove: " + Arrays.toString(mSelectedItems.toArray()));
+						Toast.makeText(mContext, "Klik", Toast.LENGTH_SHORT);
 					}
 				}
 			})

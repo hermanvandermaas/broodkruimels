@@ -69,7 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 		categoryDialog.setCategoryList((ArrayList<CategoryItem>) categoryList);
 		categoryDialog.setPrefFilename(this.FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES);
 		categoryDialog.setPrefKey(this.FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES);
-		categoryDialog.show(getFragmentManager(), "pref_category");
+		categoryDialog.show(getFragmentManager() , "pref_category");
 	}
 
 	// Lees wel/niet instelling
