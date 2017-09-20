@@ -6,7 +6,6 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
 import android.util.*;
-import android.widget.*;
 import java.util.*;
 
 import android.support.v4.app.DialogFragment;
@@ -23,6 +22,7 @@ public class CategoryDialogFragment extends DialogFragment
 	private String[] categoryNameArray;
 	private Integer[] categoryNumberArray;
 	private boolean[] categoryCheckedArray;
+	private ArrayList<Integer> categoryNumberArrayList;
 	private ArrayList<Integer> mSelectedItems;
 
 	public interface DownloadCategories
@@ -91,11 +91,16 @@ public class CategoryDialogFragment extends DialogFragment
 		}
 		else
 		{
-			// mSelectedItems is een ArrayList met de categorienummers uit WordPress,
+			// mSelectedItems is een ArrayList met de gekozen categorienummers uit WordPress,
 			// mSelectedItems bevat niet de oplopende volgnummers 'which' van de lijst in de dialog
 			catSaveRestore = new CategorySaveAndRestore(mContext, prefFilename, prefKey);
 			mSelectedItems = catSaveRestore.restoreCategories();
 			categoryNameArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
+			
+			if (mSelectedItems.size() == 0)
+			{
+				mSelectedItems = categoryNumberArrayList;
+			}
 		}
 		
 		Log.i("HermLog", "CategoryDialogFragment: prefFilename: " + prefFilename);
@@ -114,14 +119,18 @@ public class CategoryDialogFragment extends DialogFragment
 						// If the user checked the item, add it to the selected items
 						mSelectedItems.add(categoryNumberArray[which]);
 						Log.i("HermLog", "mSelectedItems na add: " + Arrays.toString(mSelectedItems.toArray()));
-						Toast.makeText(mContext, "Klik", Toast.LENGTH_SHORT).show();
+						// Toast.makeText(mContext, "Klik", Toast.LENGTH_SHORT).show();
 					}
-					else if (mSelectedItems.contains(categoryNumberArray[which]))
+					else
 					{
 						// Else, if the item is already in the array, remove it
-						mSelectedItems.remove(categoryNumberArray[which]);
-						Log.i("HermLog", "mSelectedItems na remove: " + Arrays.toString(mSelectedItems.toArray()));
-						Toast.makeText(mContext, "Klik", Toast.LENGTH_SHORT);
+						if (mSelectedItems.contains(categoryNumberArray[which]))
+						{
+							mSelectedItems.remove(categoryNumberArray[which]);
+							Log.i("HermLog", "mSelectedItems na remove: " + Arrays.toString(mSelectedItems.toArray()));
+						}
+						
+						// Toast.makeText(mContext, "Klik", Toast.LENGTH_SHORT);
 					}
 				}
 			})
@@ -130,7 +139,6 @@ public class CategoryDialogFragment extends DialogFragment
 				public void onClick(DialogInterface dialog, int id)
 				{
 					// FIRE ZE MISSILES!
-					// :-)
 
 					Collections.sort(mSelectedItems);
 					Log.i("HermLog", "mSelectedItems gesorteerd: " + mSelectedItems.toString());
@@ -195,7 +203,7 @@ public class CategoryDialogFragment extends DialogFragment
 		// Filter niet gewenste categorieen er uit
 		// maak boolean[] voor aangevinkte categorieen
 		ArrayList<String> categoryNameArrayList = new ArrayList<String>();
-		ArrayList<Integer> categoryNumberArrayList = new ArrayList<Integer>();
+		categoryNumberArrayList = new ArrayList<Integer>();
 		ArrayList<Boolean> categoryCheckedArrayList = new ArrayList<Boolean>();
 		int[] exclude_children = getResources().getIntArray(R.array.parent_categories_exclude_children);
 		int[] exclude_categories = getResources().getIntArray(R.array.categories_exclude);
@@ -229,9 +237,9 @@ public class CategoryDialogFragment extends DialogFragment
 			i++;
 		}
 
-		// Log.i("HermLog", "categoryCheckedArray: " + Arrays.toString(categoryCheckedArray) + "  lengte: " + categoryCheckedArray.length);
-		// Log.i("HermLog", "categoryNameArray: " + Arrays.toString(categoryNameArray) + "  lengte: " + categoryNameArray.length);
-		// Log.i("HermLog", "categoryNumberArray: " + Arrays.toString(categoryNumberArray) + "  lengte: " + categoryNumberArray.length);
+		//Log.i("HermLog", "categoryCheckedArray: " + Arrays.toString(categoryCheckedArray) + "  lengte: " + categoryCheckedArray.length);
+		//Log.i("HermLog", "categoryNameArray: " + Arrays.toString(categoryNameArray) + "  lengte: " + categoryNameArray.length);
+		//Log.i("HermLog", "categoryNumberArray: " + Arrays.toString(categoryNumberArray) + "  lengte: " + categoryNumberArray.length);
 
 		return categoryNameArray;
 	}
