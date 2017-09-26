@@ -89,7 +89,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         //Setting text views
         customViewHolder.textViewTitle.setText(Html.fromHtml(feedItem.getTitle()));
-        customViewHolder.textViewPubdate.setText(Html.fromHtml(feedItem.getPubdate()));
+        customViewHolder.textViewPubdate.setText(Html.fromHtml(feedItem.getPubDate()));
 
         View.OnClickListener listener = new View.OnClickListener()
 		{

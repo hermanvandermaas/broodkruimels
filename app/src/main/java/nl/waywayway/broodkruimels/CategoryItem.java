@@ -1,6 +1,8 @@
 package nl.waywayway.broodkruimels;
 import java.io.*;
 
+// Model definitie voor gebruik met Gson library
+
 public class CategoryItem implements Serializable
 {
 	private int number;

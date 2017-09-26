@@ -92,7 +92,7 @@ public class CategoryDialogFragment extends DialogFragment
 		else
 		{
 			// mSelectedItems is een ArrayList met de gekozen categorienummers uit WordPress,
-			// mSelectedItems bevat niet de oplopende volgnummers 'which' van de lijst in de dialog
+			// let op: mSelectedItems bevat niet de oplopende volgnummers 'which' van de lijst in de dialog
 			catSaveRestore = new CategorySaveAndRestore(mContext, prefFilename, prefKey);
 			mSelectedItems = catSaveRestore.restoreCategories();
 			categoryNameArray = makeCategoryArray((ArrayList<CategoryItem>) categoryList);
@@ -138,8 +138,6 @@ public class CategoryDialogFragment extends DialogFragment
 			{
 				public void onClick(DialogInterface dialog, int id)
 				{
-					// FIRE ZE MISSILES!
-
 					Collections.sort(mSelectedItems);
 					Log.i("HermLog", "mSelectedItems gesorteerd: " + mSelectedItems.toString());
 					ArrayList<Integer> savedCategories = catSaveRestore.restoreCategories();
@@ -202,9 +200,11 @@ public class CategoryDialogFragment extends DialogFragment
 		// maak daarna String[] van ArrayList<String>
 		// Filter niet gewenste categorieen er uit
 		// maak boolean[] voor aangevinkte categorieen
+		
 		ArrayList<String> categoryNameArrayList = new ArrayList<String>();
 		categoryNumberArrayList = new ArrayList<Integer>();
 		ArrayList<Boolean> categoryCheckedArrayList = new ArrayList<Boolean>();
+		
 		int[] exclude_children = getResources().getIntArray(R.array.parent_categories_exclude_children);
 		int[] exclude_categories = getResources().getIntArray(R.array.categories_exclude);
 

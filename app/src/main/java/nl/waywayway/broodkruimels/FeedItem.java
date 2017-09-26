@@ -1,50 +1,26 @@
 package nl.waywayway.broodkruimels;
 
+// Model definitie voor gebruik met Gson library
+
 public class FeedItem
 {
-
     private String title;
 	private String link;
-    private String pubdate;
+    private String pubDate;
     private String creator;
+	private transient int guid;
+	private transient String description;
     private String content;
     private String mediacontent;	
     private int mediawidth;
     private int mediaheight;
     private String mediamedium;
 	private String mediatype;
+	private transient String mediacopyright;
 	private int imgwidth;
 	private int imgheight;
-
-	public void setLink(String link)
-	{
-		this.link = link;
-	}
-
-	public String getLink()
-	{
-		return link;
-	}
-
-	public void setImgheight(int imgheight)
-	{
-		this.imgheight = imgheight;
-	}
-
-	public int getImgheight()
-	{
-		return imgheight;
-	}
-
-	public void setImgwidth(int imgwidth)
-	{
-		this.imgwidth = imgwidth;
-	}
-
-	public int getImgwidth()
-	{
-		return imgwidth;
-	}
+	private transient String categories;
+	private transient String tags;
 
 	public void setTitle(String title)
 	{
@@ -56,14 +32,24 @@ public class FeedItem
 		return title;
 	}
 
-	public void setPubdate(String pubdate)
+	public void setLink(String link)
 	{
-		this.pubdate = pubdate;
+		this.link = link;
 	}
 
-	public String getPubdate()
+	public String getLink()
 	{
-		return pubdate;
+		return link;
+	}
+
+	public void setPubDate(String pubDate)
+	{
+		this.pubDate = pubDate;
+	}
+
+	public String getPubDate()
+	{
+		return pubDate;
 	}
 
 	public void setCreator(String creator)
@@ -74,6 +60,26 @@ public class FeedItem
 	public String getCreator()
 	{
 		return creator;
+	}
+
+	public void setGuid(int guid)
+	{
+		this.guid = guid;
+	}
+
+	public int getGuid()
+	{
+		return guid;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public String getDescription()
+	{
+		return description;
 	}
 
 	public void setContent(String content)
@@ -134,5 +140,55 @@ public class FeedItem
 	public String getMediatype()
 	{
 		return mediatype;
+	}
+
+	public void setMediacopyright(String mediacopyright)
+	{
+		this.mediacopyright = mediacopyright;
+	}
+
+	public String getMediacopyright()
+	{
+		return mediacopyright;
+	}
+
+	public void setImgwidth(int imgwidth)
+	{
+		this.imgwidth = imgwidth;
+	}
+
+	public int getImgwidth()
+	{
+		return imgwidth;
+	}
+
+	public void setImgheight(int imgheight)
+	{
+		this.imgheight = imgheight;
+	}
+
+	public int getImgheight()
+	{
+		return imgheight;
+	}
+
+	public void setCategories(String categories)
+	{
+		this.categories = categories;
+	}
+
+	public String getCategories()
+	{
+		return categories;
+	}
+
+	public void setTags(String tags)
+	{
+		this.tags = tags;
+	}
+
+	public String getTags()
+	{
+		return tags;
 	}
 }

@@ -7,16 +7,17 @@ import android.os.*;
 import android.support.design.widget.*;
 import android.support.v4.app.*;
 import android.support.v7.app.*;
-import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.google.android.gms.common.*;
+import com.google.gson.*;
+import com.google.gson.reflect.*;
 import com.paginate.*;
+import java.lang.reflect.*;
 import java.text.*;
 import java.util.*;
-import org.json.*;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -252,13 +253,13 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void downloadFromCategories()
 	{
 		Log.i("HermLog", "downloadFromCategories");
-					
+
 		// Cancel eventueel lopende download
 		if (mTaskFragment.isRunning())
 		{
 			mTaskFragment.cancel();
 		}
-		
+
 		// Reset endless scrolling flags
 		pageLoadingInProgress = false;
 		hasLoadedAllItems = false;
@@ -266,14 +267,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Wis eerder gedownloade data
 		feedsList.clear();
 		categoryList.clear();
-		
+
 		// Verberg categorie knop
 		// deze method roept onCreateOptionsMenu() aan
 		if (categoryList.size() > 0)
 		{
 			invalidateOptionsMenu();
 		}
-		
+
 		downloadXml(false);
 	}
 
@@ -302,58 +303,75 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		Log.i("HermLog", "parseResult()");
 
-		try
-		{
-			// Content items
-			JSONObject response = new JSONObject(result);
-			JSONArray posts = response.optJSONArray("data");
+		Gson gson = new Gson();
+		
+		JsonArray data = gson.fromJson(result, JsonObject.class).getAsJsonArray("data");
+		Type feedItemListType = new TypeToken<ArrayList<FeedItem>>(){}.getType();
+		ArrayList<FeedItem> newItems = gson.fromJson(data, feedItemListType);
+		feedsList.addAll(newItems);
+		Log.i("HermLog", "feedsList size: " + feedsList.size());
+		
+		if (categoryList.size() > 0) return;
+		
+		JsonArray categories = gson.fromJson(result, JsonObject.class).getAsJsonArray("categories");
+		Type categoryItemListType = new TypeToken<ArrayList<CategoryItem>>(){}.getType();
+		categoryList = gson.fromJson(categories, categoryItemListType);
+		Log.i("HermLog", "categoryList size: " + categoryList.size());
+		
+		/*
+		 try
+		 {
+		 // Content items
+		 JSONObject response = new JSONObject(result);
+		 JSONArray posts = response.optJSONArray("data");
 
-			for (int i = 0; i < posts.length(); i++)
-			{
-				JSONObject post = posts.optJSONObject(i);
-				FeedItem item = new FeedItem();
+		 for (int i = 0; i < posts.length(); i++)
+		 {
+		 JSONObject post = posts.optJSONObject(i);
+		 FeedItem item = new FeedItem();
 
-				// Velden in de lijst met feeditems vullen
-				item.setTitle(post.optString("title"));
-				item.setLink(post.optString("link"));
-				item.setPubdate(formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss"));
-				item.setCreator(post.optString("creator"));
-				item.setContent(post.optString("content"));
-				item.setMediacontent(post.optString("mediacontent"));
-				item.setMediawidth(post.optInt("mediawidth"));
-				item.setMediaheight(post.optInt("mediaheight"));
-				item.setMediamedium(post.optString("mediamedium"));
-				item.setMediatype(post.optString("mediatype"));
-				item.setImgwidth(post.optInt("imgwidth"));
-				item.setImgheight(post.optInt("imgheight"));
+		 // Velden in de lijst met feeditems vullen
+		 item.setTitle(post.optString("title"));
+		 item.setLink(post.optString("link"));
+		 item.setPubdate(formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss"));
+		 item.setCreator(post.optString("creator"));
+		 item.setContent(post.optString("content"));
+		 item.setMediacontent(post.optString("mediacontent"));
+		 item.setMediawidth(post.optInt("mediawidth"));
+		 item.setMediaheight(post.optInt("mediaheight"));
+		 item.setMediamedium(post.optString("mediamedium"));
+		 item.setMediatype(post.optString("mediatype"));
+		 item.setImgwidth(post.optInt("imgwidth"));
+		 item.setImgheight(post.optInt("imgheight"));
 
-				feedsList.add(item);
-			}
+		 feedsList.add(item);
+		 }
 
-			// Categorieen alleen parsen als de lijst met categorieen leeg is
-			if (categoryList.size() > 0) return;
-			
-			// Categorieen
-			JSONArray categories = response.optJSONArray("categories");
+		 // Categorieen alleen parsen als de lijst met categorieen leeg is
+		 if (categoryList.size() > 0) return;
 
-			for (int i = 0; i < categories.length(); i++)
-			{
-				JSONObject category = categories.optJSONObject(i);
-				CategoryItem categoryItem = new CategoryItem();
+		 // Categorieen
+		 JSONArray categories = response.optJSONArray("categories");
 
-				// Velden in de lijst met categoryItems vullen
-				categoryItem.setNumber(category.optInt("number"));
-				categoryItem.setName(category.optString("name"));
-				categoryItem.setParent(category.optInt("parent"));
+		 for (int i = 0; i < categories.length(); i++)
+		 {
+		 JSONObject category = categories.optJSONObject(i);
+		 CategoryItem categoryItem = new CategoryItem();
 
-				categoryList.add(categoryItem);
-			}
-		}
-		catch (JSONException e)
-		{
-			Log.i("HermLog", "JSON Exception in parseResult");
-			e.printStackTrace();
-		}
+		 // Velden in de lijst met categoryItems vullen
+		 categoryItem.setNumber(category.optInt("number"));
+		 categoryItem.setName(category.optString("name"));
+		 categoryItem.setParent(category.optInt("parent"));
+
+		 categoryList.add(categoryItem);
+		 }
+		 }
+		 catch (JSONException e)
+		 {
+		 Log.i("HermLog", "JSON Exception in parseResult");
+		 e.printStackTrace();
+		 }
+		 */
 	}
 
 
@@ -427,7 +445,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 	private void showSnackbar(String snackMsg)
 	{
-		// if ( findViewById(R.id.coordinator) )
 		Snackbar mSnackbar = Snackbar.make(findViewById(R.id.coordinator), snackMsg, Snackbar.LENGTH_LONG);
 		mSnackbar.show();
 	}
@@ -563,7 +580,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		mProgressbar.setVisibility(View.GONE);
 	}
 
-	// Bepaal breedte van de app: 'narrow' of 'width'
+	// Bepaal breedte van de app: 'narrow' of 'wide'
 	// grenswaarde staat in xml bestand resources / values / integers
 	private void findAppWidth()
 	{
@@ -695,7 +712,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					mIntent.putExtra("imgheight", item.getImgheight());
 					mIntent.putExtra("title", item.getTitle());
 					mIntent.putExtra("link", item.getLink());
-					mIntent.putExtra("pubdate", item.getPubdate());
+					mIntent.putExtra("pubdate", item.getPubDate());
 					mIntent.putExtra("creator", item.getCreator());
 					mIntent.putExtra("content", item.getContent());
 

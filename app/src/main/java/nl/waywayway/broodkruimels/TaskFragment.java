@@ -31,14 +31,12 @@ public class TaskFragment extends Fragment
 	private DummyTask mTask;
 	private boolean mRunning;
 	private OkHttpClient mClient;
-	private String mUrl;
 	private Request mRequest;
 	private Response mResponse;
 	private int startItem;
 	private int itemsPerPage;
 	private int feedsListSize;
 	private String categoriesParameter;
-	String url;
 	private Boolean getExtraPage;
 
 	/**
@@ -68,9 +66,6 @@ public class TaskFragment extends Fragment
 		itemsPerPage = getActivity().getResources().getInteger(R.integer.items_per_page);
 		if (attachedClassName.equals(CLASSNAME_DETAIL_ACTIVITY))
 			itemsPerPage = 1;
-		
-		// url is de basis url voor ophalen data
-		url = getActivity().getResources().getString(R.string.url_data);
 	}
 
 	/**
@@ -176,33 +171,6 @@ public class TaskFragment extends Fragment
 	{
 		return getExtraPage;
 	}
-	
-	/** Maak URL voor downloaden data
-	 Query string heeft de vorm:
-	 ?s=0&n=40&c=3,406,15
-	 waarin:
-	 s=eerste op te halen item in de op datum gesorteerde lijst met alle items,
-	 let op: het eerste item is item 0
-	 n=aantal op te halen items binnen de lijst met alle items, inclusief item nummer "s"
-	 c=komma gescheiden lijst met categorieen waarvan items worden opgehaald
-
-	 Endless scrolling:
-	 als er al eerder gedownloade data in de List<E> staan, begin nieuwe download bij eerstvolgende item
-	 */
-
-	private String getUrl(int startItem, int itemsPerPage)
-	{
-		String mUrl = url
-			+ "s="
-			+ Integer.toString(startItem)
-			+ "&n="
-			+ Integer.toString(itemsPerPage)
-			+ categoriesParameter;
-
-		Log.i("HermLog", "mUrl: " + mUrl);
-
-		return mUrl;
-	}
 
 	/**
 	 * A dummy task that performs some (dumb) background work and proxies progress
@@ -229,12 +197,6 @@ public class TaskFragment extends Fragment
 			Log.i("HermLog", "doInBackground");
 			Log.i("HermLog", "downloadMoreItems[0]: " + downloadMoreItems[0].toString());
 
-			// De asynchrone taak
-			OkHttpClient mClient = new OkHttpClient.Builder()
-				.readTimeout(30, TimeUnit.SECONDS)
-				.build();
-
-
 			if (!downloadMoreItems[0])
 			{
 				// In geval eerste download
@@ -249,33 +211,13 @@ public class TaskFragment extends Fragment
 			}
 
 			Log.i("HermLog", "startItem: " + startItem);
-
-			Request mRequest = new Request.Builder()
-				.url(getUrl(startItem, itemsPerPage))
-				.build();
-
-			try
-			{
-				Response mResponse = mClient
-					.newCall(mRequest)
-					.execute();
-
-				if (!mResponse.isSuccessful())
-				{
-					throw new IOException("Unexpected code " + mResponse);
-				}
-
-				Log.i("HermLog", "Gedownload!");
-
-				return mResponse.body().string();
-			}
-			catch (IOException e)
-			{
-				Log.i("HermLog", "Exception bij download JSON");
-			}
-
-			return "Fout!";
-
+			
+			// maak url en download data json string
+			String baseUrl = getActivity().getResources().getString(R.string.url_data);
+			MakeUrl mUrlMaker = new MakeUrl(baseUrl, startItem, itemsPerPage, categoriesParameter);
+			DownloadJsonString mDownloader = new DownloadJsonString(mUrlMaker.make());
+			
+			return mDownloader.download();
 			// Eind asynchrone taak
 		}
 
