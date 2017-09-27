@@ -59,46 +59,6 @@ public class CategorySaveAndRestore
 		Type listType = new TypeToken<ArrayList<Integer>>(){}.getType();
 		savedCategoriesList = gson.fromJson(savedCategoriesString, listType);
 		Log.i("HermLog", "savedCategoriesList: " + Arrays.toString(savedCategoriesList.toArray()));
-			
-		/*
-		// Maak JSONarray van string
-		JSONArray categoriesJsonArray = null;
-
-		try
-		{
-			categoriesJsonArray = new JSONArray(savedCategoriesString);
-		}
-		catch (JSONException e)
-		{
-			Log.i("HermLog", "JSON Exception in method restoreCategories, field categoriesJsonArray");
-            e.printStackTrace();
-        }
-
-		ArrayList<Integer> savedCategoriesList = new ArrayList<Integer>();
-
-		if (categoriesJsonArray != null)
-		{
-			int len = categoriesJsonArray.length();
-			for (int i=0; i < len; i++)
-			{
-				String val = null;
-				try
-				{
-					val = categoriesJsonArray.get(i).toString();
-				}
-				catch (JSONException e)
-				{
-					Log.i("HermLog", "JSON Exception in restoreCategories, field savedCategoriesList");
-					e.printStackTrace();
-				}
-
-				savedCategoriesList.add(Integer.valueOf(val));
-			} 
-		} 
-
-		// Log.i("HermLog", "savedCategoriesList: " + savedCategoriesList.toString());
-		// Log.i("HermLog", "savedCategoriesList.size(): " + savedCategoriesList.size());
-		*/
 		
 		Collections.sort(savedCategoriesList);
 		return savedCategoriesList;
