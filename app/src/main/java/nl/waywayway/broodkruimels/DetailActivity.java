@@ -486,7 +486,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 
 		// Als niets gedownload, toon boodschap
 		// en knop probeer opnieuw
-		if (mResult == "Fout!")
+		if (mResult.equalsIgnoreCase("Fout in DownloadJsonString!"))
 		{
 			Log.i("HermLog", "DetailActivity: Niets gedownload");
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));

@@ -317,61 +317,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		Type categoryItemListType = new TypeToken<ArrayList<CategoryItem>>(){}.getType();
 		categoryList = gson.fromJson(categories, categoryItemListType);
 		Log.i("HermLog", "categoryList size: " + categoryList.size());
-		
-		/*
-		 try
-		 {
-		 // Content items
-		 JSONObject response = new JSONObject(result);
-		 JSONArray posts = response.optJSONArray("data");
-
-		 for (int i = 0; i < posts.length(); i++)
-		 {
-		 JSONObject post = posts.optJSONObject(i);
-		 FeedItem item = new FeedItem();
-
-		 // Velden in de lijst met feeditems vullen
-		 item.setTitle(post.optString("title"));
-		 item.setLink(post.optString("link"));
-		 item.setPubdate(formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss"));
-		 item.setCreator(post.optString("creator"));
-		 item.setContent(post.optString("content"));
-		 item.setMediacontent(post.optString("mediacontent"));
-		 item.setMediawidth(post.optInt("mediawidth"));
-		 item.setMediaheight(post.optInt("mediaheight"));
-		 item.setMediamedium(post.optString("mediamedium"));
-		 item.setMediatype(post.optString("mediatype"));
-		 item.setImgwidth(post.optInt("imgwidth"));
-		 item.setImgheight(post.optInt("imgheight"));
-
-		 feedsList.add(item);
-		 }
-
-		 // Categorieen alleen parsen als de lijst met categorieen leeg is
-		 if (categoryList.size() > 0) return;
-
-		 // Categorieen
-		 JSONArray categories = response.optJSONArray("categories");
-
-		 for (int i = 0; i < categories.length(); i++)
-		 {
-		 JSONObject category = categories.optJSONObject(i);
-		 CategoryItem categoryItem = new CategoryItem();
-
-		 // Velden in de lijst met categoryItems vullen
-		 categoryItem.setNumber(category.optInt("number"));
-		 categoryItem.setName(category.optString("name"));
-		 categoryItem.setParent(category.optInt("parent"));
-
-		 categoryList.add(categoryItem);
-		 }
-		 }
-		 catch (JSONException e)
-		 {
-		 Log.i("HermLog", "JSON Exception in parseResult");
-		 e.printStackTrace();
-		 }
-		 */
 	}
 
 
@@ -502,9 +447,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Als niets gedownload, toon boodschap
 		// en knop probeer opnieuw
-		if (mResult == "Fout!")
+		if (mResult.equalsIgnoreCase("Fout in DownloadJsonString!"))
 		{
-			Log.i("HermLog", "Niets gedownload");
+			Log.i("HermLog", "MainActivity: niets gedownload");
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
 		}		
