@@ -6,6 +6,7 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.preference.*;
 import android.util.*;
+import com.firebase.jobdispatcher.*;
 import java.util.*;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
@@ -232,14 +233,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 				break;
 		}
 	}
-	
-	/*
-	@Override
-	public void downloadFromCategories()
-	{
-		// TODO: Implement this method
-	}
-	*/
 }
 
 
