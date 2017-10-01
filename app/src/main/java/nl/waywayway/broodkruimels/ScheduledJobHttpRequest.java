@@ -27,12 +27,12 @@ public class ScheduledJobHttpRequest
 			// uniquely identifies the job
 			.setTag(TAG_NOTIFICATION_SCHEDULED_JOB)
 			// one-off job
-			.setRecurring(true)
+			.setRecurring(false)
 			// don't persist past a device reboot
-			.setLifetime(Lifetime.FOREVER)
-			// start between 0 and 60 seconds from now
-			.setTrigger(Trigger.executionWindow(0, 10))
-			// don't overwrite an existing job with the same tag
+			.setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+			// start between x and x seconds from now
+			.setTrigger(Trigger.executionWindow(0, 1))
+			// overwrite an existing job with the same tag
 			.setReplaceCurrent(true)
 			// retry with exponential backoff
 			.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
