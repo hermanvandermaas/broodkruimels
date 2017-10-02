@@ -19,9 +19,8 @@ public class ScheduledJobRunOnce
 		/*
 		 Bundle myExtrasBundle = new Bundle();
 		 myExtrasBundle.putString("some_key", "some_value");
-		 */
-
-		RetryStrategy retryStrategy = dispatcher.newRetryStrategy(RetryStrategy.RETRY_POLICY_EXPONENTIAL, 20, 120);
+		RetryStrategy retryStrategy = dispatcher.newRetryStrategy(RetryStrategy.RETRY_POLICY_EXPONENTIAL, 30, 301);
+		*/
 		 
 		Job myJob = dispatcher.newJobBuilder()
 			// the JobService that will be called
@@ -33,11 +32,11 @@ public class ScheduledJobRunOnce
 			// don't persist past a device reboot
 			.setLifetime(Lifetime.UNTIL_NEXT_BOOT)
 			// start between x and x seconds from now
-			.setTrigger(Trigger.executionWindow(0, 20))
+			.setTrigger(Trigger.executionWindow(0, 1))
 			// overwrite an existing job with the same tag
 			.setReplaceCurrent(true)
 			// retry with exponential backoff
-			.setRetryStrategy(retryStrategy)
+			.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
 			// constraints that need to be satisfied for the job to run
 			.setConstraints(
 				// only run on an unmetered network

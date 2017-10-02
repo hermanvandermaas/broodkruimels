@@ -37,8 +37,9 @@ public class MyJobService extends JobService
 
 		mBackgroundTask.execute();
 
-        return false;
+        return true;
 		// Answers the question: "Is there still work going on?"
+		// ja, in geval er een aparte thread is gestart
     }
 
     @Override
