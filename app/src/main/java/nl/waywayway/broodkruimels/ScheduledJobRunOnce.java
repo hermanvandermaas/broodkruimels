@@ -21,6 +21,8 @@ public class ScheduledJobRunOnce
 		 myExtrasBundle.putString("some_key", "some_value");
 		 */
 
+		RetryStrategy retryStrategy = dispatcher.newRetryStrategy(RetryStrategy.RETRY_POLICY_EXPONENTIAL, 20, 120);
+		 
 		Job myJob = dispatcher.newJobBuilder()
 			// the JobService that will be called
 			.setService(MyJobService.class)
@@ -35,16 +37,12 @@ public class ScheduledJobRunOnce
 			// overwrite an existing job with the same tag
 			.setReplaceCurrent(true)
 			// retry with exponential backoff
-			.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+			.setRetryStrategy(retryStrategy)
 			// constraints that need to be satisfied for the job to run
-			/*
 			.setConstraints(
-			// only run on an unmetered network
-			Constraint.ON_UNMETERED_NETWORK,
-			// only run when the device is charging
-			Constraint.DEVICE_CHARGING)
-			// .setExtras(myExtrasBundle)
-			*/
+				// only run on an unmetered network
+				Constraint.ON_ANY_NETWORK
+			)
 			.build();
 
 		dispatcher.mustSchedule(myJob);
