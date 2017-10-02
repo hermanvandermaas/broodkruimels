@@ -4,12 +4,12 @@ import android.os.*;
 import com.firebase.jobdispatcher.*;
 import nl.waywayway.broodkruimels.*;
 
-public class ScheduledJobHttpRequest
+public class ScheduledJobRunOnce
 {
 	private FirebaseJobDispatcher dispatcher;
-	public static final String TAG_NOTIFICATION_SCHEDULED_JOB = "tag_daily_notification_scheduled_job";
+	public static final String TAG_SCHEDULED_JOB_RUN_ONCE = "tag_scheduled_job_run_once";
 
-	public ScheduledJobHttpRequest(FirebaseJobDispatcher dispatcher)
+	public ScheduledJobRunOnce(FirebaseJobDispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
 	}
@@ -25,13 +25,13 @@ public class ScheduledJobHttpRequest
 			// the JobService that will be called
 			.setService(MyJobService.class)
 			// uniquely identifies the job
-			.setTag(TAG_NOTIFICATION_SCHEDULED_JOB)
+			.setTag(TAG_SCHEDULED_JOB_RUN_ONCE)
 			// one-off job
 			.setRecurring(false)
 			// don't persist past a device reboot
 			.setLifetime(Lifetime.UNTIL_NEXT_BOOT)
 			// start between x and x seconds from now
-			.setTrigger(Trigger.executionWindow(0, 1))
+			.setTrigger(Trigger.executionWindow(0, 20))
 			// overwrite an existing job with the same tag
 			.setReplaceCurrent(true)
 			// retry with exponential backoff

@@ -10,15 +10,12 @@ public class MyJobService extends JobService
 	private AsyncTask mBackgroundTask;
 
 	@Override
-    public boolean onStartJob(JobParameters job)
+    public boolean onStartJob(final JobParameters job)
 	{
-		final JobParameters jobParameters = job;
-
-        // Do some work here
-		mBackgroundTask = new AsyncTask<Void, Void, String>()
+		mBackgroundTask = new AsyncTask<Object, Void, String>()
 		{
 			@Override
-			protected String doInBackground(Void... mVoid)
+			protected String doInBackground(Object... mObject)
 			{
 				Context context = MyJobService.this;
 
@@ -30,9 +27,11 @@ public class MyJobService extends JobService
 			@Override
 			protected void onPostExecute(String result)
 			{
+				Log.i("HermLog", "MyJobService: onPostExecute(), result: " + result);
+				
 				// false: job is done, no rescheduling
-				jobFinished(jobParameters, false);
-				Log.i("HermLog", "onStartJob: OnPostExecute");
+				jobFinished(job, false);
+				
 			}
 		};
 
@@ -45,6 +44,7 @@ public class MyJobService extends JobService
     @Override
     public boolean onStopJob(JobParameters job)
 	{
+		Log.i("HermLog", "onStopJob");
         return false;
 		// Answers the question: "Should this job be retried?"
     }

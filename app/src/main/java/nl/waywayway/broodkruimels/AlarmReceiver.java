@@ -1,6 +1,7 @@
 package nl.waywayway.broodkruimels;
 
 import android.content.*;
+import android.util.*;
 import com.firebase.jobdispatcher.*;
 
 // Class voor tonen van notification, na ontvangen en verwerken
@@ -15,8 +16,9 @@ public class AlarmReceiver extends BroadcastReceiver
 		// Firebase Job Dispatcher library
 		// Create a new dispatcher using the Google Play driver.
 		FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
-		ScheduledJobHttpRequest job = new ScheduledJobHttpRequest(dispatcher);
+		ScheduledJobRunOnce job = new ScheduledJobRunOnce(dispatcher);
 		job.schedule();
+		Log.i("HermLog", "onReceive(): job scheduled");
     }
 }
 
