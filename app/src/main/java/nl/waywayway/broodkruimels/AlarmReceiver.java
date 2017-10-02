@@ -13,12 +13,9 @@ public class AlarmReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
 	{
-		// Firebase Job Dispatcher library
-		// Create a new dispatcher using the Google Play driver.
-		FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
-		ScheduledJobRunOnce job = new ScheduledJobRunOnce(dispatcher);
-		job.schedule();
-		Log.i("HermLog", "onReceive(): job scheduled");
+		MakeNotification notification = new MakeNotification(context);
+		notification.showNotification();
+		Log.i("HermLog", "AlarmReveiver: onReceive()");
     }
 }
 
