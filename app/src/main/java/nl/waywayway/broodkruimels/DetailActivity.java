@@ -217,10 +217,8 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			if (!mTaskFragment.isRunning())
 			{
 				// Geef te downloaden categorieen door
-				// in dit geval is DetailActivity direct aangeroepen
-				// om het laatste item te tonen, ongeacht de categorie,
-				// dan moet categorie parameter leeg zijn
-				mTaskFragment.setCategoriesParameter("");
+				CategoryGetter categoryGetter = new CategoryGetter(mContext, SettingsFragment.FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES , SettingsFragment.FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES);
+				mTaskFragment.setCategoriesParameter(categoryGetter.getCategories());
 				
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items (niet aan de
@@ -252,7 +250,6 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	// Toon foutboodschap
 	// toon knop probeer opnieuw
 	// eventueel cancel download
-	// zet 	hasDownloaded flag op false
 	private void tryAgain(String mMsg)
 	{	
 		TextView txtview = (TextView) findViewById(R.id.txtTryAgain_detailactivity);

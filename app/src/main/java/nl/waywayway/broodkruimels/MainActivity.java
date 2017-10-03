@@ -95,18 +95,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 	}
 
-	private String getCategories()
-	{
-		SharedPreferences sharedPref = mContext.getSharedPreferences(this.FILENAME_PREF_CATEGORIES, mContext.MODE_PRIVATE);
-		String prefDefault = "";
-		String savedCategoriesString = sharedPref.getString(this.KEY_PREF_CATEGORIES, prefDefault);
-		Log.i("HermLog", "MainActivity: savedCategoriesString: " + savedCategoriesString);
-		String commaSeparatedList = savedCategoriesString.replaceAll("\\[|\\]", "").replaceAll("\\s", "");
-		// Log.i("HermLog", "CommaSeparatedList: " + commaSeparatedList);
-
-		return commaSeparatedList;
-	}
-
 	// Check beschikbaarheid Play Services
 	protected void isPlayServicesAvailable()
 	{
@@ -231,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				mTaskFragment.setFeedsListSize(feedsList.size());
 
 				// Geef te downloaden categorieen door
-				mTaskFragment.setCategoriesParameter(getCategories());
+				CategoryGetter categoryGetter = new CategoryGetter(mContext, this.FILENAME_PREF_CATEGORIES, this.KEY_PREF_CATEGORIES);
+				mTaskFragment.setCategoriesParameter(categoryGetter.getCategories());
 
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items start(true)
@@ -327,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		MenuItem categoryItem = menu.findItem(R.id.action_select_category);
+		MenuItem settingsItem = menu.findItem(R.id.action_settings);
 
 		Log.i("HermLog", "categoryList.size(): " + categoryList.size());
 
@@ -334,10 +324,12 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		if (categoryList.size() > 0)
 		{
 			categoryItem.setVisible(true);
+			settingsItem.setVisible(true);
 		}
 		else
 		{
 			categoryItem.setVisible(false);
+			settingsItem.setVisible(false);
 		}
 
 

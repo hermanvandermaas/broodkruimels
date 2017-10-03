@@ -11,8 +11,8 @@ import java.util.*;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
 {
-	private String FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES = "notify_categories";
-	private String FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES = "pref_notify_categories";
+	public static final String FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES = "notify_categories";
+	public static final String FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES = "pref_notify_categories";
 	Context mContext;
 	List<CategoryItem> categoryList;
 
