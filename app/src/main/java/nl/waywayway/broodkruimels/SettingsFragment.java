@@ -6,7 +6,6 @@ import android.os.*;
 import android.support.v4.app.*;
 import android.support.v7.preference.*;
 import android.util.*;
-import com.firebase.jobdispatcher.*;
 import java.util.*;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener

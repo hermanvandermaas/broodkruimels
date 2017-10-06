@@ -2,7 +2,6 @@ package nl.waywayway.broodkruimels;
 
 import android.content.*;
 import android.util.*;
-import com.firebase.jobdispatcher.*;
 
 // Class voor tonen van notification, na ontvangen en verwerken
 // van de intent die wordt verzonden na het afgaan van 
