@@ -38,13 +38,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private LinearLayoutManager mLinearLayoutManager;
 	private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 	private MyRecyclerViewAdapter adapter;
-	private Context mContext;
-	private float mLogicalDensity;
+	private Context context;
 	private int mColumnWidth;
 	private boolean pageLoadingInProgress;
 	private boolean hasLoadedAllItems;
 	private int recyclerViewListSize = 0;
-	int appWidthDp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		Log.i("HermLog", "onCreate()");
 
 		// zet referentie naar context van deze activity in een variabele
-		mContext = this;
+		context = this;
 
 		// maak lege feedsList en categoryList aan
 		feedsList = new ArrayList<>();
@@ -101,14 +99,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		if (dialogWasShowed) return;
 
 		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-		int resultCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
 
 		if (resultCode != ConnectionResult.SUCCESS)
 		{
 			Log.i("HermLog", "Play Services fout");
 			if (apiAvailability.isUserResolvableError(resultCode))
 			{
-				apiAvailability.getErrorDialog((Activity) mContext, resultCode, 9000).show();
+				apiAvailability.getErrorDialog((Activity) context, resultCode, 9000).show();
 				dialogWasShowed = true;
 			}
 		}
@@ -190,8 +188,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					getIntent().putExtra("used", true);
 
 					// Start activity
-					Intent mIntent = new Intent(mContext, DetailActivity.class);
-					mContext.startActivity(mIntent);
+					Intent mIntent = new Intent(context, DetailActivity.class);
+					context.startActivity(mIntent);
 				}
 			}
 		}
@@ -219,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				mTaskFragment.setFeedsListSize(feedsList.size());
 
 				// Geef te downloaden categorieen door
-				CategoryGetter categoryGetter = new CategoryGetter(mContext, this.FILENAME_PREF_CATEGORIES, this.KEY_PREF_CATEGORIES);
+				CategoryGetter categoryGetter = new CategoryGetter(context, this.FILENAME_PREF_CATEGORIES, this.KEY_PREF_CATEGORIES);
 				mTaskFragment.setCategoriesParameter(categoryGetter.getCategories());
 
 				// Bij eerste download van items start(false)
@@ -348,9 +346,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		{
 			case R.id.action_settings:
 				// Ga naar instellingen / preferences / settings scherm
-				Intent mIntent = new Intent(mContext, SettingsActivity.class);
+				Intent mIntent = new Intent(context, SettingsActivity.class);
 				mIntent.putExtra("categoryListExtra", (ArrayList<CategoryItem>) categoryList);
-				mContext.startActivity(mIntent);
+				context.startActivity(mIntent);
 				return true;
 
 			case R.id.action_select_category:
@@ -517,33 +515,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		mProgressbar.setVisibility(View.GONE);
 	}
 
-	// Bepaal breedte van de app: 'narrow' of 'wide'
-	// grenswaarde staat in xml bestand resources / values / integers
-	private void findAppWidth()
-	{
-		// Vind breedte van de app in dp
-		// dp = pixels / logical density
-		// de gemeten breedte is de breedte van de hoogste view in het xml layout bestand
-		View mView = findViewById(R.id.coordinator);
-		int mViewWidth = mView.getWidth();
-		DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-		mLogicalDensity = displayMetrics.density;
-		appWidthDp = Math.round(mViewWidth / mLogicalDensity);
-
-		// Bepaal of de weergave van de app smal of breed is
-		if (appWidthDp <= getResources().getInteger(R.integer.listview_max_width))
-			this.mScreenWidth = "narrow";
-		else
-			this.mScreenWidth = "wide";
-
-		Log.i("HermLog", "AppWidthDp: " + appWidthDp);
-		Log.i("HermLog", "Density: " + displayMetrics.density);
-	}
-
 	private int getNumberOfColumns()
 	{
 		// Bereken aantal kolommen
 		// Kolombreedte staat in xml bestand resources / values / integers
+		int appWidthDp = AppWidthFinder.getAppWidthFinder().getWidthInt(findViewById(android.R.id.content));
 		mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
 		int mNumberOfColumns = Math.round((float) appWidthDp / mColumnWidth);
 
@@ -579,6 +555,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
 		// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
 		adapter.setColumnWidth(mColumnWidth);
+		
+		getResources().getInteger(R.integer.listview_max_width)
+		
 		adapter.setScreenWidth(mScreenWidth);
 		adapter.setLogicalDensity(mLogicalDensity);
 
@@ -642,7 +621,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 				@Override
 				public void onItemClick(FeedItem item)
 				{
-					Intent mIntent = new Intent(mContext, DetailActivity.class);
+					Intent mIntent = new Intent(context, DetailActivity.class);
 
 					mIntent.putExtra("mediacontent", item.getMediacontent());
 					mIntent.putExtra("imgwidth", item.getImgwidth());
@@ -653,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 					mIntent.putExtra("creator", item.getCreator());
 					mIntent.putExtra("content", item.getContent());
 
-					mContext.startActivity(mIntent);
+					context.startActivity(mIntent);
 				}
 			});
 	}
@@ -663,9 +642,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	// instellen endless scrolling, actie bij aanklikken item
 	private void makeRecyclerView()
 	{
-		// Bepaal breedte van de app: 'narrow' of 'wide'
-		findAppWidth();
-
 		// Vind recyclerview
 		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
