@@ -12,9 +12,6 @@ import android.view.*;
 
 public class AppWidthFinder
 {
-	private View view;
-	private float logicalDensity;
-	int appWidthDp;
 	private static AppWidthFinder instance;
 	
 	private AppWidthFinder(){}
@@ -27,13 +24,13 @@ public class AppWidthFinder
 		return instance;
 	}
 	
-	private int getWidth()
+	private int getWidth(View view)
 	{
 		// Vind breedte van de app in dp
 		// dp = pixels / logical density
 		int viewWidth = view.getWidth();
-		getLogicalDensity(view);
-		appWidthDp = Math.round(viewWidth / logicalDensity);
+		float logicalDensity = getLogicalDensity(view);
+		int appWidthDp = Math.round(viewWidth / logicalDensity);
 
 		Log.i("HermLog", "AppWidthDp: " + appWidthDp);
 		
@@ -42,10 +39,8 @@ public class AppWidthFinder
 	
 	public String getWidthString(View view, int listviewMaxWidth)
 	{
-		this.view = view;
-		
 		// Bepaal of de weergave van de app smal of breed is
-		if (getWidth() <= listviewMaxWidth)
+		if (getWidth(view) <= listviewMaxWidth)
 			return "narrow";
 		else
 			return "wide";
@@ -53,13 +48,12 @@ public class AppWidthFinder
 	
 	public int getWidthInt(View view)
 	{
-		this.view = view;
-		return getWidth();
+		return getWidth(view);
 	}
 	
 	public float getLogicalDensity(View view)
 	{
-		logicalDensity = view.getContext().getResources().getDisplayMetrics().density;
+		float logicalDensity = view.getContext().getResources().getDisplayMetrics().density;
 		Log.i("HermLog", "logicalDensity: " + logicalDensity);
 		
 		return logicalDensity;
