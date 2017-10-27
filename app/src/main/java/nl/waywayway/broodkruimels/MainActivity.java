@@ -559,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			feedsList,
 			getResources().getInteger(R.integer.staggeredgridview_column_width),
 			AppWidthFinder.getAppWidthFinder().getLogicalDensity(findViewById(android.R.id.content)),
-			AppWidthFinder.getAppWidthFinder().getWidthString(findViewById(android.R.id.content), getResources().getInteger(R.integer.listview_max_width))															  
+			AppWidthFinder.getAppWidthFinder().getWidthString(findViewById(android.R.id.content), getResources().getInteger(R.integer.listview_max_width))
 		);
 
 		mRecyclerView.setAdapter(adapter);
