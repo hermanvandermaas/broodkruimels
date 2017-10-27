@@ -531,7 +531,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	// 
 	private void setLayoutManager()
 	{
-		if (this.mScreenWidth == "narrow")
+		String width = AppWidthFinder.getAppWidthFinder().getWidthString(findViewById(android.R.id.content), getResources().getInteger(R.integer.listview_max_width));
+		
+		if (width == "narrow")
 		{
 			// Koppel layoutmanager voor smal scherm
 			mLinearLayoutManager = new LinearLayoutManager(this);
@@ -549,19 +551,17 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private void setAdapter()
 	{
 		// maak adapter instance
-		adapter = new MyRecyclerViewAdapter(MainActivity.this, feedsList);
-
-		// instelling appbreedte en logical density in adapter,
+		// instelling appbreedte en logical density in adapter via constructor,
 		// voor berekenen van aantal kolommen en aanpassen afbeelding in staggered grid layout
 		// oncreateviewholder en onbindviewholder worden na deze setters aangeroepen
-		adapter.setColumnWidth(mColumnWidth);
-		
-		getResources().getInteger(R.integer.listview_max_width)
-		
-		adapter.setScreenWidth(mScreenWidth);
-		adapter.setLogicalDensity(mLogicalDensity);
+		adapter = new MyRecyclerViewAdapter(
+			MainActivity.this,
+			feedsList,
+			getResources().getInteger(R.integer.staggeredgridview_column_width),
+			AppWidthFinder.getAppWidthFinder().getLogicalDensity(findViewById(android.R.id.content)),
+			AppWidthFinder.getAppWidthFinder().getWidthString(findViewById(android.R.id.content), getResources().getInteger(R.integer.listview_max_width))															  
+		);
 
-		// Verbind adapter met recyclerview
 		mRecyclerView.setAdapter(adapter);
 	}
 

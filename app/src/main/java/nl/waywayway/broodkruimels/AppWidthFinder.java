@@ -6,16 +6,15 @@ import android.support.annotation.*;
 import android.util.*;
 import android.view.*;
 
-// Bepaal breedte van de app: 'narrow' of 'wide'
+// Singleton voor bepalen breedte van de app: 'narrow' of 'wide'
+// en andere meetwaarden
 // grenswaarde staat in xml bestand resources / values / integers
-// Singleton
 
 public class AppWidthFinder
 {
 	private View view;
 	private float logicalDensity;
 	int appWidthDp;
-	
 	private static AppWidthFinder instance;
 	
 	private AppWidthFinder(){}
@@ -32,9 +31,8 @@ public class AppWidthFinder
 	{
 		// Vind breedte van de app in dp
 		// dp = pixels / logical density
-		// de gemeten breedte is de breedte van de hoogste view in het xml layout bestand
 		int viewWidth = view.getWidth();
-		getLogicalDensity(null);
+		getLogicalDensity(view);
 		appWidthDp = Math.round(viewWidth / logicalDensity);
 
 		Log.i("HermLog", "AppWidthDp: " + appWidthDp);
@@ -59,13 +57,9 @@ public class AppWidthFinder
 		return getWidth();
 	}
 	
-	public float getLogicalDensity(@Nullable View view)
+	public float getLogicalDensity(View view)
 	{
-		if (context != null) 
-			this.activity = (Activity) context;
-		DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
-		logicalDensity = displayMetrics.density;
-		
+		logicalDensity = view.getContext().getResources().getDisplayMetrics().density;
 		Log.i("HermLog", "logicalDensity: " + logicalDensity);
 		
 		return logicalDensity;
