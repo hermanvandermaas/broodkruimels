@@ -32,7 +32,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
 	{		
 		// Inflate juiste layout voor smal of breed scherm
-		// mScreenWidth wordt in MainActivity bepaald op deze adapter class met een setter functie
+		// mScreenWidth wordt in MainActivity bepaald
 		if (screenWidth == "narrow")
 		{
 			itemLayout = R.layout.recyclerview_item_listlayout;
@@ -44,6 +44,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 		View view = LayoutInflater.from(viewGroup.getContext()).inflate(itemLayout, null);
 		CustomViewHolder viewHolder = new CustomViewHolder(view);
+		
 		return viewHolder;
     }
 
@@ -107,7 +108,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         customViewHolder.textViewTitle.setOnClickListener(listener);
         customViewHolder.textViewPubdate.setOnClickListener(listener);
 		customViewHolder.itemView.setOnClickListener(listener);
-		
     }
 
     @Override
@@ -115,7 +115,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 	{
         return (null != feedItemList ? feedItemList.size() : 0);
     }
-
 
     class CustomViewHolder extends RecyclerView.ViewHolder
 	{
@@ -134,21 +133,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
     }
 	
-	public void setColumnWidth(int mColumnWidth)
-	{
-		this.columnWidth = mColumnWidth;
-	}
-	
-	public void setScreenWidth(String mScreenwidth)
-	{
-		this.screenWidth = mScreenwidth;
-	}
-	
-	public void setLogicalDensity(float mLogicalDensity)
-	{
-		this.logicalDensity = mLogicalDensity;
-	}
-
     public OnItemClickListener getOnItemClickListener()
 	{
         return onItemClickListener;

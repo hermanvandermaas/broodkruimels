@@ -535,7 +535,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			mImgHeight = post.optInt("imgheight");
 			mTitle = post.optString("title");
 			mLink = post.optString("link");
-			mPubdate = formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss");
+			mPubdate = DateStringFormatter.getDateStringFormatter().formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss");
 			mCreator = post.optString("creator");
 			mContent = post.optString("content");
         }
@@ -545,24 +545,6 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
             e.printStackTrace();
         }
     }
-
-	// Datum opmaken
-	private String formatDate(String mDateString, String dateFormat)
-	{
-		try
-		{
-			Date mDate = new SimpleDateFormat(dateFormat).parse(mDateString);
-			String mFormattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(mDate);
-			return mFormattedDate;
-		}
-		catch (Exception e)
-		{
-			Log.i("HermLog", "DetailActivity: Date format exception in parseResult");
-			e.printStackTrace();
-		}
-
-		return "";
-	}
 
 	// Progressbar tonen
 	private void showProgressBar()
@@ -578,11 +560,6 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		View mProgressbar = findViewById(R.id.toolbar_progress_bar_detailactivity);
 		mProgressbar.setVisibility(View.GONE);
 	}
-
-
-	/************************/
-	/***** LOGS & STUFF *****/
-	/************************/
 
 	@Override
 	protected void onStart()
@@ -609,33 +586,5 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		{
 			downloadXml();
 		}
-	}
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		Log.i("HermLog", "DetailActivity: onResume()");
-	}
-
-	@Override
-	protected void onPause()
-	{
-		super.onPause();
-		Log.i("HermLog", "DetailActivity: onPause()");
-	}
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-		Log.i("HermLog", "DetailActivity: onStop()");
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		Log.i("HermLog", "DetailActivity: onDestroy()");
 	}
 }

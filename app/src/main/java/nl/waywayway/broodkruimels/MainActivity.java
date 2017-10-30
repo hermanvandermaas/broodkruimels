@@ -28,18 +28,15 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
 	private static final String KEY_PREF_CATEGORIES = "pref_categories";
 	private static final String FILENAME_PREF_CATEGORIES = "categories";
-	private ActionBar actionBar;
 	private TaskFragment mTaskFragment;
 	private List<FeedItem> feedsList;
 	private List<CategoryItem> categoryList;
 	private boolean dialogWasShowed = false;
 	private RecyclerView mRecyclerView;
-	private String mScreenWidth;
 	private LinearLayoutManager mLinearLayoutManager;
 	private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 	private MyRecyclerViewAdapter adapter;
 	private Context context;
-	private int mColumnWidth;
 	private boolean pageLoadingInProgress;
 	private boolean hasLoadedAllItems;
 	private int recyclerViewListSize = 0;
@@ -265,25 +262,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		downloadXml(false);
 	}
 
-	// Datum opmaken
-	private String formatDate(String mDateString, String dateFormat)
-	{
-		try
-		{
-			Date mDate = new SimpleDateFormat(dateFormat).parse(mDateString);
-			String mFormattedDate = DateFormat.getDateInstance(DateFormat.LONG).format(mDate);
-			return mFormattedDate;
-		}
-		catch (Exception e)
-		{
-			Log.i("HermLog", "Date format exception in parseResult");
-			e.printStackTrace();
-		}
-
-		return "";
-	}
-
-
 	// json string verwerken na download
 	// Zet json string per item in List<E>
 	private void parseResult(String result, Boolean downloadMoreItems)
@@ -305,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		categoryList = gson.fromJson(categories, categoryItemListType);
 		Log.i("HermLog", "categoryList size: " + categoryList.size());
 	}
-
 
 	// Maak options menu in toolbar
 	@Override
@@ -380,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 	private void showSnackbar(String snackMsg)
 	{
-		Snackbar mSnackbar = Snackbar.make(findViewById(R.id.coordinator), snackMsg, Snackbar.LENGTH_LONG);
+		Snackbar mSnackbar = Snackbar.make(findViewById(R.id.coordinator), snackMsg, Snackbar.LENGTH_SHORT);
 		mSnackbar.show();
 	}
 
@@ -520,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Bereken aantal kolommen
 		// Kolombreedte staat in xml bestand resources / values / integers
 		int appWidthDp = AppWidthFinder.getAppWidthFinder().getWidthInt(findViewById(android.R.id.content));
-		mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
+		int mColumnWidth = getResources().getInteger(R.integer.staggeredgridview_column_width);
 		int mNumberOfColumns = Math.round((float) appWidthDp / mColumnWidth);
 
 		// Log.i("HermLog", "mNumberOfColumns: " + mNumberOfColumns);
@@ -658,10 +635,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		setClickAction();
 	}
 
-	/************************/
-	/***** LOGS & STUFF *****/
-	/************************/
-
 	@Override
 	protected void onNewIntent(Intent intent)
 	{
@@ -707,26 +680,5 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		// Check of deze activity is gestart vanuit een push melding,
 		// zo ja, start de juiste andere activity, op basis van de inhoud van de melding
 		ifStartedFromPushNotificationStartOtherActivity();
-	}
-
-	@Override
-	protected void onPause()
-	{
-		super.onPause();
-		Log.i("HermLog", "onPause()");
-	}
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-		Log.i("HermLog", "onStop()");
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		Log.i("HermLog", "onDestroy()");
 	}
 }
