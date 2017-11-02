@@ -267,14 +267,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private void parseResult(String result, Boolean downloadMoreItems)
 	{
 		Log.i("HermLog", "parseResult()");
-
-		Gson gson = new Gson();
 		
-		JsonArray data = gson.fromJson(result, JsonObject.class).getAsJsonArray("data");
-		Type feedItemListType = new TypeToken<ArrayList<FeedItem>>(){}.getType();
-		ArrayList<FeedItem> newItems = gson.fromJson(data, feedItemListType);
-		feedsList.addAll(newItems);
-		Log.i("HermLog", "feedsList size: " + feedsList.size());
+		// "data", ArrayList<FeedItem>
+		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, R.string.json_items_list_root_element, feedsList);
 		
 		if (categoryList.size() > 0) return;
 		
