@@ -22,15 +22,14 @@ public class JsonToArrayListParser
 		return instance;
 	}
 	
-	public <T> ArrayList<T> parse(String jsonString, String rootElement, ArrayList<T> arrayList)
+	public <T> ArrayList<T> parse(String jsonString, String rootElement, ArrayList<T> arrayList, Type type)
 	{
 		Log.i("HermLog", "JsonToArrayListParser.parse()");
 
 		Gson gson = new Gson();
 
 		JsonArray jsonArray = gson.fromJson(jsonString, JsonObject.class).getAsJsonArray(rootElement);
-		// Type type = new TypeToken<ArrayList<FeedItem>>(){}.getType();
-		ArrayList<T> newItems = gson.fromJson(jsonArray, arrayList.getClass());
+		ArrayList<T> newItems = gson.fromJson(jsonArray, type);
 		arrayList.addAll(newItems);
 		Log.i("HermLog", "arrayList size: " + arrayList.size());
 		

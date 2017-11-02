@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private static final String KEY_PREF_CATEGORIES = "pref_categories";
 	private static final String FILENAME_PREF_CATEGORIES = "categories";
 	private TaskFragment mTaskFragment;
-	private List<FeedItem> feedsList;
-	private List<CategoryItem> categoryList;
+	private ArrayList<FeedItem> feedsList;
+	private ArrayList<CategoryItem> categoryList;
 	private boolean dialogWasShowed = false;
 	private RecyclerView mRecyclerView;
 	private LinearLayoutManager mLinearLayoutManager;
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		context = this;
 
 		// maak lege feedsList en categoryList aan
-		feedsList = new ArrayList<>();
-		categoryList = new ArrayList<>();
+		feedsList = new ArrayList<FeedItem>();
+		categoryList = new ArrayList<CategoryItem>();
 
 		// Maak toolbar
 		makeToolbar();
@@ -263,19 +263,14 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	}
 
 	// json string verwerken na download
-	// Zet json string per item in List<E>
+	// Zet json string per item in ArrayList<T>
 	private void parseResult(String result, Boolean downloadMoreItems)
 	{
 		Log.i("HermLog", "parseResult()");
-		
-		// "data", ArrayList<FeedItem>
-		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, R.string.json_items_list_root_element, feedsList);
+		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, getResources().getString(R.string.json_items_list_root_element), feedsList, new TypeToken<ArrayList<FeedItem>>(){}.getType());
 		
 		if (categoryList.size() > 0) return;
-		
-		JsonArray categories = gson.fromJson(result, JsonObject.class).getAsJsonArray("categories");
-		Type categoryItemListType = new TypeToken<ArrayList<CategoryItem>>(){}.getType();
-		categoryList = gson.fromJson(categories, categoryItemListType);
+		categoryList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, getResources().getString(R.string.json_categories_list_root_element), categoryList, new TypeToken<ArrayList<CategoryItem>>(){}.getType());
 		Log.i("HermLog", "categoryList size: " + categoryList.size());
 	}
 
