@@ -12,11 +12,8 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.google.android.gms.common.*;
-import com.google.gson.*;
 import com.google.gson.reflect.*;
 import com.paginate.*;
-import java.lang.reflect.*;
-import java.text.*;
 import java.util.*;
 
 import android.support.v4.app.FragmentManager;
@@ -268,8 +265,9 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	{
 		Log.i("HermLog", "parseResult()");
 		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, getResources().getString(R.string.json_items_list_root_element), feedsList, new TypeToken<ArrayList<FeedItem>>(){}.getType());
-		
+
 		if (categoryList.size() > 0) return;
+		
 		categoryList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, getResources().getString(R.string.json_categories_list_root_element), categoryList, new TypeToken<ArrayList<CategoryItem>>(){}.getType());
 		Log.i("HermLog", "categoryList size: " + categoryList.size());
 	}
@@ -330,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private void showCategoryDialog()
 	{
 		CategoryDialogFragment categoryDialog = new CategoryDialogFragment();
-		categoryDialog.setCategoryList((ArrayList<CategoryItem>) categoryList);
+		categoryDialog.setCategoryList(categoryList);
 		categoryDialog.setPrefFilename(this.FILENAME_PREF_CATEGORIES);
 		categoryDialog.setPrefKey(this.KEY_PREF_CATEGORIES);
 		categoryDialog.show(getSupportFragmentManager(), "category");
@@ -499,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	private void setLayoutManager()
 	{
 		String width = AppWidthFinder.getAppWidthFinder().getWidthString(findViewById(android.R.id.content), getResources().getInteger(R.integer.listview_max_width));
-		
+
 		if (width == "narrow")
 		{
 			// Koppel layoutmanager voor smal scherm
