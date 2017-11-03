@@ -4,9 +4,6 @@ import android.content.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.util.*;
-import java.io.*;
-import java.util.concurrent.*;
-import okhttp3.*;
 
 /**
  * TaskFragment manages a single background task and retains itself across
@@ -30,9 +27,6 @@ public class TaskFragment extends Fragment
 	private TaskCallbacks mCallbacks;
 	private DummyTask mTask;
 	private boolean mRunning;
-	private OkHttpClient mClient;
-	private Request mRequest;
-	private Response mResponse;
 	private int startItem;
 	private int itemsPerPage;
 	private int feedsListSize;
@@ -146,19 +140,19 @@ public class TaskFragment extends Fragment
 	{
 		return feedsListSize;
 	}
-	
+
 	// Setter voor URL query string parameter voor te
 	// downloaden categorieen
 	public void setCategoriesParameter(String categoriesParameter)
 	{
-		if(categoriesParameter != null && !categoriesParameter.trim().isEmpty())
+		if (categoriesParameter != null && !categoriesParameter.trim().isEmpty())
 			this.categoriesParameter = "&c=" + categoriesParameter;
 		else
 			this.categoriesParameter = "";
-			
+
 		Log.i("HermLog", "categoriesParameter: " + categoriesParameter);
 	}
-	
+
 	// Setter en getter voor getExtraPage, gebruikt voor bepalen
 	// of taskfragment gebruikt wordt voor eerste download data of extra 'page' met data
 	// voor endless scrolling
@@ -211,12 +205,12 @@ public class TaskFragment extends Fragment
 			}
 
 			Log.i("HermLog", "startItem: " + startItem);
-			
+
 			// maak url en download data json string
 			String baseUrl = getActivity().getResources().getString(R.string.url_data);
 			MakeUrl mUrlMaker = new MakeUrl(baseUrl, startItem, itemsPerPage, categoriesParameter);
 			DownloadJsonString mDownloader = new DownloadJsonString(mUrlMaker.make());
-			
+
 			return mDownloader.download();
 			// Eind asynchrone taak
 		}
@@ -246,39 +240,5 @@ public class TaskFragment extends Fragment
 			mRunning = false;
 			getExtraPage = false;
 		}
-	}
-
-	/************************/
-	/***** LOGS & STUFF *****/
-	/************************/
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-	}
-
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-	}
-
-	@Override
-	public void onPause()
-	{
-		super.onPause();
-	}
-
-	@Override
-	public void onStop()
-	{
-		super.onStop();
 	}
 }
