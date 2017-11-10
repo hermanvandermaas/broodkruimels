@@ -12,9 +12,9 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.google.android.gms.common.*;
-import com.google.gson.reflect.*;
 import com.paginate.*;
 import java.util.*;
+import nl.waywayway.broodkruimels.*;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items start(true)
-				mTaskFragment.start(downloadMoreItems);
+				mTaskFragment.start(downloadMoreItems, feedsList, categoryList);
 			}
 			else
 			{
@@ -257,19 +257,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 
 		downloadXml(false);
-	}
-
-	// json string verwerken na download
-	// Zet json string per item in ArrayList<T>
-	private void parseResult(String result, Boolean downloadMoreItems)
-	{
-		Log.i("HermLog", "parseResult()");
-		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, getResources().getString(R.string.json_items_list_root_element), feedsList, new TypeToken<ArrayList<FeedItem>>(){}.getType());
-
-		if (categoryList.size() > 0) return;
-		
-		categoryList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, getResources().getString(R.string.json_categories_list_root_element), categoryList, new TypeToken<ArrayList<CategoryItem>>(){}.getType());
-		Log.i("HermLog", "categoryList size: " + categoryList.size());
 	}
 
 	// Maak options menu in toolbar
@@ -381,9 +368,11 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	}
 
 	@Override
-	public void onPostExecute(String mResult, Boolean downloadMoreItems)
+	public void onPostExecute(String mResult, Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
 	{
 		Log.i("HermLog", "onPostExecute() downloadMoreItems: " + downloadMoreItems);
+		
+		// 
 
 		// Verberg progress bar
 		hideProgressBar();
@@ -408,10 +397,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
 		}		
-
-		// Als download blijkbaar goed is gegaan
-		// resultaat parsen in een arraylist
-		parseResult(mResult, downloadMoreItems);
 
 		// Data zijn beschikbaar, toon categorie knop
 		// deze method roept onCreateOptionsMenu() aan

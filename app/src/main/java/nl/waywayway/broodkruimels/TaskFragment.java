@@ -4,6 +4,8 @@ import android.content.*;
 import android.os.*;
 import android.support.v4.app.*;
 import android.util.*;
+import com.google.gson.reflect.*;
+import java.util.*;
 
 /**
  * TaskFragment manages a single background task and retains itself across
@@ -20,19 +22,22 @@ public class TaskFragment extends Fragment
 		public void onPreExecute();
 		public void onProgressUpdate(int percent);
 		public void onCancelled();
-		public void onPostExecute(String mResult, Boolean downloadMoreItems);
+		public void onPostExecute(String mResult, Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList);
 	}
 
 	private static final String CLASSNAME_DETAIL_ACTIVITY = "DetailActivity";
+	private Context context;
 	private TaskCallbacks mCallbacks;
 	private DummyTask mTask;
 	private boolean mRunning;
 	private int startItem;
 	private int itemsPerPage;
 	private int feedsListSize;
+	private ArrayList<FeedItem> feedsList;
+	private ArrayList<CategoryItem> categoryList;
 	private String categoriesParameter;
 	private Boolean getExtraPage;
-
+	
 	/**
 	 * Hold a reference to the parent Activity so we can report the task's current
 	 * progress and results. The Android framework will pass us a reference to the
@@ -42,6 +47,7 @@ public class TaskFragment extends Fragment
 	public void onAttach(Context context)
 	{
 		super.onAttach(context);
+		this.context = context;
 
 		if (!(context instanceof TaskCallbacks))
 		{
@@ -94,11 +100,11 @@ public class TaskFragment extends Fragment
 	 */
 	// parameter false: eerste download
 	// parameter true: extra data downoaden bij endless scrolling
-	public void start(Boolean downloadMoreItems)
+	public void start(Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
 	{
 		if (!mRunning)
 		{
-			mTask = new DummyTask();
+			mTask = new DummyTask(feedsList, categoryList);
 			mTask.execute(downloadMoreItems);
 			mRunning = true;
 			// geeft weer of dit eerste download is of 
@@ -172,6 +178,14 @@ public class TaskFragment extends Fragment
 	 */
 	private class DummyTask extends AsyncTask<Boolean, Integer, String>
 	{
+		private ArrayList<FeedItem> feedsList;
+		private ArrayList<CategoryItem> categoryList;
+		
+		public DummyTask(ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
+		{
+			this.feedsList = feedsList;
+			this.categoryList = categoryList;
+		}
 
 		@Override
 		protected void onPreExecute()
@@ -234,11 +248,24 @@ public class TaskFragment extends Fragment
 		@Override
 		protected void onPostExecute(String mResult)
 		{
-			// Proxy the call to the Activity.
-			mCallbacks.onPostExecute(mResult, getExtraPage);
+			// Proxy the call to the Activity
+			mCallbacks.onPostExecute(mResult, getExtraPage, feedsList, categoryList);
 
 			mRunning = false;
 			getExtraPage = false;
 		}
+	}
+	
+	// json string verwerken na download
+	// Zet json string per item in ArrayList<T>
+	private void parseResult(String result)
+	{
+		Log.i("HermLog", "parseResult()");
+		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, context.getResources().getString(R.string.json_items_list_root_element), feedsList, new TypeToken<ArrayList<FeedItem>>(){}.getType());
+
+		if (categoryList.size() > 0) return;
+		
+		categoryList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, context.getResources().getString(R.string.json_categories_list_root_element), categoryList, new TypeToken<ArrayList<CategoryItem>>(){}.getType());
+		Log.i("HermLog", "categoryList size: " + categoryList.size());
 	}
 }
