@@ -247,7 +247,9 @@ public class TaskFragment extends Fragment
 
 		@Override
 		protected void onPostExecute(String mResult)
-		{
+		{	
+			parseResult(mResult);
+		
 			// Proxy the call to the Activity
 			mCallbacks.onPostExecute(mResult, getExtraPage, feedsList, categoryList);
 

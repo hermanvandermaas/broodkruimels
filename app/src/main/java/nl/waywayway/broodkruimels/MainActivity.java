@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			{
 				public void onClick(View v)
 				{
-					// Perform action on click
 					downloadXml(false);
 				}
 			});
@@ -251,10 +250,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 
 		// Verberg categorie knop
 		// deze method roept onCreateOptionsMenu() aan
-		if (categoryList.size() > 0)
-		{
-			invalidateOptionsMenu();
-		}
+		invalidateOptionsMenu();
 
 		downloadXml(false);
 	}
