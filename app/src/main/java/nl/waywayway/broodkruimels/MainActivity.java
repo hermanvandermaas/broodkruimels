@@ -367,8 +367,6 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	public void onPostExecute(String mResult, Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
 	{
 		Log.i("HermLog", "onPostExecute() downloadMoreItems: " + downloadMoreItems);
-		
-		// 
 
 		// Verberg progress bar
 		hideProgressBar();

@@ -33,8 +33,6 @@ public class TaskFragment extends Fragment
 	private int startItem;
 	private int itemsPerPage;
 	private int feedsListSize;
-	private ArrayList<FeedItem> feedsList;
-	private ArrayList<CategoryItem> categoryList;
 	private String categoriesParameter;
 	private Boolean getExtraPage;
 	
@@ -135,43 +133,6 @@ public class TaskFragment extends Fragment
 		return mRunning;
 	}
 
-	// setter en getter voor feedsListSize, gebruikt voor
-	// bepalen welke extra data te downloaden bij endless scrolling
-	public void setFeedsListSize(int feedsListSize)
-	{
-		this.feedsListSize = feedsListSize;
-	}
-
-	public int getFeedsListSize()
-	{
-		return feedsListSize;
-	}
-
-	// Setter voor URL query string parameter voor te
-	// downloaden categorieen
-	public void setCategoriesParameter(String categoriesParameter)
-	{
-		if (categoriesParameter != null && !categoriesParameter.trim().isEmpty())
-			this.categoriesParameter = "&c=" + categoriesParameter;
-		else
-			this.categoriesParameter = "";
-
-		Log.i("HermLog", "categoriesParameter: " + categoriesParameter);
-	}
-
-	// Setter en getter voor getExtraPage, gebruikt voor bepalen
-	// of taskfragment gebruikt wordt voor eerste download data of extra 'page' met data
-	// voor endless scrolling
-	public void setGetExtraPage(Boolean getExtraPage)
-	{
-		this.getExtraPage = getExtraPage;
-	}
-
-	public Boolean getGetExtraPage()
-	{
-		return getExtraPage;
-	}
-
 	/**
 	 * A dummy task that performs some (dumb) background work and proxies progress
 	 * updates and results back to the Activity.
@@ -220,12 +181,14 @@ public class TaskFragment extends Fragment
 
 			Log.i("HermLog", "startItem: " + startItem);
 
-			// maak url en download data json string
+			// maak url, download data json string, parse json string naar ArrayList(s)
 			String baseUrl = getActivity().getResources().getString(R.string.url_data);
-			MakeUrl mUrlMaker = new MakeUrl(baseUrl, startItem, itemsPerPage, categoriesParameter);
-			DownloadJsonString mDownloader = new DownloadJsonString(mUrlMaker.make());
-
-			return mDownloader.download();
+			MakeUrl urlMaker = new MakeUrl(baseUrl, startItem, itemsPerPage, categoriesParameter);
+			DownloadJsonString downloader = new DownloadJsonString(urlMaker.make());
+			String jsonstring = downloader.download();
+			parseResult(jsonstring, downloadMoreItems[0], feedsList, categoryList);
+			
+			return jsonstring;
 			// Eind asynchrone taak
 		}
 
@@ -246,12 +209,10 @@ public class TaskFragment extends Fragment
 		}
 
 		@Override
-		protected void onPostExecute(String mResult)
+		protected void onPostExecute(String result)
 		{	
-			parseResult(mResult);
-		
 			// Proxy the call to the Activity
-			mCallbacks.onPostExecute(mResult, getExtraPage, feedsList, categoryList);
+			mCallbacks.onPostExecute(result, getExtraPage, feedsList, categoryList);
 
 			mRunning = false;
 			getExtraPage = false;
@@ -260,14 +221,63 @@ public class TaskFragment extends Fragment
 	
 	// json string verwerken na download
 	// Zet json string per item in ArrayList<T>
-	private void parseResult(String result)
+	private void parseResult(String result, Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
 	{
 		Log.i("HermLog", "parseResult()");
-		feedsList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, context.getResources().getString(R.string.json_items_list_root_element), feedsList, new TypeToken<ArrayList<FeedItem>>(){}.getType());
+		
+		feedsList = JsonToArrayListParser.
+			getJsonToArrayListParser().
+			parse(result, 
+				context.getResources().getString(R.string.json_items_list_root_element),
+				feedsList, 
+				new TypeToken<ArrayList<FeedItem>>(){}.getType());
 
 		if (categoryList.size() > 0) return;
 		
-		categoryList = JsonToArrayListParser.getJsonToArrayListParser().parse(result, context.getResources().getString(R.string.json_categories_list_root_element), categoryList, new TypeToken<ArrayList<CategoryItem>>(){}.getType());
+		categoryList = JsonToArrayListParser.
+			getJsonToArrayListParser().
+			parse(result, 
+				context.getResources().getString(R.string.json_categories_list_root_element), 
+				categoryList, 
+				new TypeToken<ArrayList<CategoryItem>>(){}.getType());
+			
 		Log.i("HermLog", "categoryList size: " + categoryList.size());
+	}
+	
+	// Setter voor URL query string parameter voor te
+	// downloaden categorieen
+	public void setCategoriesParameter(String categoriesParameter)
+	{
+		if (categoriesParameter != null && !categoriesParameter.trim().isEmpty())
+			this.categoriesParameter = "&c=" + categoriesParameter;
+		else
+			this.categoriesParameter = "";
+
+		Log.i("HermLog", "categoriesParameter: " + categoriesParameter);
+	}
+
+	// Setter en getter voor getExtraPage, gebruikt voor bepalen
+	// of taskfragment gebruikt wordt voor eerste download data of extra 'page' met data
+	// voor endless scrolling
+	public void setGetExtraPage(Boolean getExtraPage)
+	{
+		this.getExtraPage = getExtraPage;
+	}
+
+	public Boolean getGetExtraPage()
+	{
+		return getExtraPage;
+	}
+	
+	// setter en getter voor feedsListSize, gebruikt voor
+	// bepalen welke extra data te downloaden bij endless scrolling
+	public void setFeedsListSize(int feedsListSize)
+	{
+		this.feedsListSize = feedsListSize;
+	}
+
+	public int getFeedsListSize()
+	{
+		return feedsListSize;
 	}
 }
