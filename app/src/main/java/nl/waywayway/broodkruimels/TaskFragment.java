@@ -225,13 +225,22 @@ public class TaskFragment extends Fragment
 	{
 		Log.i("HermLog", "parseResult()");
 		
-		feedsList = JsonToArrayListParser.
+		ArrayList<FeedItem> newItems = JsonToArrayListParser.
 			getJsonToArrayListParser().
 			parse(result, 
 				context.getResources().getString(R.string.json_items_list_root_element),
 				feedsList, 
 				new TypeToken<ArrayList<FeedItem>>(){}.getType());
 
+		if (downloadMoreItems)
+		{
+			feedsList.addAll(newItems);
+		}
+		else
+		{
+			feedsList = newItems;
+		}
+				
 		if (categoryList.size() > 0) return;
 		
 		categoryList = JsonToArrayListParser.

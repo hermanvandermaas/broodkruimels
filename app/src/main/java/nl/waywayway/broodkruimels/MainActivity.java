@@ -14,7 +14,6 @@ import android.widget.*;
 import com.google.android.gms.common.*;
 import com.paginate.*;
 import java.util.*;
-import nl.waywayway.broodkruimels.*;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -364,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 	}
 
 	@Override
-	public void onPostExecute(String mResult, Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
+	public void onPostExecute(String mResult, Boolean downloadMoreItems, ArrayList<FeedItem> feedsListLatest, ArrayList<CategoryItem> categoryListLatest)
 	{
 		Log.i("HermLog", "onPostExecute() downloadMoreItems: " + downloadMoreItems);
 
@@ -383,14 +382,18 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 			return;
 		}
 
-		// Als niets gedownload, toon boodschap
+		// Als laatste download fout is gegaan, toon boodschap
 		// en knop probeer opnieuw
 		if (mResult.equalsIgnoreCase("Fout in DownloadJsonString!"))
 		{
 			Log.i("HermLog", "MainActivity: niets gedownload");
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
-		}		
+		}
+
+		// Neem bijgewerkte feedsList en categoryList over in deze Activity
+		feedsList = feedsListLatest;
+		categoryList = categoryListLatest;
 
 		// Data zijn beschikbaar, toon categorie knop
 		// deze method roept onCreateOptionsMenu() aan
