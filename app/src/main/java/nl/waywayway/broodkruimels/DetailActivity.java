@@ -25,6 +25,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	private Intent mIntent;
 	private String mImageUrl;
 	private TaskFragment mTaskFragment;
+	private ArrayList<FeedItem> feedsList;
 	private int mImgWidth;
 	private int mImgHeight;
 	private String mTitle;
@@ -199,7 +200,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	// Start download json (was eerst xml, vandaar de method naam)
 	private void downloadXml()
 	{
-		Log.i("HermLog", "downloadXml()");
+		Log.i("HermLog", "DetailActivity: downloadXml()");
 
 		// Als verbinding, download json
 		if (isNetworkConnected())
@@ -223,7 +224,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items (niet aan de
 				// orde in deze class) start(true)
-				mTaskFragment.start(false);
+				mTaskFragment.start(false, feedsList, null);
 			}
 			else
 			{
@@ -474,7 +475,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	}
 
 	@Override
-	public void onPostExecute(String mResult, Boolean downloadMoreItems)
+	public void onPostExecute(String mResult, Boolean downloadMoreItems, ArrayList<FeedItem> feedsListLatest, ArrayList<CategoryItem> categoryListLatest)
 	{
 		Log.i("HermLog", "DetailActivity: onPostExecute()");
 
@@ -488,11 +489,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			Log.i("HermLog", "DetailActivity: Niets gedownload");
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
-		}		
-
-		// Als download blijkbaar goed is gegaan
-		// resultaat parsen in een arraylist
-		parseResult(mResult, downloadMoreItems);
+		}
+		
+		// Neem bijgewerkte feedsList en categoryList over in deze Activity
+		feedsList = feedsListLatest;
+		
+		hier verder: feedslist naar variabelen
 
 		if (!TextUtils.isEmpty(mImageUrl))
 		{
