@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		if (categoryList.size() > 0)
 		{
 			invalidateOptionsMenu();
-		}
+		}	
 
 		// Als er geen extra data meer zijn gedownload,
 		// geef aan dat laatste 'page' met data is gedownload

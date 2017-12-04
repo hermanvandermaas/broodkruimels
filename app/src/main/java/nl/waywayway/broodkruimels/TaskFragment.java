@@ -240,7 +240,8 @@ public class TaskFragment extends Fragment
 		{
 			feedsList = newItems;
 		}
-				
+		
+		if (categoryList == null) return;
 		if (categoryList.size() > 0) return;
 		
 		categoryList = JsonToArrayListParser.

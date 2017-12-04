@@ -12,38 +12,37 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import com.squareup.picasso.*;
-import java.text.*;
 import java.util.*;
-import org.json.*;
+import nl.waywayway.broodkruimels.*;
 
 import android.support.v7.widget.Toolbar;
 
 public class DetailActivity extends AppCompatActivity implements TaskFragment.TaskCallbacks
 {
 	private static final String TAG_TASK_FRAGMENT = "task_fragment";
-	private Boolean mWeHaveData = false;
-	private Intent mIntent;
-	private String mImageUrl;
-	private TaskFragment mTaskFragment;
+	private Boolean weHaveData = false;
+	private Intent intent;
+	private String imageUrl;
+	private TaskFragment taskFragment;
 	private ArrayList<FeedItem> feedsList;
-	private int mImgWidth;
-	private int mImgHeight;
-	private String mTitle;
-	private String mLink;
-	private String mPubdate;
-	private String mCreator;
-	private String mContent;
-	private Context mContext;
-	private ImageView mImageview;
-	private ProgressBar mProgressBar;
-	private TextView mTextViewTitle;
-	private TextView mTextViewPubdate;
-	private TextView mTextViewCreator;
-	private TextView mTextViewContent;
-	private String mUrlDimensions;
-	private int mUrlWidth;
-	private int mUrlHeight;
-	private Float mAspectRatio;
+	private int imgWidth;
+	private int imgHeight;
+	private String title;
+	private String link;
+	private String pubDate;
+	private String creator;
+	private String content;
+	private Context context;
+	private ImageView imageView;
+	private ProgressBar progressBar;
+	private TextView textViewTitle;
+	private TextView textViewPubdate;
+	private TextView textViewCreator;
+	private TextView textViewContent;
+	private String urlDimensions;
+	private int urlWidth;
+	private int urlHeight;
+	private Float aspectRatio;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,7 +52,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		setContentView(R.layout.activity_detail);
 
 		// zet referentie naar context van deze activity in een variabele
-		mContext = this;
+		context = this;
 
 		// Maak toolbar
 		makeToolBar();
@@ -65,12 +64,12 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		// gestart vanuit een notification en moeten data nog
 		// worden downgeload
 		getDataFromIntent();
-		if (!TextUtils.isEmpty(mImageUrl))
-			mWeHaveData = true;
+		if (!TextUtils.isEmpty(imageUrl))
+			weHaveData = true;
 
-		Log.i("HermLog", "mWeHaveData: " + mWeHaveData);
-		
-		if (mWeHaveData)
+		Log.i("HermLog", "mWeHaveData: " + weHaveData);
+
+		if (weHaveData)
 		{
 			// Download afbeelding
 			downloadImage(false);
@@ -88,14 +87,14 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 
 		// Handler voor worker fragment
 		FragmentManager fm = getSupportFragmentManager();
-		mTaskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
+		taskFragment = (TaskFragment) fm.findFragmentByTag(TAG_TASK_FRAGMENT);
 
 		// If the Fragment is non-null, then it is being retained
 		// over a configuration change.
-		if (mTaskFragment == null)
+		if (taskFragment == null)
 		{
-			mTaskFragment = new TaskFragment();
-			fm.beginTransaction().add(mTaskFragment, TAG_TASK_FRAGMENT).commit();
+			taskFragment = new TaskFragment();
+			fm.beginTransaction().add(taskFragment, TAG_TASK_FRAGMENT).commit();
 		}
     }
 
@@ -116,7 +115,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		MenuItem shareItem = menu.findItem(R.id.action_share);
 
 		// Toon share knop, als content beschikbaar is
-		if (!TextUtils.isEmpty(mLink))
+		if (!TextUtils.isEmpty(link))
 		{
 			// Toast.makeText(mContext, "mLink: " + mLink, Toast.LENGTH_SHORT).show();
 			shareItem.setVisible(true);
@@ -170,8 +169,8 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	{		
 		Intent shareIntent = ShareCompat.IntentBuilder.from(DetailActivity.this)
 			.setType("text/plain")
-			.setText(mLink)
-			.setSubject(mTitle)
+			.setText(link)
+			.setSubject(title)
 			.getIntent();
 
 		if (shareIntent.resolveActivity(getPackageManager()) != null)
@@ -185,16 +184,16 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	{
 		Log.i("HermLog", "getDataFromIntent()");
 
-		mIntent = getIntent();
-		mImageUrl = mIntent.getStringExtra("mediacontent");
+		intent = getIntent();
+		imageUrl = intent.getStringExtra("mediacontent");
 		// mImgWidth en mImgHeight zijn afmetingen van de oorspronkelijke niet verkleinde afbeelding
-		mImgWidth = mIntent.getIntExtra("imgwidth", 1);
-		mImgHeight = mIntent.getIntExtra("imgheight", 1);
-		mTitle = mIntent.getStringExtra("title");
-		mLink = mIntent.getStringExtra("link");
-		mPubdate = mIntent.getStringExtra("pubdate");
-		mCreator = mIntent.getStringExtra("creator");
-		mContent = mIntent.getStringExtra("content");
+		imgWidth = intent.getIntExtra("imgwidth", 1);
+		imgHeight = intent.getIntExtra("imgheight", 1);
+		title = intent.getStringExtra("title");
+		link = intent.getStringExtra("link");
+		pubDate = intent.getStringExtra("pubdate");
+		creator = intent.getStringExtra("creator");
+		content = intent.getStringExtra("content");
 	}
 
 	// Start download json (was eerst xml, vandaar de method naam)
@@ -215,20 +214,20 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			viewNestedScroll.setVisibility(View.VISIBLE);
 
 			// Start asynchrone taak
-			if (!mTaskFragment.isRunning())
+			if (!taskFragment.isRunning())
 			{
 				// Geef te downloaden categorieen door
-				CategoryGetter categoryGetter = new CategoryGetter(mContext, SettingsFragment.FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES , SettingsFragment.FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES);
-				mTaskFragment.setCategoriesParameter(categoryGetter.getCategories());
-				
+				CategoryGetter categoryGetter = new CategoryGetter(context, SettingsFragment.FRAGMENT_FILENAME_PREF_NOTIFY_CATEGORIES , SettingsFragment.FRAGMENT_KEY_PREF_NOTIFY_CATEGORIES);
+				taskFragment.setCategoriesParameter(categoryGetter.getCategories());
+
 				// Bij eerste download van items start(false)
 				// bij latere download van extra items (niet aan de
 				// orde in deze class) start(true)
-				mTaskFragment.start(false, feedsList, null);
+				taskFragment.start(false, feedsList, null);
 			}
 			else
 			{
-				Log.i("HermLog", "DetailActivity: mTaskFragment.isRunning(): " + mTaskFragment.isRunning());
+				Log.i("HermLog", "DetailActivity: mTaskFragment.isRunning(): " + taskFragment.isRunning());
 			}
 		}
 		// Als geen verbinding, toon knop voor opnieuw proberen
@@ -265,67 +264,10 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 
 		Log.i("HermLog", "DetailActivity: tryAgain()");
 
-		if (mTaskFragment.isRunning())
+		if (taskFragment.isRunning())
 		{
-			mTaskFragment.cancel();
+			taskFragment.cancel();
 		}
-	}
-
-	private String makeUrl(Boolean secondTry)
-	{
-		// Maak juiste URL voor downloaden grote afbeelding
-		Boolean mSizeKnown = (mImgWidth > 0 && mImgHeight > 0);
-		if (secondTry) mSizeKnown = false;
-		String mOrientation = (mImgWidth > mImgHeight) ? ("landscape") : ("portrait");
-		mUrlWidth = getResources().getInteger(R.integer.activity_detail_image_size);
-
-		// Maak deel van URL met afmetingen van afbeelding
-		mAspectRatio = (float) mImgHeight / mImgWidth;
-		mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
-		mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-
-		/*
-		 if (mOrientation == "landscape" && mSizeKnown)
-		 {
-		 mAspectRatio = (float) mImgHeight / mImgWidth;
-		 mUrlHeight = Math.round(mUrlWidth * mAspectRatio);
-		 mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-		 }
-
-		 if (mOrientation == "portrait" && mSizeKnown)
-		 {
-		 mUrlHeight = mUrlWidth;
-		 mAspectRatio = (float) mImgWidth / mImgHeight;
-		 mUrlWidth = Math.round(mUrlHeight * mAspectRatio);
-		 mUrlDimensions = "-" + String.valueOf(mUrlWidth) + "x" + String.valueOf(mUrlHeight);
-		 }
-		 */
-
-		if (!mSizeKnown)
-		{
-			// Als afmetingen niet bekend, of als
-			// dit tweede poging is voor downloaden afbeelding,
-			// oorspronkelijke afbeelding downloaden,
-			// mogelijk erg grote afbeelding
-			mUrlDimensions = "";
-		}
-
-		String mRegex = "(?i)(.+)(-\\d+x\\d+)(\\.jpg|\\.jpeg|\\.png)";
-		mImageUrl = mImageUrl.replaceAll(mRegex, "$1" + mUrlDimensions + "$3");
-
-		/*
-		 Log.i("HermLog", "mOrientation: " + mOrientation);
-		 Log.i("HermLog", "2e poging: " + secondTry);
-		 Log.i("HermLog", "mSizeknown: " + mSizeKnown);
-		 Log.i("HermLog", "mUrlWidth: " + mUrlWidth);
-		 Log.i("HermLog", "mUrlHeight: " + mUrlHeight);
-		 Log.i("HermLog", "mAspectratio: " + mAspectRatio);			
-		 Log.i("HermLog", "mImgWidth: " + mImgWidth);
-		 Log.i("HermLog", "mImgHeight: " + mImgHeight);
-		 Log.i("HermLog", "mImageUrl: " + mImageUrl);
-		 */
-
-		return mImageUrl;
 	}
 
 	// Download image using picasso library
@@ -334,27 +276,30 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	// afbeelding proberen te downloaden
 	private void downloadImage(Boolean secondTry)
 	{
-		mImageview = (ImageView) findViewById(R.id.image_detail);
-
+		imageView = (ImageView) findViewById(R.id.image_detail);
+		
+		// Maak url afbeelding
+		urlWidth = getResources().getInteger(R.integer.activity_detail_image_size);
+		MakeImageUrl imgUrlMaker = new MakeImageUrl(imgWidth, imgHeight, urlWidth, imageUrl);
+		
 		// Poging 1
 		if (!secondTry)
 		{
 			// progress bar indeterminate (draaiende cirkel)
 			// zichtbaar maken tijdens downloaden afbeelding
-			mProgressBar = (ProgressBar) findViewById(R.id.image_detail_progress_bar);
-			mProgressBar.setVisibility(ProgressBar.VISIBLE);
+			progressBar = (ProgressBar) findViewById(R.id.image_detail_progress_bar);
+			progressBar.setVisibility(ProgressBar.VISIBLE);
 
-			// Laad grote afbeelding
-			// maar wel verkleind
+			// Laad afbeelding
 			Picasso
-				.with(mContext)
-				.load(makeUrl(secondTry))
-				.into(mImageview, new Callback()
+				.with(context)
+				.load(imgUrlMaker.make(secondTry))
+				.into(imageView, new Callback()
 				{
 					@Override
 					public void onSuccess()
 					{
-						mProgressBar.setVisibility(ProgressBar.GONE);
+						progressBar.setVisibility(ProgressBar.GONE);
 					}
 
 					@Override
@@ -368,24 +313,23 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		else
 		{
 			// Poging 2
-			// Laad grote afbeelding
-			// onverkleind
+			// Laad grote afbeelding, onverkleind
 			Picasso
-				.with(mContext)
-				.load(makeUrl(secondTry))
-				.resize(mUrlWidth, 0)
-				.into(mImageview, new Callback()
+				.with(context)
+				.load(imgUrlMaker.make(secondTry))
+				.resize(urlWidth, 0)
+				.into(imageView, new Callback()
 				{
 					@Override
 					public void onSuccess()
 					{
-						mProgressBar.setVisibility(ProgressBar.GONE);
+						progressBar.setVisibility(ProgressBar.GONE);
 					}
 
 					@Override
 					public void onError()
 					{
-						mProgressBar.setVisibility(ProgressBar.GONE);
+						progressBar.setVisibility(ProgressBar.GONE);
 						Log.i("HermLog", "2e poging: afbeelding downloadfout");
 					}
 				});
@@ -401,13 +345,13 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 				@Override
 				public void onClick(View v)
 				{
-					Intent mImageIntent = new Intent(mContext, ImageActivity.class);
+					Intent mImageIntent = new Intent(context, ImageActivity.class);
 
-					mImageIntent.putExtra("mediacontent", mImageUrl);
-					mImageIntent.putExtra("imgwidth", mImgWidth);
-					mImageIntent.putExtra("imgheight", mImgHeight);
+					mImageIntent.putExtra("mediacontent", imageUrl);
+					mImageIntent.putExtra("imgwidth", imgWidth);
+					mImageIntent.putExtra("imgheight", imgHeight);
 
-					mContext.startActivity(mImageIntent);
+					context.startActivity(mImageIntent);
 				}
 			});
 	}
@@ -416,26 +360,20 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	{
 		// Vind text views
 		// title-pubdate-creator-content
-		mTextViewTitle = (TextView) findViewById(R.id.title_detail);
-		mTextViewPubdate = (TextView) findViewById(R.id.pubdate_detail);
-		mTextViewCreator = (TextView) findViewById(R.id.creator_detail);
-		mTextViewContent = (TextView) findViewById(R.id.content_detail);
+		textViewTitle = (TextView) findViewById(R.id.title_detail);
+		textViewPubdate = (TextView) findViewById(R.id.pubdate_detail);
+		textViewCreator = (TextView) findViewById(R.id.creator_detail);
+		textViewContent = (TextView) findViewById(R.id.content_detail);
 
 		// Setting text views
-		mTextViewTitle.setText(Html.fromHtml(mTitle));
-		mTextViewPubdate.setText(Html.fromHtml(mPubdate));
-		mTextViewCreator.setText(Html.fromHtml(mCreator));
-		mTextViewContent.setText(Html.fromHtml(makeVideoLinks(mContent)));
+		textViewTitle.setText(Html.fromHtml(title));
+		textViewPubdate.setText(Html.fromHtml(pubDate));
+		textViewCreator.setText(Html.fromHtml(creator));
+		textViewContent.setText(Html.fromHtml(makeVideoLinks(content)));
 		// Maak links klikbaar
-		mTextViewContent.setMovementMethod(LinkMovementMethod.getInstance());
-
-		/*
-		 TextView tv = (TextView) findViewById(R.id.title_detail);
-		 float ts = tv.getTextSize();
-		 Toast.makeText(mContext, String.valueOf(ts), Toast.LENGTH_SHORT).show();
-		 */
+		textViewContent.setMovementMethod(LinkMovementMethod.getInstance());
 	}
-	
+
 	// Maak klikbare links van embedded video (youtube) iframes
 	private String makeVideoLinks(String myHtml)
 	{
@@ -490,15 +428,15 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 			tryAgain(getResources().getString(R.string.txt_try_again_nodownload));
 			return;
 		}
-		
-		// Neem bijgewerkte feedsList en categoryList over in deze Activity
-		feedsList = feedsListLatest;
-		
-		hier verder: feedslist naar variabelen
 
-		if (!TextUtils.isEmpty(mImageUrl))
+		// Neem bijgewerkte feedsList en categoryList over in deze Activity
+		// zet data uit ArrayList in fields
+		feedsList = feedsListLatest;
+		parseList(feedsListLatest);
+
+		if (!TextUtils.isEmpty(imageUrl))
 		{
-			mWeHaveData = true;
+			weHaveData = true;
 
 			// Data zijn beschikbaar, toon share knop
 			// deze method roept onCreateOptionsMenu() aan
@@ -507,7 +445,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 
 		// Als data aanwezig zijn in de lijst,
 		// update de UI met de data
-		if (!TextUtils.isEmpty(mImageUrl))
+		if (!TextUtils.isEmpty(imageUrl))
 		{
 			Log.i("HermLog", "DetailActivity: data gedownload, update UI");
 
@@ -519,33 +457,21 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		}
 	}
 
-	// json string verwerken na download
-	// Zet json data in variabelen
-	private void parseResult(String result, Boolean downloadMoreItems)
+	// Zet data in variabelen
+	private void parseList(ArrayList<FeedItem> downloadedFeedsList)
 	{
 		Log.i("HermLog", "DetailActivity: parseResult()");
-
-        try
-		{
-            JSONObject response = new JSONObject(result);
-            JSONArray posts = response.optJSONArray("data");
-			JSONObject post = posts.optJSONObject(0);
-
-			mImageUrl = post.optString("mediacontent");
-			// mImgWidth en mImgHeight zijn afmetingen van de oorspronkelijke niet verkleinde afbeelding
-			mImgWidth = post.optInt("imgwidth");
-			mImgHeight = post.optInt("imgheight");
-			mTitle = post.optString("title");
-			mLink = post.optString("link");
-			mPubdate = DateStringFormatter.getDateStringFormatter().formatDate(post.optString("pubDate"), "yyyy-MM-dd HH:mm:ss");
-			mCreator = post.optString("creator");
-			mContent = post.optString("content");
-        }
-		catch (JSONException e)
-		{
-			Log.i("HermLog", "DetailActivity: JSON Exception in parseResult");
-            e.printStackTrace();
-        }
+		FeedItem feedItem = downloadedFeedsList.get(0);
+		
+		imageUrl = feedItem.getMediacontent();
+		// mImgWidth en mImgHeight zijn afmetingen van de oorspronkelijke niet verkleinde afbeelding
+		imgWidth = feedItem.getImgwidth();
+		imgHeight = feedItem.getImgheight();
+		title = feedItem.getTitle();
+		link = feedItem.getLink();
+		pubDate = DateStringFormatter.getDateStringFormatter().formatDate(feedItem.getPubDate(), "yyyy-MM-dd HH:mm:ss");
+		creator = feedItem.getCreator();
+		content = feedItem.getContent();
     }
 
 	// Progressbar tonen
@@ -572,7 +498,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 
 		// Progressbar tonen als downloadproces nog loopt
 		// na configuratie verandering
-		if (mTaskFragment.isRunning())
+		if (taskFragment.isRunning())
 		{
 			showProgressBar();
 		}
@@ -584,7 +510,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 		// Wordt DetailActivity aangeroepen uit lijst,
 		// Zo niet, dan is deze Activity gestart uit een
 		// Notificatie, dan data nog downloaden
-		if (!mWeHaveData)
+		if (!weHaveData)
 		{
 			downloadXml();
 		}
