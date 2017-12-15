@@ -186,7 +186,16 @@ public class TaskFragment extends Fragment
 			MakeUrl urlMaker = new MakeUrl(baseUrl, startItem, itemsPerPage, categoriesParameter);
 			DownloadJsonString downloader = new DownloadJsonString(urlMaker.make());
 			String jsonstring = downloader.download();
-			parseResult(jsonstring, downloadMoreItems[0], feedsList, categoryList);
+			// String jsonstring = "Fout in DownloadJsonString!";
+			
+			if (jsonstring == "Fout in DownloadJsonString!")
+			{
+				Log.i("HermLog", "TaskFragment doInBackground jsonstring: " + jsonstring);
+			}
+			else if (jsonstring != null)
+			{
+				parseResult(jsonstring, downloadMoreItems[0], feedsList, categoryList);
+			}
 			
 			return jsonstring;
 			// Eind asynchrone taak
@@ -211,47 +220,52 @@ public class TaskFragment extends Fragment
 		@Override
 		protected void onPostExecute(String result)
 		{	
+			Log.i("HermLog", "TaskFragment onPostExecute(): feedsList.size(): " + feedsList.size());
+			Log.i("HermLog", "TaskFragment onPostExecute(): categoryList.size(): " + (categoryList == null ? categoryList : categoryList.size()));
+		
 			// Proxy the call to the Activity
 			mCallbacks.onPostExecute(result, getExtraPage, feedsList, categoryList);
 
 			mRunning = false;
 			getExtraPage = false;
 		}
-	}
-	
-	// json string verwerken na download
-	// Zet json string per item in ArrayList<T>
-	private void parseResult(String result, Boolean downloadMoreItems, ArrayList<FeedItem> feedsList, ArrayList<CategoryItem> categoryList)
-	{
-		Log.i("HermLog", "parseResult()");
 		
-		ArrayList<FeedItem> newItems = JsonToArrayListParser.
-			getJsonToArrayListParser().
-			parse(result, 
-				context.getResources().getString(R.string.json_items_list_root_element),
-				feedsList, 
-				new TypeToken<ArrayList<FeedItem>>(){}.getType());
+		// json string verwerken na download
+		// Zet json string per item in ArrayList<T>
+		private void parseResult(String result, Boolean downloadMoreItems, ArrayList<FeedItem> feedsListLatest, ArrayList<CategoryItem> categoryListLatest)
+		{
+			// Log.i("HermLog", "TaskFragment: parseResult()");
 
-		if (downloadMoreItems)
-		{
-			feedsList.addAll(newItems);
+			ArrayList<FeedItem> newItems = JsonToArrayListParser.
+				getJsonToArrayListParser().
+				parse(result, 
+					  context.getResources().getString(R.string.json_items_list_root_element),
+					  feedsListLatest, 
+					  new TypeToken<ArrayList<FeedItem>>(){}.getType());
+
+			if (downloadMoreItems)
+			{
+				feedsList.addAll(newItems);
+			}
+			else
+			{
+				feedsList = newItems;
+			}
+
+			Log.i("HermLog", "TaskFragment: parseResult: feedsList.size():" + feedsList.size());
+
+			if (categoryList == null) return;
+			if (categoryList.size() > 0) return;
+
+			categoryList = JsonToArrayListParser.
+				getJsonToArrayListParser().
+				parse(result, 
+					  context.getResources().getString(R.string.json_categories_list_root_element), 
+					  categoryListLatest, 
+					  new TypeToken<ArrayList<CategoryItem>>(){}.getType());
+
+			Log.i("HermLog", "TaskFragment: parseResult: categoryList.size(): " + categoryList.size());
 		}
-		else
-		{
-			feedsList = newItems;
-		}
-		
-		if (categoryList == null) return;
-		if (categoryList.size() > 0) return;
-		
-		categoryList = JsonToArrayListParser.
-			getJsonToArrayListParser().
-			parse(result, 
-				context.getResources().getString(R.string.json_categories_list_root_element), 
-				categoryList, 
-				new TypeToken<ArrayList<CategoryItem>>(){}.getType());
-			
-		Log.i("HermLog", "categoryList size: " + categoryList.size());
 	}
 	
 	// Setter voor URL query string parameter voor te
@@ -263,9 +277,9 @@ public class TaskFragment extends Fragment
 		else
 			this.categoriesParameter = "";
 
-		Log.i("HermLog", "categoriesParameter: " + categoriesParameter);
+		Log.i("HermLog", "TaskFragment: setCategoriesParameter(): categoriesParameter: " + categoriesParameter);
 	}
-
+	
 	// Setter en getter voor getExtraPage, gebruikt voor bepalen
 	// of taskfragment gebruikt wordt voor eerste download data of extra 'page' met data
 	// voor endless scrolling

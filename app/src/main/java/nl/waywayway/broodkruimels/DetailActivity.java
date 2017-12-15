@@ -39,10 +39,7 @@ public class DetailActivity extends AppCompatActivity implements TaskFragment.Ta
 	private TextView textViewPubdate;
 	private TextView textViewCreator;
 	private TextView textViewContent;
-	private String urlDimensions;
 	private int urlWidth;
-	private int urlHeight;
-	private Float aspectRatio;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState)

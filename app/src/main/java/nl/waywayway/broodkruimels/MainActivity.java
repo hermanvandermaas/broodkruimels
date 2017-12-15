@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		MenuItem categoryItem = menu.findItem(R.id.action_select_category);
 		MenuItem settingsItem = menu.findItem(R.id.action_settings);
 
-		Log.i("HermLog", "categoryList.size(): " + categoryList.size());
+		Log.i("HermLog", "onCreateOptionsMenu() categoryList.size(): " + categoryList.size());
 
 		// Toon categorie knop, als content beschikbaar is
 		if (categoryList.size() > 0)
@@ -392,6 +392,8 @@ public class MainActivity extends AppCompatActivity implements TaskFragment.Task
 		}
 
 		// Neem bijgewerkte feedsList en categoryList over in deze Activity
+		Log.i("HermLog", "MainActivity: onPostExecute() feedsListLatest.size(): " + feedsListLatest.size());
+		Log.i("HermLog", "MainActivity: onPostExecute() categoryListLatest.size(): " + categoryListLatest.size());
 		feedsList = feedsListLatest;
 		categoryList = categoryListLatest;
 
